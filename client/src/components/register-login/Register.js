@@ -1,128 +1,143 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { startRegister } from '../../redux/actions/loginsAction'
+import React, { Fragment, useState } from 'react'
+import { Formik, Form, Field } from 'formik'
+import { object, string, ref } from 'yup'
+import { MdVisibility, MdVisibilityOff } from 'react-icons/md'
+import {
+  Button,
+  TextField,
+  Box,
+  FormGroup,
+  InputAdornment,
+  IconButton,
+} from '@material-ui/core'
 
-class Register extends Component {
-    state = {
-        username: '',
-        email: '',
-        password: '',
-        passwordConfirm: '',
-        show: false,
-        mismatch: false,
-        falseEntry: false,
-    }
+import '../../styles/form.css'
 
-    handleChange = (e) => {
-        this.setState({ [e.target.name]:e.target.value })
-    }
-    handleShow = () => {
-        this.setState(prevState => ({
-            show: !prevState.show
-        }))
-    }
-    handleOnBlur = () => {
-        const {password,passwordConfirm} = this.state
-        if(password !== passwordConfirm){
-            this.setState({mismatch: true})
-        }
-        else{
-            this.setState({ mismatch: false })
-        }
-    }
-    handleSubmit = (e) => {
-        e.preventDefault()
-        const redirect = () => {
-            return this.props.history.push('/user/login')
-        }
-        const {username,password,email, mismatch} = this.state
-        if(!username || !email || !password){
-            this.setState({falseEntry: true})
-        }
-        else if(mismatch){
-            alert('password do not match')
-        }
-        else{
-            const formData = {
-                username,email,password
-            }
-            console.log(formData)
-            this.props.dispatch(startRegister(formData,redirect))
-        }
-    }
-    render() {
-        return (
-          <div>
-            <h1>Register</h1>
-            <p className='errorMsg'>
-              {this.state.falseEntry && 'The fields cant be empty'}
-            </p>
-            <br />
-            <form onSubmit={this.handleSubmit}>
-              <input
-                type='text'
-                name='username'
-                id='username'
-                value={this.state.username}
-                onChange={this.handleChange}
-                placeholder='username (min 6 characters)'
-              />
-              <br />
-              <br />
+const registerSchema = object().shape({
+  username: string().required().min(4, 'minimum 4 characters'),
+  email: string().email().required(),
+  password: string().required().min(6, 'minimum 6 characters'),
+  confirmPass: string().oneOf([ref('password')], 'password must match'),
 
-              <input
-                type='email'
-                name='email'
-                id='email'
-                value={this.state.email}
-                onChange={this.handleChange}
-                placeholder='email'
-              />
-              <br />
-              <br />
+  //🧾https://til.hashrocket.com/posts/vahuw4phan-check-the-password-confirmation-with-yup
+})
 
-              <input
-                type='text'
-                name='password'
-                id='password'
-                value={this.state.password}
-                onChange={this.handleChange}
-                placeholder='password (min 8 characters)'
-              />
-              <br />
-              <br />
+// ! https://dev.to/finallynero/react-form-using-formik-material-ui-and-yup-2e8h
+// ! https://medium.com/@kmerandi25/react-form-validation-with-formik-material-ui-and-yup-1cd92eac887
 
-              <input
-                type={this.state.show ? 'text' : 'password'}
-                name='passwordConfirm'
-                id='passwordConfirm'
-                value={this.state.passwordConfirm}
-                onChange={this.handleChange}
-                onBlur={this.handleOnBlur}
-                placeholder='Confirm Password'
-              />
-              <br />
-              <br />
-              <p className='errorMsg'>
-                {this.state.mismatch && 'Password does not match'}
-              </p>
-              <br />
-              <input
-                type='checkbox'
-                name='show'
-                id='show'
-                value={this.state.show}
-                onClick={this.handleShow}
-              />
-              <label htmlFor='show'>Show Password</label>
-              <br />
-              <br />
-
-              <input type='submit' value='Sign Up' />
-            </form>
-          </div>
-        )
-    }
+function Register() {
+  const [showPass, setShowPass] = useState(false)
+  const handleShowPass = () => {
+    console.log(showPass, 'showPass')
+    setShowPass(!showPass)
+  }
+  return (
+    <div>
+      <Formik
+        initialValues={{
+          username: '',
+          password: '',
+          confirmPass: '',
+          email: '',
+          role: '',
+          check: [],
+        }}
+        validationSchema={registerSchema}
+        onSubmit={(values, { setSubmitting }) => {
+          console.log(values)
+          setSubmitting(false)
+        }}
+      >
+        {({ isSubmitting, values, errors, touched, isValid }) => (
+          <Fragment>
+            <div className='form-register'>
+              <h1>Register</h1>
+              <Form>
+                <Box marginBottom={2}>
+                  <FormGroup>
+                    <Field
+                      error={touched.username && Boolean(errors.username)}
+                      type='text'
+                      name='username'
+                      label='Username'
+                      variant='outlined'
+                      as={TextField}
+                      helperText={touched.username && errors.username}
+                    />
+                  </FormGroup>
+                </Box>
+                <Box marginBottom={2}>
+                  <FormGroup>
+                    <Field
+                      error={touched.email && Boolean(errors.email)}
+                      helperText={touched.email && errors.email}
+                      type='email'
+                      name='email'
+                      label='Email'
+                      variant='outlined'
+                      as={TextField}
+                    />
+                  </FormGroup>
+                </Box>
+                <Box marginBottom={2}>
+                  <FormGroup>
+                    <Field
+                      error={touched.password && Boolean(errors.password)}
+                      helperText={touched.password && errors.password}
+                      type={showPass ? 'text' : 'password'}
+                      name='password'
+                      label='Password'
+                      variant='outlined'
+                      as={TextField}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position='end'>
+                            <IconButton onClick={handleShowPass} className='icon-svg'>
+                              {showPass ? (
+                                <MdVisibility />
+                              ) : (
+                                <MdVisibilityOff />
+                              )}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </FormGroup>
+                </Box>
+                <Box marginBottom={2}>
+                  <FormGroup>
+                    <Field
+                      error={touched.confirmPass && Boolean(errors.confirmPass)}
+                      helperText={touched.confirmPass && errors.confirmPass}
+                      type='password'
+                      name='confirmPass'
+                      label='Confirm Password'
+                      variant='outlined'
+                      as={TextField}
+                    />
+                  </FormGroup>
+                </Box>
+                <Button
+                  variant='contained'
+                  color='primary'
+                  type='submit'
+                  className='btn-register'
+                  disabled={isSubmitting || !isValid}
+                >
+                  SIGN UP
+                </Button>
+                {/* <pre>{JSON.stringify(values, null, 4)}</pre>
+                <pre>{JSON.stringify(isSubmitting, null, 4)}</pre>
+                <pre>{JSON.stringify(errors, null, 4)}</pre>
+                <pre>{JSON.stringify(isValid, null, 4)}</pre> */}
+              </Form>
+            </div>
+          </Fragment>
+        )}
+      </Formik>
+    </div>
+  )
 }
 
-export default connect()(Register)
+export default Register

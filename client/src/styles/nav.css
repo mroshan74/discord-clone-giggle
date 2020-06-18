@@ -76,3 +76,14 @@ ul {
     background-color: var(--bg);
     border: 1px solid white;
 }
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-input {
+    background-color: white;
+    border-radius: 8px;
+}

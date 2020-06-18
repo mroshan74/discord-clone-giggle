@@ -2,6 +2,10 @@ import React from 'react'
 import './App.css'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 
+//material-ui
+import { Container } from '@material-ui/core'
+
+
 import Home from './Home';
 import Login from '../register-login/Login';
 import Nav from './Nav';
@@ -13,13 +17,15 @@ function App(props) {
       <BrowserRouter>
         <div>
           <Nav />
-          <Switch>
-            <Route exact path='/' component={Home} />
-            <Route path='/user/login' component={Login} />
-            <Route path='/user/register' component={Register} />
+          <Container>
+            <Switch>
+              <Route exact path='/' component={Home} />
+              <Route path='/user/login' component={Login} />
+              <Route path='/user/register' component={Register} />
 
-            <Route path='/chat' component={Chatbox} />
-          </Switch>
+              <Route path='/chat' component={Chatbox} />
+            </Switch>
+          </Container>
         </div>
       </BrowserRouter>
     )

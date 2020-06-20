@@ -3,12 +3,14 @@ import thunk from 'redux-thunk'
 
 import loginReducer from '../reducers/loginReducer'
 import chatReducer from '../reducers/chatReducer'
+import searchReducer from '../reducers/searchReducer'
 
 
 const configureStore = () => {
     const store = createStore(combineReducers({
         login: loginReducer,
-        chat: chatReducer
+        chat: chatReducer,
+        searchResult: searchReducer
     }),applyMiddleware(thunk))
     return store
 }

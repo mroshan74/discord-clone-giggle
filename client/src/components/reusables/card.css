@@ -1,0 +1,54 @@
+:root{
+    --item-width: 500px; 
+    --item-height: 100px;
+    --btn-primary: #096cd7;
+}
+
+.card {
+    margin: auto;
+    max-width: 80%;
+}
+
+.card-wrap{
+    margin: auto;
+    max-width: 75%;
+}
+
+.card-item-wrap {
+    height: var(--item-height);
+    width: var(--item-width);
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+    padding: 5px;
+    margin: 10px auto;
+    border: 1px solid #4a4e52a6;
+}
+.avatar {
+    height: calc(var(--item-height) * 0.6);
+    width: calc(var(--item-height) * 0.6);
+    margin: 2%;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.card-item {
+    margin: auto 3px;
+}
+
+.btn {
+    height: calc(var(--item-height) * 0.4);
+    width: calc(var(--item-width) * 0.25);
+    background-color: var(--btn-primary);
+    border: none;
+    color: white;
+    border-radius: 8px;
+    margin-left: auto;
+    margin-right: 2%;
+}
+
+.btn:visited{
+    border-radius: 8px;
+    border: 1px solid white;
+}

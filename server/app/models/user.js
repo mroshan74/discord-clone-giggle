@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const bcryptjs = require('bcryptjs')
 const isEmail = require('validator/lib/isEmail')
 const md5 = require('crypto-js/md5')
+const {chatSchema} = require('./chat')
 
 const Schema = mongoose.Schema
 const userSchema = new Schema({
@@ -33,6 +34,27 @@ const userSchema = new Schema({
   },
   profilePicUrl: {
       type: String
+  },
+  country: String,
+  friends : [{
+    info : {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    status: {
+      type: String,
+      default: 'Pending'
+    },
+    sendByMe: {
+      type: Boolean,
+      default: false
+    },
+    inbox: [chatSchema]
+  }],
+  notifications: [],
+  groups: [],
+  token: {
+    type: String
   }
 })
 

@@ -22,4 +22,7 @@ router.get('/user/account',authenticateUser, userControllers.account)
 router.get('/user/chats', authenticateUser,chatControllers.list)
 router.post('/user/upload', authenticateUser, upload.single('file'), chatControllers.fileUpload)
 
+router.post('/user/search',authenticateUser ,userControllers.search)
+router.post('/user/sendrequest/:id',authenticateUser ,userControllers.sendRequest)
+
 module.exports = router

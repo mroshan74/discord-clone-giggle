@@ -3,6 +3,7 @@ const initialStateLogin = {
   username: '',
   email: '',
   profileImg:'',
+  notifications: []
 }
 
 const loginReducer = (state = initialStateLogin, action) => {
@@ -12,7 +13,8 @@ const loginReducer = (state = initialStateLogin, action) => {
         _id: action.payload._id,
         username: action.payload.username,
         email: action.payload.email,
-        profileImg: action.payload.profilePicUrl
+        profileImg: action.payload.profilePicUrl,
+        notifications: action.payload.notifications
       })
     }
     case 'CLEAR_USER_DATA': {
@@ -20,7 +22,8 @@ const loginReducer = (state = initialStateLogin, action) => {
         _id: '',
         username: '',
         email: '',
-        profileImg:''
+        profileImg:'',
+        notification: []
       })
     }
     default: {

@@ -2,23 +2,27 @@ import axios from 'axios'
 const getToken = localStorage.getItem('token')
 
 //------------------register
-export const startRegister = (fd, redirect) => {
+export const startRegister = (fd, redirect ,regEnable) => {
   return () => {
     axios
       .post(`/user/register`, fd)
       .then((response) => {
         console.log('[PROMISE-login]', response.data)
         const res = response.data
-        if (res.hasOwnProperty('errors')) {
-          alert('invalid/format username or password')
-        } else if (res.hasOwnProperty('keyPattern')) {
+        // if (res.hasOwnProperty('errors')) {
+        //   alert('invalid/format username or password')
+        // } else 
+        if (res.hasOwnProperty('keyPattern')) {
           if (res.keyPattern.email === 1) {
             alert('email already exists')
+            regEnable()
           } else {
             alert('username already exists')
+            regEnable()
           }
         } else {
           alert('Successfully registered')
+          regEnable()
           redirect()
         }
       })

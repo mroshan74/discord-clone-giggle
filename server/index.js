@@ -3,7 +3,7 @@ const port = 7303
 const app =express()
 app.use(express.json())
 
-const Chat = require('./app/models/chat')
+const {Chat} = require('./app/models/chat')
 const server = require('http').createServer(app)
 //🔥 connecting server with socket io
 const io = require('socket.io')(server)

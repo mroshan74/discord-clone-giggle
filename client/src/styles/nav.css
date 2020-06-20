@@ -87,3 +87,14 @@ ul {
     background-color: white;
     border-radius: 8px;
 }
+
+.badge{
+    --button-size: calc(var(--nav-size) * 0.5 );
+    width: var(--button-size);
+    height: var(--button-size);
+    border-radius: 50%;
+}
+
+.badge-li{
+    width: calc(var(--nav-size)*0.8);
+}

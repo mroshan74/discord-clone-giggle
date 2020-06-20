@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from 'react'
+import { connect } from 'react-redux'
 import { Formik, Form, Field } from 'formik'
 import { object, string, ref } from 'yup'
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md'
@@ -12,6 +13,7 @@ import {
 } from '@material-ui/core'
 
 import '../../styles/form.css'
+import { startRegister } from '../../redux/actions/loginsAction'
 
 const registerSchema = object().shape({
   username: string().required().min(4, 'minimum 4 characters'),
@@ -25,11 +27,14 @@ const registerSchema = object().shape({
 // ! https://dev.to/finallynero/react-form-using-formik-material-ui-and-yup-2e8h
 // ! https://medium.com/@kmerandi25/react-form-validation-with-formik-material-ui-and-yup-1cd92eac887
 
-function Register() {
+function Register(props) {
   const [showPass, setShowPass] = useState(false)
   const handleShowPass = () => {
     console.log(showPass, 'showPass')
     setShowPass(!showPass)
+  }
+  const redirect = () => {
+    props.history.push('/user/login')
   }
   return (
     <div>
@@ -38,14 +43,18 @@ function Register() {
           username: '',
           password: '',
           confirmPass: '',
-          email: '',
-          role: '',
-          check: [],
+          email: ''
         }}
         validationSchema={registerSchema}
         onSubmit={(values, { setSubmitting }) => {
-          console.log(values)
-          setSubmitting(false)
+          const regEnable = () => {
+            setSubmitting(false)
+          }
+          const fd = {
+            ...values
+          }
+          //console.log(fd, setSubmitting)
+          props.dispatch(startRegister(fd,redirect,regEnable))
         }}
       >
         {({ isSubmitting, values, errors, touched, isValid }) => (
@@ -140,4 +149,4 @@ function Register() {
   )
 }
 
-export default Register
+export default connect()(Register)

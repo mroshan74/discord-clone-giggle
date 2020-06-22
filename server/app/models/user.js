@@ -49,7 +49,11 @@ const userSchema = new Schema({
       type: Boolean,
       default: false
     },
-    inbox: [chatSchema]
+    inbox: [chatSchema],
+    createdAt: {
+      type: Date,
+      default: Date.now()
+    }
   }],
   notifications: [],
   groups: [],

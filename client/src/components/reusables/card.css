@@ -1,17 +1,15 @@
 :root{
-    --item-width: 500px; 
-    --item-height: 100px;
+    --item-width: 60%; 
+    --item-height: 20%;
     --btn-primary: #096cd7;
 }
 
 .card {
     margin: auto;
-    max-width: 80%;
 }
 
 .card-wrap{
     margin: auto;
-    max-width: 75%;
 }
 
 .card-item-wrap {
@@ -37,15 +35,17 @@
     margin: auto 3px;
 }
 
-.btn {
-    height: calc(var(--item-height) * 0.4);
-    width: calc(var(--item-width) * 0.25);
+button {
+    height: 50px;
+    width: 120px;
     background-color: var(--btn-primary);
     border: none;
     color: white;
     border-radius: 8px;
-    margin-left: auto;
     margin-right: 2%;
+}
+.btn {
+    margin-left: auto;
 }
 
 .btn:visited{

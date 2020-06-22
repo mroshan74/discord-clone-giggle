@@ -46,7 +46,7 @@ usersController.account = (req,res) => {
         .catch(err => res.json(err))
 }
 
-//------------search for users
+//!------------search for users
 usersController.search = (req,res) => {
     const search = req.body.searchUser
     //console.log(search)
@@ -72,7 +72,7 @@ usersController.search = (req,res) => {
                         async function checkFriend(){
                         //function checkFriend(){
                             try{
-                                let result = await User.findOne({_id: user._id, 'friends.info': req.user._id},'friends.status')
+                                let result = await User.findOne({_id: user._id, 'friends.info': req.user._id},'friends.status friends.sendByMe')
                                 //console.log(result,'try--->result async ***')
                                 return result
                             }catch(e){
@@ -83,13 +83,15 @@ usersController.search = (req,res) => {
                             // TODO filter isFriend
                             // ! User.findOne({_id: user._id, 'friends.info': req.user._id},'friends.status')
                             let alreadyFriend = await checkFriend()
-                                                    
+                            
                             //console.log('+SHOULD BE HERE+',alreadyFriend)
                             if(alreadyFriend){
                                 //console.log('DUMMY TRUE IS FRIEND')
                                 return Object.assign({}, dataPack, { 
                                     isFriend: true , 
-                                    status: alreadyFriend.friends[0].status
+                                    status: alreadyFriend.friends[0].status,
+                                    // 🔥found the requester id -> if sendByMe is false in his database then it is sent by the requester -> so we use negation
+                                    sendByMe: !alreadyFriend.friends[0].sendByMe
                                 })
                             }
                             else{
@@ -128,6 +130,7 @@ usersController.search = (req,res) => {
 //-------------sent friend request
 usersController.sendRequest = (req,res) => {
     const friendId = req.params.id
+    //console.log('REQUEST ID', req.params.id)
     //! checking a request has already sent or friends already
     User.find({ _id: req.user._id ,'friends.info': friendId })
     .then(user => {
@@ -137,7 +140,10 @@ usersController.sendRequest = (req,res) => {
                 { _id: friendId },
                 { $push: {
                     'friends': { info: req.user._id },
-                    'notifications': { message: `${req.user.username} sent you a friend request`}
+                    'notifications': { 
+                        _id: req.user._id,
+                        message: `${req.user.username} sent you a friend request`
+                    }
                 }},
                 { runValidators: true })
                 .then(user => {
@@ -150,11 +156,18 @@ usersController.sendRequest = (req,res) => {
             User.findOneAndUpdate({_id: req.user._id},{
                 $push: {
                     'friends': { info: friendId, sendByMe: true }
-                }
-                }).then(user => {
+                }},
+                {new: true}
+                ).then(user => {
                     User.findOne({_id: user._id})
                         .populate('friends.info','username profilePicUrl ')
-                        .then(user => res.json(user))
+                        .then(user => res.json(
+                            {
+                                isFriend: true,
+                                status: "Pending",
+                                _id: friendId,
+                            }
+                        ))
                         .catch(err => res.json(err))
                 }).catch(err => res.json(err))
         }
@@ -165,7 +178,35 @@ usersController.sendRequest = (req,res) => {
             })
             //res.json(user)
         }
-    })
+    }).catch(err => res.json(err))
+}
+// cancel request
+usersController.cancelRequest = (req,res) => {
+    const friendId = req.params.id
+
+    //! cancel request from the request receivers id -> check if the request user is present
+    User.findOneAndUpdate({_id: friendId, 'friends.info': req.user._id},
+    {
+        $pull: { 
+            'friends': { info: req.user._id },
+            'notifications': {_id: req.user._id}
+    }
+    }).catch(err => res.json(err))
+
+    //! cancel request from the user 
+    User.findOneAndUpdate({_id: req.user._id, 'friends.info': friendId},
+    {
+        $pull: { 'friends': { info: friendId } }
+    },
+    { new : true })
+    .then(user => res.json(
+        {
+            isFriend: false,
+            _id: friendId,
+            status:'Cancelled'
+        }
+    ))
+    .catch(err => res.json(err))        
 }
 
 module.exports = usersController

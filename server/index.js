@@ -1,7 +1,9 @@
 const express = require('express')
 const port = 7303
 const app =express()
+const morgan = require('morgan')
 app.use(express.json())
+app.use(morgan('dev'))
 
 const {Chat} = require('./app/models/chat')
 const server = require('http').createServer(app)

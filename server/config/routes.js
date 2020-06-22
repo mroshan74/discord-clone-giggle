@@ -24,5 +24,6 @@ router.post('/user/upload', authenticateUser, upload.single('file'), chatControl
 
 router.post('/user/search',authenticateUser ,userControllers.search)
 router.post('/user/sendrequest/:id',authenticateUser ,userControllers.sendRequest)
+router.post('/user/cancelrequest/:id',authenticateUser ,userControllers.cancelRequest)
 
 module.exports = router

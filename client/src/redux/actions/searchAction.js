@@ -32,7 +32,7 @@ export const sendReq = (data) => {
 
 export const startSendRequest = (id,fd) => {
     return (dispatch) => {
-        axios.post(`/user/sendrequest/${id}`,fd,{
+        axios.post(`/user/sendRequest/${id}`,fd,{
             headers: { 
                 'x-auth': getToken
             }
@@ -57,7 +57,7 @@ export const cancelReq = (data) => {
 
 export const startCancelRequest = (id,fd) => {
     return (dispatch) => {
-        axios.post(`/user/cancelrequest/${id}`,fd,{
+        axios.post(`/user/cancelRequest/${id}`,fd,{
             headers: { 
                 'x-auth': getToken
             }
@@ -70,6 +70,83 @@ export const startCancelRequest = (id,fd) => {
                 }
                 else{
                     dispatch(cancelReq(resData))
+                }
+            })
+        }
+}
+
+//accept request
+export const acceptReq = (data) => {
+    return { type: 'SET_ACCEPT_REQUEST', payload: data }
+}
+
+export const startAcceptRequest = (id,fd) => {
+    return (dispatch) => {
+        axios.post(`/user/acceptRequest/${id}`,fd,{
+            headers: { 
+                'x-auth': getToken
+            }
+        })
+            .then((response) => {
+                console.log('[PROMISE-accept-request]',response.data)
+                const resData = response.data
+                if(resData.hasOwnProperty('errors')){
+                    alert(resData.message)
+                }
+                else{
+                    dispatch(acceptReq(resData))
+                }
+            })
+        }
+}
+
+
+//reject request
+export const rejectReq = (data) => {
+    return { type: 'SET_REJECT_REQUEST', payload: data }
+}
+
+export const startRejectRequest = (id,fd) => {
+    return (dispatch) => {
+        axios.post(`/user/rejectRequest/${id}`,fd,{
+            headers: { 
+                'x-auth': getToken
+            }
+        })
+            .then((response) => {
+                console.log('[PROMISE-reject-request]',response.data)
+                const resData = response.data
+                if(resData.hasOwnProperty('errors')){
+                    alert(resData.message)
+                }
+                else{
+                    dispatch(rejectReq(resData))
+                }
+            })
+        }
+}
+
+
+//remove friend
+export const removeFriend = (data) => {
+    return { type: 'SET_REMOVE_FRIEND', payload: data }
+}
+
+export const startRemoveFriend = (id,fd) => {
+    return (dispatch) => {
+        axios.post(`/user/removeFriend/${id}`,fd,{
+            headers: { 
+                'x-auth': getToken
+            }
+        })
+            .then((response) => {
+                console.log('[PROMISE-remove-friend]',response.data)
+                const resData = response.data
+                if(resData.hasOwnProperty('errors')){
+                    alert(resData.message)
+                }
+                else{
+                    dispatch(removeFriend(resData))
                 }
             })
         }

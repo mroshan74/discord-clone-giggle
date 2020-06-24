@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react'
 import './card.css'
-import {Button } from '@material-ui/core'
 
 export function Card(props) {
     return (
@@ -14,7 +13,7 @@ export function Card(props) {
 
 export function CardList(props) {
     const {
-        img,username,_id,isFriend,sendByMe,status, handleRequest
+        img,username,_id,isFriend,sendByMe,status, handleRequest, handleAccept, handleReject,handleRemove
     } = props
     return (
         <div className='card-item-wrap'>
@@ -26,8 +25,13 @@ export function CardList(props) {
                     {(sendByMe && status==='Pending') ? 
                         <button className='btn' onClick={() => {handleRequest(_id,isFriend,sendByMe,status)}}>Cancel Request</button> :
                         <Fragment>
-                            <button className='btn'>Accept</button>
-                            <button>Reject</button>
+                            {status === 'Accepted' ? 
+                                <button className='btn' onClick={() => {handleRemove(_id)}}>Remove Friend</button> : status=== 'Pending' &&
+                                <Fragment>
+                                    <button className='btn' onClick={() => {handleAccept(_id)}}>Accept</button>
+                                    <button onClick={() => {handleReject(_id)}}>Reject</button>
+                                </Fragment>
+                        }
                         </Fragment>
                     }
                 </Fragment> 

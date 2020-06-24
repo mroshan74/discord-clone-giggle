@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import { Card, CardList } from '../reusables/Card'
-import { startSendRequest, startCancelRequest } from '../../redux/actions/searchAction'
+import { startSendRequest, startCancelRequest, startAcceptRequest, startRejectRequest, startRemoveFriend } from '../../redux/actions/searchAction'
 
 function Search(props) {
     const handleRequest = (id,isFriend,sendByMe,status) => {
@@ -15,6 +15,19 @@ function Search(props) {
             }
         }
     }
+
+    const handleAcceptRequest = (id) => {
+        props.dispatch(startAcceptRequest(id))
+    }
+
+    const handleRejectRequest = (id) => {
+        props.dispatch(startRejectRequest(id))
+    }
+
+    const handleRemoveFriend = (id) => {
+        props.dispatch(startRemoveFriend(id))
+    }
+
     return (
         <div>
             <Card >
@@ -28,6 +41,9 @@ function Search(props) {
                                 handleRequest={handleRequest}
                                 _id={user._id}
                                 sendByMe={user.sendByMe}
+                                handleAccept={handleAcceptRequest}
+                                handleReject={handleRejectRequest}
+                                handleRemove={handleRemoveFriend}
                             />
                 })}
             </Card>

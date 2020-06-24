@@ -55,7 +55,22 @@ const userSchema = new Schema({
       default: Date.now()
     }
   }],
-  notifications: [],
+  notifications: [{
+    info: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    message: {
+      type: String
+    },
+    type: {
+      type:String
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now()
+    }
+  }],
   groups: [],
   token: {
     type: String

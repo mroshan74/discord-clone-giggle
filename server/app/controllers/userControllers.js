@@ -3,6 +3,7 @@ const bcryptjs = require('bcryptjs')
 const jwt = require = require('jsonwebtoken')
 const usersController = {}
 
+
 //-----------Register User
 usersController.register = (req,res) => {
     const body = req.body
@@ -10,6 +11,7 @@ usersController.register = (req,res) => {
     user.save().then(user => res.json(user))
     .catch(err => res.json(err))
 }
+
 
 //-----------Sign-in User
 usersController.login = (req,res) => {
@@ -37,6 +39,7 @@ usersController.login = (req,res) => {
         }).catch(err => res.json(err))
 }
 
+
 //------------sent account details
 usersController.account = (req,res) => {
     User.findOne({_id: req.user._id})
@@ -45,6 +48,7 @@ usersController.account = (req,res) => {
         })
         .catch(err => res.json(err))
 }
+
 
 //!------------search for users
 usersController.search = (req,res) => {
@@ -57,6 +61,7 @@ usersController.search = (req,res) => {
     User.find({ 
         username : { $regex : regex, $options: 'i'},
         _id: { $ne : req.user._id }, // ? not equal -> doesn't need our own result
+        'friends.status': { $ne: 'Rejected'}
     },'username profilePicUrl friends')
         .then(async users => {
             if(users.length){
@@ -72,7 +77,12 @@ usersController.search = (req,res) => {
                         async function checkFriend(){
                         //function checkFriend(){
                             try{
-                                let result = await User.findOne({_id: user._id, 'friends.info': req.user._id},'friends.status friends.sendByMe')
+                                let result = await User.findOne({
+                                    _id: user._id, 
+                                    'friends.info': req.user._id, 
+                                    //'friends.status': { $ne: 'Rejected'}
+                                },
+                                    'friends.status friends.sendByMe')
                                 //console.log(result,'try--->result async ***')
                                 return result
                             }catch(e){
@@ -81,7 +91,7 @@ usersController.search = (req,res) => {
                         }
                         if(user.friends.length){
                             // TODO filter isFriend
-                            // ! User.findOne({_id: user._id, 'friends.info': req.user._id},'friends.status')
+
                             let alreadyFriend = await checkFriend()
                             
                             //console.log('+SHOULD BE HERE+',alreadyFriend)
@@ -127,6 +137,7 @@ usersController.search = (req,res) => {
         .catch(err => res.json(err))
 }
 
+
 //-------------sent friend request
 usersController.sendRequest = (req,res) => {
     const friendId = req.params.id
@@ -139,36 +150,48 @@ usersController.sendRequest = (req,res) => {
             User.findOneAndUpdate(
                 { _id: friendId },
                 { $push: {
-                    'friends': { info: req.user._id },
-                    'notifications': { 
-                        _id: req.user._id,
+                    friends: { info: req.user._id },
+                    notifications: {  
+                        info: req.user._id,
                         message: `${req.user.username} sent you a friend request`
                     }
-                }},
-                { runValidators: true })
-                .then(user => {
-                    User.findOne({_id: user._id})
-                        .populate('friends.info','username profilePicUrl ')
-                        .catch(err => res.json(err))
-                }).catch(err => res.json(err))
+                }})
+                // .then(user => {
+                //     console.log(user)
+                    // User.findOne({_id: user._id})
+                    //     .populate('friends.info','username profilePicUrl ')
+                    //     .catch(err => res.json(err))
+                //})
+                .then()
+                .catch(err => res.json(err))
 
         //!--------update the sender database
             User.findOneAndUpdate({_id: req.user._id},{
                 $push: {
-                    'friends': { info: friendId, sendByMe: true }
+                    friends: { info: friendId, sendByMe: true }
                 }},
-                {new: true}
-                ).then(user => {
-                    User.findOne({_id: user._id})
-                        .populate('friends.info','username profilePicUrl ')
-                        .then(user => res.json(
+                {new: true})
+                // .then(user => {
+                //     User.findOne({_id: user._id})
+                //         .populate('friends.info','username profilePicUrl ')
+                //         .then(user => res.json(
+                //             {
+                //                 isFriend: true,
+                //                 status: "Pending",
+                //                 _id: friendId
+                //             }
+                //         ))
+                //         .catch(err => res.json(err))
+                // }).catch(err => res.json(err))
+
+                .then(()=> {
+                        res.json(
                             {
                                 isFriend: true,
                                 status: "Pending",
                                 _id: friendId,
-                            }
-                        ))
-                        .catch(err => res.json(err))
+                                sendByMe: true
+                            })
                 }).catch(err => res.json(err))
         }
         else{
@@ -180,33 +203,215 @@ usersController.sendRequest = (req,res) => {
         }
     }).catch(err => res.json(err))
 }
+
+
 // cancel request
 usersController.cancelRequest = (req,res) => {
     const friendId = req.params.id
 
-    //! cancel request from the request receivers id -> check if the request user is present
+    //! cancel request from the receivers id -> check if the request user is present
     User.findOneAndUpdate({_id: friendId, 'friends.info': req.user._id},
     {
         $pull: { 
-            'friends': { info: req.user._id },
-            'notifications': {_id: req.user._id}
-    }
+            friends: { info: req.user._id },
+            notifications: {info: req.user._id}
+        }
     }).catch(err => res.json(err))
 
     //! cancel request from the user 
     User.findOneAndUpdate({_id: req.user._id, 'friends.info': friendId},
     {
-        $pull: { 'friends': { info: friendId } }
+        $pull: { friends: { info: friendId } }
     },
     { new : true })
-    .then(user => res.json(
-        {
-            isFriend: false,
-            _id: friendId,
-            status:'Cancelled'
+    .then(user => {
+        if(user){
+            res.json(
+                {
+                    isFriend: false,
+                    _id: friendId,
+                    status:'Cancelled'
+                })
+        }else{
+            res.json({
+                errors: 'invalid user',
+                message: 'No user found in database'
+            })
         }
-    ))
+    })
     .catch(err => res.json(err))        
 }
 
+// accept friend request
+usersController.acceptRequest = (req,res) => {
+    const friendId = req.params.id
+
+    User.findOne({_id: friendId, 'friends.info':req.user._id, 'friends.status':'Accepted'})
+        .then(user => {
+            console.log(user)
+            if(!user){    //? if empty only execute
+                //! the requester update
+                User.findOneAndUpdate({ _id: friendId , 'friends.info': req.user._id },{
+                    $set: { 'friends.$.status': 'Accepted' },
+                    $push: {
+                        notifications: { 
+                            info: req.user._id,
+                            message: `${req.user.username} accepted your friend request`
+                        }}
+                })
+                .then(user => {
+                    if(!user){
+                        res.json({
+                            errors: 'invalid user',
+                            message: 'No user found in database'
+                        })
+                    }
+                }).catch(err => res.json(err))
+            
+                //! receiver update
+                User.findOneAndUpdate({ _id: req.user._id , 'friends.info': friendId},{
+                    $set: { 'friends.$.status': 'Accepted' },
+                    $push: { notifications : {
+                        info: friendId,
+                        message: `You are now friend with ${friendId}`
+                    }}
+                }, {new:true})
+                    .then(user => {
+                        if(user){
+                            User.findOne({_id: user._id})
+                                .populate('friends.info','username profilePicUrl')
+                                .populate('notifications.info','username profilePicUrl')
+                                .then(user => {
+                                    if(user){
+                                        res.json({
+                                            isFriend: true,
+                                            _id: friendId,
+                                            status:'Accepted'
+                                        })
+                                    }
+                                    else{
+                                        res.json({
+                                            errors: 'invalid user',
+                                            message: 'No user found in database'
+                                        })
+                                    }
+                                }).catch(err => res.json(err))
+                        }
+                    }).catch(err => res.json(err))
+            }
+            else{
+                res.json({
+                    errors: 'invalid action',
+                    message:' No access authorization'
+                })
+            }
+        }).catch(err => res.json(err))
+}
+
+// reject friend request
+usersController.rejectRequest = (req,res) => {
+    const friendId = req.params.id
+
+    User.findOne({ _id :friendId , 'friends.info':req.user._id, 'friends.status':'Rejected' })
+        .then(user => {
+            if(!user){
+                //! requester update
+                User.findOneAndUpdate({ _id: friendId, 'friends.info':req.user._id },{
+                    $set: { 'friends.$.status': 'Rejected'}
+                })
+                    .then(user => {
+                        if(!user){
+                            res.json({
+                                errors: 'invalid user',
+                                message: 'No user found in database'
+                            })
+                        }
+                    }).catch(err => res.json(err))
+
+                //! receiver update
+                User.findOneAndUpdate({ _id: req.user._id , 'friends.info': friendId},{
+                    $set: { 'friends.$.status': 'Rejected'}
+                })
+                    .then(user => {
+                        if(user){
+                            res.json({
+                                isFriend: false,
+                                _id: friendId,
+                                status:'Rejected'
+                            })
+                        }
+                        else{
+                            res.json({
+                                errors: 'invalid user',
+                                message: 'No user found in database'
+                            })
+                        }
+                    }).catch(err => res.json(err))
+            }else{
+                res.json({
+                    errors: 'invalid action',
+                    message: 'No access authorization'
+                })
+            }
+        }).catch(err => res.json(err))
+}
+
+// remove friend
+usersController.removeFriend = (req,res) => {
+    const friendId = req.params.id
+    
+    User.findOne({_id: friendId, 'friends.info': req.user._id, 'friends.status':'Accepted'})
+        .then(user => {
+            if(user){
+                //! requester
+                User.findOneAndUpdate({_id: friendId, 'friends.info': req.user._id},{
+                    $pull : {
+                        friends: {
+                            info: req.user._id
+                        }
+                    }
+                })
+                    .then(user => {
+                        if(!user){
+                            res.json({
+                                errors: 'invalid user',
+                                message: 'No user found in database'
+                            })
+                        }
+                    })
+                    .catch(err => res.json(err))
+
+                //! receiver
+                User.findOneAndUpdate({_id: req.user._id, 'friends.info': friendId},{
+                    $pull : {
+                        friends: {
+                            info: friendId
+                        }
+                    }
+                })
+                    .then(user => {
+                        if(user){
+                            res.json({
+                                isFriend: false,
+                                _id: friendId,
+                                status: 'Pending'
+                            })
+                        }else{
+                            res.json({
+                                errors: 'invalid user',
+                                message: 'No user found in database'
+                            })
+                        }
+                    })
+                    .catch(err => res.json(err))
+
+            }else{
+                res.json({
+                    errors: 'invalid action',
+                    message: 'No access authorization'
+                })
+            }
+        })
+        .catch(err => res.json(err))
+}
 module.exports = usersController

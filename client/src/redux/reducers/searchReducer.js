@@ -25,6 +25,29 @@ const searchReducer = ( state = initialSearchResult, action ) => {
                 }
             })
         }
+        case 'SET_ACCEPT_REQUEST': {
+            return state.map(user => {
+                if(user._id===action.payload._id){
+                    return Object.assign({},user, action.payload)
+                }
+                else{
+                    return Object.assign({},user)
+                }
+            })
+        }
+        case 'SET_REJECT_REQUEST': {
+            return state.filter(user => user._id !== action.payload._id)
+        }
+        case 'SET_REMOVE_FRIEND': {
+            return state.map(user => {
+                if(user._id===action.payload._id){
+                    return Object.assign({},user, action.payload)
+                }
+                else{
+                    return Object.assign({},user)
+                }
+            })
+        }
         default: {
             return [...state]
         }

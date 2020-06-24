@@ -23,7 +23,10 @@ router.get('/user/chats', authenticateUser,chatControllers.list)
 router.post('/user/upload', authenticateUser, upload.single('file'), chatControllers.fileUpload)
 
 router.post('/user/search',authenticateUser ,userControllers.search)
-router.post('/user/sendrequest/:id',authenticateUser ,userControllers.sendRequest)
-router.post('/user/cancelrequest/:id',authenticateUser ,userControllers.cancelRequest)
+router.post('/user/sendRequest/:id',authenticateUser ,userControllers.sendRequest)
+router.post('/user/cancelRequest/:id',authenticateUser ,userControllers.cancelRequest)
+router.post('/user/acceptRequest/:id',authenticateUser ,userControllers.acceptRequest)
+router.post('/user/rejectRequest/:id',authenticateUser ,userControllers.rejectRequest)
+router.post('/user/removeFriend/:id',authenticateUser ,userControllers.removeFriend)
 
 module.exports = router

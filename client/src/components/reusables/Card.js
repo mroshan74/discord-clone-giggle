@@ -41,7 +41,4 @@ export function CardList(props) {
         </div>
     )
 }
-//props.handleRequest(_id,isFriend,status)
-// isFriend ? 
-// (status=== 'Pending' ? 'Cancel Request' :'Remove Friend')
-// : 'Add Friend'
+

@@ -10,8 +10,8 @@ import Home from './Home';
 import Login from '../register-login/Login';
 import Nav from './Nav';
 import Register from '../register-login/Register'
-import Chatbox from '../chatbox/Chatbox';
 import Search from '../search/Search';
+import ChatShell from '../chat-box/container-main/ChatShell';
 
 function App(props) {
     return (
@@ -24,8 +24,7 @@ function App(props) {
               <Route path='/user/login' component={Login} />
               <Route path='/user/register' component={Register} />
               <Route path='/user/search' component={Search} />
-
-              <Route path='/chat' component={Chatbox} />
+              <Route path='/chat' component={ChatShell} />
             </Switch>
           </Container>
         </div>

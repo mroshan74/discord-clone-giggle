@@ -1,12 +1,60 @@
-const Chat = require('../models/chat')
+const User = require('../models/user')
 const chatControllers = {}
 
 chatControllers.list = (req, res) => {
-  //const id = req.user._id
-  Chat.find()
-    .populate('sender')
+  const friendId = req.params.id
+  User.findOne({ _id: req.user._id, 'friends.info': friendId, 'friends.status':'Accepted' }, 'friends.info friends.inbox')
+    .populate('friends.info', 'username profilePicUrl')
+    .populate('friends.inbox.sender', 'username profilePicUrl')
     .then((chats) => res.json(chats))
     .catch((err) => res.json(err))
+}
+
+chatControllers.sendMsg = (req,res) => {
+  const friendId = req.params.id
+  const { message } = req.body
+  //console.log(friendId, message ,'SEND MESSAGE----------------')
+  //!receivers database
+  User.findOneAndUpdate({_id: friendId, 'friends.info': req.user._id, 'friends.status':'Accepted'},{
+    $push: {
+      'friends.$.inbox': { message }
+    }
+  })
+    .then(user => {
+      if(!user){
+        res.json({
+          errors: 'invalid action',
+          message: 'No access authorization',
+        })
+      }
+    })
+    .catch(err => res.json(err))
+
+
+  //! sender database
+  User.findOneAndUpdate({ _id: req.user._id, 'friends.info': friendId, 'friends.status':'Accepted' },{
+    $push: {
+        'friends.$.inbox': {
+            message,
+            isMyMessage: true
+        }
+    }
+  },{new: true , select: 'friends.info friends.inbox'})
+    .then(user => {
+      if(user){
+        const packData = {
+          _id: friendId,
+          inbox: user.friends[0].inbox.slice(-1).pop()
+        }
+        //console.log(packData, 'PACKDATA++++++')
+        res.json(packData)
+      }else{
+        res.json({
+          errors: 'invalid action',
+          message: 'No access authorization'
+        })
+      }
+    }).catch(err => res.json(err))
 }
 
 // upload a file

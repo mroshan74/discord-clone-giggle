@@ -1,15 +1,18 @@
-const initialChatState = []
+const initialChatState = {
+    'friends.info' : null,
+    'friends.inbox': null
+}
 
 const chatReducer = (state = initialChatState, action) => {
     switch(action.type){
-        case 'SET_CHAT': {
-            return state.concat(action.payload)
-        }
-        case 'AFTER_CHAT_SUBMIT': {
-            return state.concat(action.payload)
+        case 'SET_CHAT_INBOX': {
+            return {
+                'state.friends.info': action.payload.data.friends.info,
+                'state.friends.inbox': action.payload.data.friends.inbox
+            }
         }
         default: {
-            return [...state]
+            return {...state}
         }
     }
 }

@@ -29,4 +29,7 @@ router.post('/user/acceptRequest/:id',authenticateUser ,userControllers.acceptRe
 router.post('/user/rejectRequest/:id',authenticateUser ,userControllers.rejectRequest)
 router.post('/user/removeFriend/:id',authenticateUser ,userControllers.removeFriend)
 
+router.get('/user/getChats/:id',authenticateUser,chatControllers.list)
+router.post('/user/sendMsg/:id',authenticateUser,chatControllers.sendMsg)
+
 module.exports = router

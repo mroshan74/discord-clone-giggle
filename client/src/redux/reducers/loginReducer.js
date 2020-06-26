@@ -3,7 +3,8 @@ const initialStateLogin = {
   username: '',
   email: '',
   profileImg:'',
-  notifications: []
+  notifications: [],
+  friends: []
 }
 
 const loginReducer = (state = initialStateLogin, action) => {
@@ -14,8 +15,22 @@ const loginReducer = (state = initialStateLogin, action) => {
         username: action.payload.username,
         email: action.payload.email,
         profileImg: action.payload.profilePicUrl,
-        notifications: action.payload.notifications
+        notifications: action.payload.notifications,
+        friends: action.payload.friends
       })
+    }
+    case 'SET_SEND_MSG': {
+      const data = state.friends.map(friend => {
+          if(friend.info._id === action.payload._id){
+            friend.inbox.push(action.payload.inbox)
+            return friend
+          }
+          else {
+            return friend
+          }
+      })
+      //console.log('DATA-LOGIN-REDUCER',data)
+      return Object.assign({},state,{ friends: data })
     }
     case 'CLEAR_USER_DATA': {
       return Object.assign({}, state, {
@@ -23,7 +38,8 @@ const loginReducer = (state = initialStateLogin, action) => {
         username: '',
         email: '',
         profileImg:'',
-        notification: []
+        notification: [],
+        friends:[]
       })
     }
     default: {

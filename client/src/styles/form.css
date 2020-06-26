@@ -1,3 +1,10 @@
+.form-container {
+    background-color: white;
+    border-radius: 8px;
+    max-width: 600px;
+    margin: auto;
+}
+
 
 h1 {
     text-align: center;
@@ -8,8 +15,6 @@ h1 {
     max-width: 100%;
     padding: 5%;
     margin: auto;
-    border: 1px solid black;
-    border-radius: 8px;
 }
 
 .icon-svg {

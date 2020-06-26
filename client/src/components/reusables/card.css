@@ -15,6 +15,7 @@
 .card-item-wrap {
     height: var(--item-height);
     width: var(--item-width);
+    background-color: white;
     display: flex;
     align-items: center;
     border-radius: 8px;
@@ -25,6 +26,7 @@
 .avatar {
     height: calc(var(--item-height) * 0.6);
     width: calc(var(--item-height) * 0.6);
+    border: 1px solid black;
     margin: 2%;
     border-radius: 50%;
     display: flex;

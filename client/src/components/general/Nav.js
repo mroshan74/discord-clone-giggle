@@ -19,11 +19,14 @@ import { startGetSearch } from '../../redux/actions/searchAction'
 
 
 function Nav(props) {
-    const change = localStorage.getItem('token')
-    const history = useHistory()
 
-    const handleLogout = () => {
-        props.dispatch(startLogout())
+    const history = useHistory()
+    const change = localStorage.getItem('token')
+    
+    const [searchUser,setSearchUser] = useState('')
+    const handleChange = (e) =>{
+        setSearchUser(e.target.value)
+        // console.log('print',e.target.value)
     }
 
     const handleSearch = (e) => {
@@ -32,14 +35,12 @@ function Nav(props) {
         props.dispatch(startGetSearch(fd))
         console.log('submit',searchUser)
         history.push('/user/search')
-
     }
-    const [searchUser,setSearchUser] = useState('')
-    const handleChange = (e) =>{
-        setSearchUser(e.target.value)
-        // console.log('print',e.target.value)
+    
+    const handleLogout = () => {
+        props.dispatch(startLogout())
     }
-
+    
     console.log('nav----',change)
     console.log('USER--------',props.user)
 
@@ -59,7 +60,7 @@ function Nav(props) {
                             InputProps={{
                             startAdornment: (
                                 <InputAdornment position='start'>
-                                <BsSearch />
+                                    <BsSearch />
                                 </InputAdornment>
                             ),
                             }}

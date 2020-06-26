@@ -37,7 +37,7 @@ function Register(props) {
     props.history.push('/user/login')
   }
   return (
-    <div>
+    <div className='form-container'>
       <Formik
         initialValues={{
           username: '',

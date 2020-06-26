@@ -43,6 +43,7 @@ usersController.login = (req,res) => {
 //------------sent account details
 usersController.account = (req,res) => {
     User.findOne({_id: req.user._id})
+        .populate('friends.info','username profilePicUrl')
         .then(user => {
             res.json(user)
         })

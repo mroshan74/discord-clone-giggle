@@ -52,7 +52,7 @@ const userSchema = new Schema({
     inbox: [chatSchema],
     createdAt: {
       type: Date,
-      default: Date.now()
+      default: Date.now
     }
   }],
   notifications: [{
@@ -68,7 +68,15 @@ const userSchema = new Schema({
     },
     createdAt: {
       type: Date,
-      default: Date.now()
+      default: Date.now
+    },
+    seen: {
+      type: Boolean,
+      default: false
+    },
+    opened: {
+      type: Boolean,
+      default: false
     }
   }],
   groups: [],

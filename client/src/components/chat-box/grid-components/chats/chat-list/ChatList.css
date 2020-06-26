@@ -1,0 +1,5 @@
+#chat-list {
+    grid-area: chat-list;
+    background: #0048AA;
+    overflow-y: scroll;
+}

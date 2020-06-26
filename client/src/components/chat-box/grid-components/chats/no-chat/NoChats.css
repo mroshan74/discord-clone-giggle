@@ -1,0 +1,40 @@
+#no-chat-layout {
+    flex: 1 0 0%;
+    display: flex; 
+    flex-direction: column; 
+}
+
+#no-chat-content {
+    flex: 1 0 0%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0 0 10px 10px;
+}
+
+#no-chat-content h2 {
+    color: #0048AA;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+}
+
+#no-chat-content p {
+    font-size: 1.5rem;
+}
+
+#no-chat-content p:last-of-type {
+    margin-bottom: 1.5rem;
+}
+
+#no-chat-content button {
+    flex: 0 0 auto;
+    background: #0048AA;
+    border: 1px solid #002C88;
+    color: #FFF;
+    padding: 12px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    outline: none;
+}

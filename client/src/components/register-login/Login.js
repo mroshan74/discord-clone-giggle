@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { startLogin } from '../../redux/actions/loginsAction'
-
+import { Link } from 'react-router-dom'
+import '../../styles/login.css'
 class Login extends Component {
   state = {
     email: '',
@@ -31,40 +32,58 @@ class Login extends Component {
   }
   render() {
     return (
-      <div>
-        <h1>Login</h1>
-        <form onSubmit={this.handleSubmit}>
-          <input
-            type='email'
-            name='email'
-            id='email'
-            value={this.state.email}
-            onChange={this.handleChange}
-            placeholder='email'
-          />
-          <br />
-          <br />
-          <input
-            type={this.state.show ? 'text' : 'password'}
-            name='password'
-            id='password'
-            value={this.state.password}
-            onChange={this.handleChange}
-            placeholder='password'
-          />
-          <br />
-          <br />
-          <input
-            type='checkbox'
-            name='show'
-            id='show'
-            value={this.state.show}
-            onClick={this.handleShow}
-          />
-          <label htmlFor='show'>Show password</label>
-          <br />
-          <br />
-          <input type='submit' value='Sign In' />
+      <div className='login-container'>
+        <div className='login-logo'>
+          <img className={'login-logo-img'} src={require('../../styles/icons/login-logo-blk.png')} alt='logo' />
+        </div>
+        <form className='login-form' onSubmit={this.handleSubmit}>
+          <div className='form-control'>
+            <label htmlFor='email'>Email</label>
+            <input
+              type='email'
+              name='email'
+              id='email'
+              value={this.state.email}
+              onChange={this.handleChange}
+              placeholder='Enter your email'
+            />
+          </div>
+
+          <div className='form-control'>
+            <label htmlFor='password'>Password</label>
+            <input
+              type={this.state.show ? 'text' : 'password'}
+              name='password'
+              id='password'
+              value={this.state.password}
+              onChange={this.handleChange}
+              placeholder='Password'
+            />
+          </div>
+
+          <div className='checkbox-control'>
+            <div>
+              <input
+                type='checkbox'
+                name='show'
+                id='show'
+                value={this.state.show}
+                onClick={this.handleShow}
+              />
+              <label htmlFor='show'>Show password</label>
+            </div>
+            <Link className='link' to='#'>
+              Forgot Password ?
+            </Link>
+          </div>
+
+          <input className='btn-login' type='submit' value='Sign In' />
+          <small>
+            Don't have an account?{' '}
+            <Link className='link' to='#'>
+              Sign Up
+            </Link>
+          </small>
         </form>
       </div>
     )

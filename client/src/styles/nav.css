@@ -18,9 +18,12 @@ ul {
 
 .navbar {
     height: var(--nav-size);
+    width:  100vw;
     background-color: var(--bg);
     padding: 0 1rem;
     border-bottom: var(--border);
+    justify-content: center;
+    align-items: center;
 }
 .navbar-nav {
     max-width: 100%;

@@ -1,0 +1,95 @@
+.login-container{
+    background-color: white;
+    border-radius: 8px;
+    border: 20px solid #dce7ff;
+    width: 600px;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+}
+
+.login-logo{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-logo-img{
+    width: 280px;
+    height: 120px;
+}
+
+.login-form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+.login-form .form-control{
+    margin: 10px 0;
+    width: 100%;
+}
+
+.login-form label {
+    display: inline-block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.login-form input:not([type='checkbox']):not([type='submit']){
+    background-color: transparent;
+    border: 2px solid #ecf2ff;
+    border-radius: 3px;
+    font-size: 14px;
+    padding: 10px;
+    width: 100%;
+}
+
+.login-form .checkbox-control{
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.login-form .checkbox-control label {
+    color: #7a7e8c;
+    font-weight: normal;
+    margin-left: 5px;
+}
+
+.login-form .checkbox-control .link{
+    margin-left: auto;
+}
+
+.btn-login{
+    background-color: #141c2c;
+    border: 2px solid #141c2c;
+    color: white;
+    border-radius: 3px;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 10px;
+    margin: 20px 0;
+    width: 100%;
+    cursor: pointer;
+    filter: brightness(0.7)
+}
+
+.btn-login:hover{
+    filter: brightness(1)
+}
+
+.login-form small {
+    font-size: 15px;
+}
+
+.login-form .link{
+    text-decoration: none;
+    color: blue;
+}
+

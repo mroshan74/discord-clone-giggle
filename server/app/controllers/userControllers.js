@@ -42,7 +42,7 @@ usersController.login = (req,res) => {
 
 //------------sent account details
 usersController.account = (req,res) => {
-    User.findOne({_id: req.user._id})
+    User.findOne({_id: req.user._id, 'friends.status': 'Accepted'})
         .populate('friends.info','username profilePicUrl')
         .then(user => {
             res.json(user)

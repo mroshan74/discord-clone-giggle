@@ -1,4 +1,6 @@
 const User = require('../models/user')
+const Socket = require('../models/socket')
+
 const chatControllers = {}
 
 chatControllers.list = (req, res) => {
@@ -11,6 +13,9 @@ chatControllers.list = (req, res) => {
 }
 
 chatControllers.sendMsg = (req,res) => {
+  const io = req.app.io
+  //console.log(req.body.message)
+
   const friendId = req.params.id
   const { message } = req.body
   //console.log(friendId, message ,'SEND MESSAGE----------------')
@@ -19,9 +24,23 @@ chatControllers.sendMsg = (req,res) => {
     $push: {
       'friends.$.inbox': { message }
     }
-  })
+  },{new: true})
     .then(user => {
-      if(!user){
+      if(user){
+        const packData = {
+          _id: req.user._id,
+          inbox: user.friends[0].inbox.slice(-1).pop()
+        }
+        Socket.findOne({_id: friendId})
+            .then(getUserSocket => {
+              if(getUserSocket){
+                const { socketId } = getUserSocket
+                io.to(socketId).emit('server message listening',{...packData})
+              }
+            })
+            .catch(err => console.log(err))
+      }
+      else{
         res.json({
           errors: 'invalid action',
           message: 'No access authorization',
@@ -55,6 +74,12 @@ chatControllers.sendMsg = (req,res) => {
         })
       }
     }).catch(err => res.json(err))
+
+
+  // res.json({
+  //   errors: 'testing api',
+  //   message: 'socket.io test run'
+  // })
 }
 
 // upload a file

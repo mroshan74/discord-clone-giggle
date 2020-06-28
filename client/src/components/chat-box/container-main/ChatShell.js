@@ -1,5 +1,6 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useEffect, useMemo } from 'react'
 import { connect } from 'react-redux'
+import socket from '../../../services/socket'
 
 
 import ChatSearch from '../grid-components/chats/chat-search/ChatSearch'
@@ -12,12 +13,38 @@ import ChatForm from '../grid-components/chat-form/ChatForm'
 
 import './ChatShell.css'
 import { startStoreSelectedId } from '../../../redux/actions/selectedChatAction'
-import { startSendMsg } from '../../../redux/actions/chatsAction'
+import { startSendMsg, setSendMsg } from '../../../redux/actions/chatsAction'
 //import { startGetChatMsgs } from '../../../redux/actions/chatsAction'
 
 function ChatShell(props) {
-    const { chats, selectedChat } = props
+    const { chats, selectedChat, user } = props
+    //const [ passId, setPassId ] = useState('')
     console.log(chats,'chatshell')
+
+    //! SOCKETS
+    //connecting client to server
+    //imported socket as an instance to avoid multiple pathway
+    //🔥  https://dev.to/bravemaster619/how-to-prevent-multiple-socket-connections-and-events-in-react-531d
+
+    function connectSocket(){
+        console.log('socketFn() connected on load')
+        
+        //to remove useEffect dependency warning
+        // let server = 'http://localhost:7303'
+        // const socket = io(server)
+
+        socket.on('server message listening',(msgFromServer)=>{
+            console.log(msgFromServer,'[MESSAGE_SERVER]')
+            //TODO update the redux state
+            props.dispatch(setSendMsg(msgFromServer))
+        })
+        
+    }
+    useEffect(()=>connectSocket,[selectedChat])
+    useMemo(() => {
+        socket.emit('userId', { userId: user._id })
+    },[user._id])
+
     let chatContent = (
         <Fragment>
             <NoChats/>
@@ -40,7 +67,7 @@ function ChatShell(props) {
         const fd = {
             message: msg
         }
-        console.log('SEND mESSAGE --------------------',id)
+        console.log('SEND MESSAGE --------------------',id)
         props.dispatch(startSendMsg(id,fd))
     }
 
@@ -67,7 +94,8 @@ function ChatShell(props) {
 const mapStateToProps = state => {
     return {
         chats: state.login.friends,
-        selectedChat: state.selectedChat
+        selectedChat: state.selectedChat,
+        user: state.login
     }
 }
 

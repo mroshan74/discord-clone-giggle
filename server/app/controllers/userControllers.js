@@ -29,7 +29,7 @@ usersController.login = (req,res) => {
                                 email: user.email,
                                 _id: user._id
                             }
-                            const token = jwt.sign(tokenData,'athena786',{ expiresIn: '15h' })
+                            const token = jwt.sign(tokenData,'athena786')
                             res.json({token})
                         }else{
                             res.json({error: 'invalid email or password'})
@@ -42,7 +42,7 @@ usersController.login = (req,res) => {
 
 //------------sent account details
 usersController.account = (req,res) => {
-    User.findOne({_id: req.user._id, 'friends.status': 'Accepted'})
+    User.findOne({_id: req.user._id})
         .populate('friends.info','username profilePicUrl')
         .then(user => {
             res.json(user)
@@ -172,18 +172,6 @@ usersController.sendRequest = (req,res) => {
                     friends: { info: friendId, sendByMe: true }
                 }},
                 {new: true})
-                // .then(user => {
-                //     User.findOne({_id: user._id})
-                //         .populate('friends.info','username profilePicUrl ')
-                //         .then(user => res.json(
-                //             {
-                //                 isFriend: true,
-                //                 status: "Pending",
-                //                 _id: friendId
-                //             }
-                //         ))
-                //         .catch(err => res.json(err))
-                // }).catch(err => res.json(err))
 
                 .then(()=> {
                         res.json(

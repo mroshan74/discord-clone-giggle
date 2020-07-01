@@ -11,7 +11,7 @@ function ChatItem(props) {
         'active': isActive
     })
 
-    let latestMsgDate = chat.inbox.slice(-1).pop()
+    let latestMsgDate = chat.inbox.slice(-1).pop() || chat.createdAt
     //console.log(latestMsgDate, 'DATE--------------------')
 
     return (

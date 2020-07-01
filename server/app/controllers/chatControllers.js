@@ -14,23 +14,38 @@ chatControllers.list = (req, res) => {
 
 chatControllers.sendMsg = (req,res) => {
   const io = req.app.io
-  //console.log(req.body.message)
+  console.log(req.body.message)
 
   const friendId = req.params.id
   const { message } = req.body
   //console.log(friendId, message ,'SEND MESSAGE----------------')
   //!receivers database
-  User.findOneAndUpdate({_id: friendId, 'friends.info': req.user._id, 'friends.status':'Accepted'},{
-    $push: {
-      'friends.$.inbox': { message }
-    }
-  },{new: true})
-    .then(user => {
-      if(user){
+  User.findOneAndUpdate(
+    {
+      _id: friendId,
+      'friends.info': req.user._id,
+      friends: { $elemMatch: { status: 'Accepted' } },
+    },
+    {
+      $push: {
+        'friends.$.inbox': { message },
+      },
+    },
+    { new: true, select: 'friends.info friends.inbox' }
+  )
+    .then((user) => {
+      if (user) {
+        console.log(user)
+
+        const getUpdatedFriend = user.friends.find(friend => JSON.stringify(friend.info) === JSON.stringify(req.user._id))
+        //console.log('getUpdatedFriend', getUpdatedFriend, req.user._id)
+        
         const packData = {
           _id: req.user._id,
-          inbox: user.friends[0].inbox.slice(-1).pop()
+          inbox: getUpdatedFriend.inbox.slice(-1).pop(),
         }
+        console.log('packData[RECEIVER] ----->',packData)
+
         Socket.findOne({_id: friendId})
             .then(getUserSocket => {
               if(getUserSocket){
@@ -39,47 +54,54 @@ chatControllers.sendMsg = (req,res) => {
               }
             })
             .catch(err => console.log(err))
-      }
-      else{
+      } else {
         res.json({
           errors: 'invalid action',
           message: 'No access authorization',
         })
       }
     })
-    .catch(err => res.json(err))
+    .catch((err) => res.json(err))
 
 
   //! sender database
-  User.findOneAndUpdate({ _id: req.user._id, 'friends.info': friendId, 'friends.status':'Accepted' },{
-    $push: {
+  User.findOneAndUpdate(
+    {
+      _id: req.user._id,
+      'friends.info': friendId,
+      friends: { $elemMatch: { status: 'Accepted' } },
+      //friends: { $elemMatch: { info: friendId } },
+    },
+    {
+      $push: {
         'friends.$.inbox': {
-            message,
-            isMyMessage: true
+          message,
+          isMyMessage: true,
         }
-    }
-  },{new: true , select: 'friends.info friends.inbox'})
-    .then(user => {
-      if(user){
+      }
+    },
+    { new: true, select: 'friends.info friends.inbox' }
+  )
+    .then((user) => {
+      if (user) {
+        //console.log(user)
+        const getUpdatedFriend = user.friends.find(friend => JSON.stringify(friend.info) === JSON.stringify(friendId))
+        //console.log('getUpdatedFriend',getUpdatedFriend,friendId)
+        
         const packData = {
           _id: friendId,
-          inbox: user.friends[0].inbox.slice(-1).pop()
+          inbox: getUpdatedFriend.inbox.slice(-1).pop()
         }
-        //console.log(packData, 'PACKDATA++++++')
+        console.log('packData[SENDER] ----->',packData)
         res.json(packData)
-      }else{
+      } else {
         res.json({
           errors: 'invalid action',
-          message: 'No access authorization'
+          message: 'No access authorization',
         })
       }
-    }).catch(err => res.json(err))
-
-
-  // res.json({
-  //   errors: 'testing api',
-  //   message: 'socket.io test run'
-  // })
+    })
+    .catch((err) => res.json(err))
 }
 
 // upload a file

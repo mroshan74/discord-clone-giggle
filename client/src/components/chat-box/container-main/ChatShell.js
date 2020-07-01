@@ -18,20 +18,16 @@ import { startSendMsg, setSendMsg } from '../../../redux/actions/chatsAction'
 
 function ChatShell(props) {
     const { chats, selectedChat, user } = props
-    //const [ passId, setPassId ] = useState('')
     console.log(chats,'chatshell')
 
     //! SOCKETS
     //connecting client to server
-    //imported socket as an instance to avoid multiple pathway
+    //imported socket as an instance to avoid multiple component call to the server
     //🔥  https://dev.to/bravemaster619/how-to-prevent-multiple-socket-connections-and-events-in-react-531d
 
     function connectSocket(){
         console.log('socketFn() connected on load')
-        
-        //to remove useEffect dependency warning
-        // let server = 'http://localhost:7303'
-        // const socket = io(server)
+        //to remove useEffect dependency warning -> by creating a socket instance in services folder
 
         socket.on('server message listening',(msgFromServer)=>{
             console.log(msgFromServer,'[MESSAGE_SERVER]')
@@ -40,10 +36,12 @@ function ChatShell(props) {
         })
         
     }
+    // eslint-disable-next-line
     useEffect(()=>connectSocket,[selectedChat])
     useMemo(() => {
         socket.emit('userId', { userId: user._id })
     },[user._id])
+    //! ----SOCKETS
 
     let chatContent = (
         <Fragment>
@@ -59,7 +57,7 @@ function ChatShell(props) {
     }
     const chatChanged = (chat) => {
         props.dispatch(startStoreSelectedId(chat))
-        console.log('selectedChat pass request', chat)
+        console.log('selectedChat----->', chat._id)
         //props.dispatch(startGetChatMsgs(chat._id))
     }
     const onMessageSubmitted = (msg) => {
@@ -67,7 +65,7 @@ function ChatShell(props) {
         const fd = {
             message: msg
         }
-        console.log('SEND MESSAGE --------------------',id)
+        console.log('SEND MESSAGE -------->',id,msg)
         props.dispatch(startSendMsg(id,fd))
     }
 

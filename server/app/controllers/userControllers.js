@@ -83,7 +83,7 @@ usersController.search = (req,res) => {
                                     'friends.info': req.user._id, 
                                     //'friends.status': { $ne: 'Rejected'}
                                 },
-                                    'friends.status friends.sendByMe')
+                                    'friends.info friends.status friends.sendByMe')
                                 //console.log(result,'try--->result async ***')
                                 return result
                             }catch(e){
@@ -95,14 +95,16 @@ usersController.search = (req,res) => {
 
                             let alreadyFriend = await checkFriend()
                             
-                            //console.log('+SHOULD BE HERE+',alreadyFriend)
+                            console.log('+SHOULD BE HERE+',alreadyFriend)
                             if(alreadyFriend){
                                 //console.log('DUMMY TRUE IS FRIEND')
+                                const getFriendStatus = alreadyFriend.friends.find(friend => JSON.stringify(friend.info) === JSON.stringify(req.user._id))
+                                console.log('getFriendStatus',getFriendStatus)
                                 return Object.assign({}, dataPack, { 
                                     isFriend: true , 
-                                    status: alreadyFriend.friends[0].status,
+                                    status: getFriendStatus.status,
                                     // 🔥found the requester id -> if sendByMe is false in his database then it is sent by the requester -> so we use negation
-                                    sendByMe: !alreadyFriend.friends[0].sendByMe
+                                    sendByMe: !getFriendStatus.sendByMe
                                 })
                             }
                             else{

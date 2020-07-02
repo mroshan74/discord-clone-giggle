@@ -10,7 +10,7 @@ export const setChatsInbox = (data) => {
 
 export const startGetChatMsgs = (id) => {
     return(dispatch) => {
-        axios.get(`/user/getChats/${id}`,{
+        axios.get(`/users/getChats/${id}`,{
             headers: {
                 'x-auth': getToken
             }
@@ -35,7 +35,7 @@ export const setSendMsg = (data) => {
 
 export const startSendMsg = (id,fd) => {
     return(dispatch) => {
-        axios.post(`/user/sendMsg/${id}`,fd,{
+        axios.post(`/users/sendMsg/${id}`,fd,{
             headers: {
                 'x-auth': getToken
             }

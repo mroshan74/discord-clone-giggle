@@ -7,7 +7,8 @@ function ChatList(props) {
 
     const { chats, selectedChat, onChatItemSelected } = props
 
-    const chatItems = chats && chats.map(chat => {
+    const displayChat = chats.filter(chat => chat.status !== 'Pending')
+    const chatItems = chats && displayChat.map(chat => {
         const chatIsActive = selectedChat && chat.info._id === selectedChat.info._id
         return <ChatItem
             key={chat.info._id}

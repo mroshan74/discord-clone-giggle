@@ -44,8 +44,21 @@ usersController.login = (req,res) => {
 usersController.account = (req,res) => {
     User.findOne({_id: req.user._id})
         .populate('friends.info','username profilePicUrl')
+        .populate('notifications.info', 'username profilePicUrl')
         .then(user => {
-            res.json(user)
+            const { _id, username, email , profilePicUrl, notifications, groups } = user
+            const friends = user.friends.filter(friend => friend.status !== 'Rejected')
+            let packData = {
+                _id,
+                username,
+                email,
+                profilePicUrl,
+                notifications,
+                groups,
+                friends
+            }
+            //packData.sort((a,b) => a.)
+            res.json(packData)
         })
         .catch(err => res.json(err))
 }
@@ -95,11 +108,11 @@ usersController.search = (req,res) => {
 
                             let alreadyFriend = await checkFriend()
                             
-                            console.log('+SHOULD BE HERE+',alreadyFriend)
+                            //console.log('+SHOULD BE HERE+',alreadyFriend)
                             if(alreadyFriend){
                                 //console.log('DUMMY TRUE IS FRIEND')
                                 const getFriendStatus = alreadyFriend.friends.find(friend => JSON.stringify(friend.info) === JSON.stringify(req.user._id))
-                                console.log('getFriendStatus',getFriendStatus)
+                                //console.log('getFriendStatus',getFriendStatus)
                                 return Object.assign({}, dataPack, { 
                                     isFriend: true , 
                                     status: getFriendStatus.status,
@@ -237,7 +250,12 @@ usersController.cancelRequest = (req,res) => {
 usersController.acceptRequest = (req,res) => {
     const friendId = req.params.id
 
-    User.findOne({_id: friendId, 'friends.info':req.user._id, 'friends.status':'Accepted'})
+    User.findOne({
+            _id: friendId, 
+            'friends.info':req.user._id, 
+            //'friends.status':'Accepted',
+            friends: { elemMatch: {status: 'Accepted'}}
+        })
         .then(user => {
             console.log(user)
             if(!user){    //? if empty only execute
@@ -303,7 +321,11 @@ usersController.acceptRequest = (req,res) => {
 usersController.rejectRequest = (req,res) => {
     const friendId = req.params.id
 
-    User.findOne({ _id :friendId , 'friends.info':req.user._id, 'friends.status':'Rejected' })
+    User.findOne({ 
+        _id :friendId , 
+        'friends.info':req.user._id, 
+        friends: { $elemMatch: {status: 'Rejected'}} 
+    })
         .then(user => {
             if(!user){
                 //! requester update
@@ -351,7 +373,11 @@ usersController.rejectRequest = (req,res) => {
 usersController.removeFriend = (req,res) => {
     const friendId = req.params.id
     
-    User.findOne({_id: friendId, 'friends.info': req.user._id, 'friends.status':'Accepted'})
+    User.findOne({
+        _id: friendId, 
+        'friends.info': req.user._id, 
+        friends: {$elemMatch: {status: 'Accepted'}}
+    })
         .then(user => {
             if(user){
                 //! requester
@@ -405,4 +431,34 @@ usersController.removeFriend = (req,res) => {
         })
         .catch(err => res.json(err))
 }
+
+// // friend list
+// usersController.friendList = (req,res) => {
+//     User.findOne({_id: req.user._id},'friends ')
+//         .populate('friends.info', 'username profilePicUrl')
+//         .then(user => {
+//             const listFriends = user.friends.filter(friend => friend.status !== 'Rejected')
+//             const packData = listFriends.map(friend => {
+//                 let { status, sendByMe, info } = friend
+//                 let data = {
+//                     _id: info._id,
+//                     status,
+//                     sendByMe,
+//                     username: info.username,
+//                     profilePicUrl: info.profilePicUrl,
+//                     isFriend: false
+//                 }
+//                 if(status === 'Pending'){
+//                     return data
+//                 }
+//                 else{
+//                     return Object.assign({}, data, {isFriend: true})
+//                 }
+//             })
+//             packData.sort((a,b) => a.isFriend-b.isFriend)
+//             res.json(packData)
+//         })
+//         .catch(err => res.json(err))
+// }
+
 module.exports = usersController

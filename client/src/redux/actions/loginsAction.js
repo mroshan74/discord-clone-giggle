@@ -5,7 +5,7 @@ const getToken = localStorage.getItem('token')
 export const startRegister = (fd, redirect ,regEnable) => {
   return () => {
     axios
-      .post(`/user/register`, fd)
+      .post(`/users/register`, fd)
       .then((response) => {
         console.log('[PROMISE-login]', response.data)
         const res = response.data
@@ -35,7 +35,7 @@ export const startRegister = (fd, redirect ,regEnable) => {
 export const startLogin = (fd, redirect) => {
   return () => {
     axios
-      .post('/user/login', fd)
+      .post('/users/login', fd)
       .then((response) => {
         console.log('[PROMISE-token-login]', response.data)
         if (response.data.hasOwnProperty('error')) {
@@ -73,7 +73,7 @@ export const setAccount = (data) => {
 export const startAccount = () => {
   return (dispatch) => {
     axios
-      .get('/user/account', { headers: { 'x-auth': getToken } })
+      .get('/users/account', { headers: { 'x-auth': getToken } })
       .then((response) => {
         console.log('[PROMISE-login-acc]', response.data)
         const data = response.data

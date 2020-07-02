@@ -34,7 +34,7 @@ function Nav(props) {
         const fd = { searchUser }
         props.dispatch(startGetSearch(fd))
         console.log('submit',searchUser)
-        history.push('/user/search')
+        history.push('/users/search')
     }
     
     const handleLogout = () => {
@@ -67,7 +67,7 @@ function Nav(props) {
                         />
                     </form>
                     <NavItem 
-                        to='/user/notifications' 
+                        to='/users/notifications' 
                         styleClass='badge'
                         styleClassLi='badge-li'
                         name={
@@ -76,30 +76,15 @@ function Nav(props) {
                                 </Badge>
                             }
                     />
+                    <NavItem to='/users/friends' name='Friends' />
                     <NavItem to='/chat' name='Chat'/>
                     <NavItem to='#' name='Sign Out' styleClass='sign-out' onClick = {handleLogout} />
                 </NavBar>
             ):(
                 <NavBar >
                     <img src={logo} alt='chatbot' className='logo' onClick={() => {history.push('/')}}/>
-                    {/* <form className='search-bar' onSubmit={handleSearch}>
-                        <TextField
-                            className='search-input'
-                            variant='outlined'
-                            placeholder='Search...'
-                            onChange={handleChange}
-                            value={searchUser}
-                            InputProps={{
-                            startAdornment: (
-                                <InputAdornment position='start'>
-                                <BsSearch />
-                                </InputAdornment>
-                            ),
-                            }}
-                        />
-                    </form> */}
-                    <NavItem to='/user/register' name='Register' styleClass='register'/>
-                    <NavItem to='/user/login' name='Sign In' styleClass='sign-in' />
+                    <NavItem to='/users/register' name='Register' styleClass='register'/>
+                    <NavItem to='/users/login' name='Sign In' styleClass='sign-in' />
                 </NavBar>
             )
             }

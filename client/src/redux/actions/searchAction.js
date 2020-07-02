@@ -7,7 +7,7 @@ export const setSearchResult = (data) => {
 
 export const startGetSearch = (fdata) => {
     return(dispatch) => {
-        axios.post('/user/search',fdata,{
+        axios.post('/users/search',fdata,{
             headers: {
                 'x-auth':getToken
             }
@@ -32,7 +32,7 @@ export const sendReq = (data) => {
 
 export const startSendRequest = (id,fd) => {
     return (dispatch) => {
-        axios.post(`/user/sendRequest/${id}`,fd,{
+        axios.post(`/users/sendRequest/${id}`,fd,{
             headers: { 
                 'x-auth': getToken
             }
@@ -57,7 +57,7 @@ export const cancelReq = (data) => {
 
 export const startCancelRequest = (id,fd) => {
     return (dispatch) => {
-        axios.post(`/user/cancelRequest/${id}`,fd,{
+        axios.post(`/users/cancelRequest/${id}`,fd,{
             headers: { 
                 'x-auth': getToken
             }
@@ -82,7 +82,7 @@ export const acceptReq = (data) => {
 
 export const startAcceptRequest = (id,fd) => {
     return (dispatch) => {
-        axios.post(`/user/acceptRequest/${id}`,fd,{
+        axios.post(`/users/acceptRequest/${id}`,fd,{
             headers: { 
                 'x-auth': getToken
             }
@@ -108,7 +108,7 @@ export const rejectReq = (data) => {
 
 export const startRejectRequest = (id,fd) => {
     return (dispatch) => {
-        axios.post(`/user/rejectRequest/${id}`,fd,{
+        axios.post(`/users/rejectRequest/${id}`,fd,{
             headers: { 
                 'x-auth': getToken
             }
@@ -134,7 +134,7 @@ export const removeFriend = (data) => {
 
 export const startRemoveFriend = (id,fd) => {
     return (dispatch) => {
-        axios.post(`/user/removeFriend/${id}`,fd,{
+        axios.post(`/users/removeFriend/${id}`,fd,{
             headers: { 
                 'x-auth': getToken
             }

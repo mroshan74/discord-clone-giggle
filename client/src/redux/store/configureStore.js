@@ -12,7 +12,7 @@ const configureStore = () => {
         login: loginReducer,
         selectedChat: selectedChatReducer,
         searchResult: searchReducer,
-        chat: chatReducer
+        chat: chatReducer,
     }),applyMiddleware(thunk))
     return store
 }

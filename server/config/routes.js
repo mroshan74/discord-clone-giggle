@@ -15,21 +15,23 @@ const userControllers = require('../app/controllers/userControllers')
 const chatControllers = require('../app/controllers/chatControllers')
 const { authenticateUser } = require('../app/middlewares/authentication')
 
-router.post('/user/register',userControllers.register)
-router.post('/user/login',userControllers.login)
-router.get('/user/account',authenticateUser, userControllers.account)
+router.post('/users/register',userControllers.register)
+router.post('/users/login',userControllers.login)
+router.get('/users/account',authenticateUser, userControllers.account)
 
-router.get('/user/chats', authenticateUser,chatControllers.list)
-router.post('/user/upload', authenticateUser, upload.single('file'), chatControllers.fileUpload)
+router.get('/users/chats', authenticateUser,chatControllers.list)
+router.post('/users/upload', authenticateUser, upload.single('file'), chatControllers.fileUpload)
 
-router.post('/user/search',authenticateUser ,userControllers.search)
-router.post('/user/sendRequest/:id',authenticateUser ,userControllers.sendRequest)
-router.post('/user/cancelRequest/:id',authenticateUser ,userControllers.cancelRequest)
-router.post('/user/acceptRequest/:id',authenticateUser ,userControllers.acceptRequest)
-router.post('/user/rejectRequest/:id',authenticateUser ,userControllers.rejectRequest)
-router.post('/user/removeFriend/:id',authenticateUser ,userControllers.removeFriend)
+router.post('/users/search',authenticateUser ,userControllers.search)
+//router.get('/users/friendList',authenticateUser ,userControllers.friendList)
+router.post('/users/sendRequest/:id',authenticateUser ,userControllers.sendRequest)
+router.post('/users/cancelRequest/:id',authenticateUser ,userControllers.cancelRequest)
+router.post('/users/acceptRequest/:id',authenticateUser ,userControllers.acceptRequest)
+router.post('/users/rejectRequest/:id',authenticateUser ,userControllers.rejectRequest)
+router.post('/users/removeFriend/:id',authenticateUser ,userControllers.removeFriend)
 
-router.get('/user/getChats/:id',authenticateUser,chatControllers.list)
-router.post('/user/sendMsg/:id',authenticateUser,chatControllers.sendMsg)
+router.get('/users/getChats/:id',authenticateUser,chatControllers.list)
+router.post('/users/sendMsg/:id',authenticateUser,chatControllers.sendMsg)
+
 
 module.exports = router

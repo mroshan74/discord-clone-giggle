@@ -1,27 +1,26 @@
 import axios from 'axios'
 const getToken = localStorage.getItem('token')
 
-
-//-----------------sent request
-export const sendFriendReq = (data) => {
-    return { type: 'FRIEND_SENT_REQUEST', payload: data }
+//------------------get updated friends list
+export const updateFriendList = (data) => {
+    return { type: 'UPDATE_FRIEND_LIST', payload: data }
 }
 
-export const startFriendSendRequest = (id,fd) => {
+export const startGetFriendList = () => {
     return (dispatch) => {
-        axios.post(`/users/sendRequest/${id}`,fd,{
+        axios.get(`/users/friendList`,{
             headers: { 
                 'x-auth': getToken
             }
         })
             .then((response) => {
-                console.log('[PROMISE-friend-send-request]',response.data)
+                console.log('[PROMISE-update-friend-list]',response.data)
                 const resData = response.data
                 if(resData.hasOwnProperty('errors')){
                     alert(resData.message)
                 }
                 else{
-                    dispatch(sendFriendReq(resData))
+                    dispatch(updateFriendList(resData))
                 }
             })
         }
@@ -32,9 +31,9 @@ export const cancelFriendReq = (data) => {
     return { type: 'FRIEND_CANCEL_REQUEST', payload: data }
 }
 
-export const startFriendCancelRequest = (id,fd) => {
+export const startCancelFriendRequest = (id,fd) => {
     return (dispatch) => {
-        axios.post(`/users/cancelRequest/${id}`,fd,{
+        axios.post(`/users/friends/cancelRequest/${id}`,fd,{
             headers: { 
                 'x-auth': getToken
             }
@@ -52,79 +51,79 @@ export const startFriendCancelRequest = (id,fd) => {
         }
 }
 
-// //accept request
-// export const acceptReq = (data) => {
-//     return { type: 'SET_ACCEPT_REQUEST', payload: data }
-// }
+//accept request
+export const acceptFriendReq = (data) => {
+    return { type: 'FRIEND_ACCEPT_REQUEST', payload: data }
+}
 
-// export const startFriendAcceptRequest = (id,fd) => {
-//     return (dispatch) => {
-//         axios.post(`/users/acceptRequest/${id}`,fd,{
-//             headers: { 
-//                 'x-auth': getToken
-//             }
-//         })
-//             .then((response) => {
-//                 console.log('[PROMISE-accept-request]',response.data)
-//                 const resData = response.data
-//                 if(resData.hasOwnProperty('errors')){
-//                     alert(resData.message)
-//                 }
-//                 else{
-//                     dispatch(acceptReq(resData))
-//                 }
-//             })
-//         }
-// }
-
-
-// //reject request
-// export const rejectReq = (data) => {
-//     return { type: 'SET_REJECT_REQUEST', payload: data }
-// }
-
-// export const startFriendRejectRequest = (id,fd) => {
-//     return (dispatch) => {
-//         axios.post(`/users/rejectRequest/${id}`,fd,{
-//             headers: { 
-//                 'x-auth': getToken
-//             }
-//         })
-//             .then((response) => {
-//                 console.log('[PROMISE-reject-request]',response.data)
-//                 const resData = response.data
-//                 if(resData.hasOwnProperty('errors')){
-//                     alert(resData.message)
-//                 }
-//                 else{
-//                     dispatch(rejectReq(resData))
-//                 }
-//             })
-//         }
-// }
+export const startAcceptFriendRequest = (id,fd) => {
+    return (dispatch) => {
+        axios.post(`/users/friends/acceptRequest/${id}`,fd,{
+            headers: { 
+                'x-auth': getToken
+            }
+        })
+            .then((response) => {
+                console.log('[PROMISE-accept-request]',response.data)
+                const resData = response.data
+                if(resData.hasOwnProperty('errors')){
+                    alert(resData.message)
+                }
+                else{
+                    dispatch(acceptFriendReq(resData))
+                }
+            })
+        }
+}
 
 
-// //remove friend
-// export const removeFriend = (data) => {
-//     return { type: 'SET_REMOVE_FRIEND', payload: data }
-// }
+//reject request
+export const rejectFriendReq = (data) => {
+    return { type: 'FRIEND_REJECT_REQUEST', payload: data }
+}
 
-// export const startFriendRemoveFriend = (id,fd) => {
-//     return (dispatch) => {
-//         axios.post(`/users/removeFriend/${id}`,fd,{
-//             headers: { 
-//                 'x-auth': getToken
-//             }
-//         })
-//             .then((response) => {
-//                 console.log('[PROMISE-remove-friend]',response.data)
-//                 const resData = response.data
-//                 if(resData.hasOwnProperty('errors')){
-//                     alert(resData.message)
-//                 }
-//                 else{
-//                     dispatch(removeFriend(resData))
-//                 }
-//             })
-//         }
-// }
+export const startRejectFriendRequest = (id,fd) => {
+    return (dispatch) => {
+        axios.post(`/users/friends/rejectRequest/${id}`,fd,{
+            headers: { 
+                'x-auth': getToken
+            }
+        })
+            .then((response) => {
+                console.log('[PROMISE-reject-request]',response.data)
+                const resData = response.data
+                if(resData.hasOwnProperty('errors')){
+                    alert(resData.message)
+                }
+                else{
+                    dispatch(rejectFriendReq(resData))
+                }
+            })
+        }
+}
+
+
+//remove friend
+export const friendRemove = (data) => {
+    return { type: 'FRIEND_REMOVE', payload: data }
+}
+
+export const startFriendRemove = (id,fd) => {
+    return (dispatch) => {
+        axios.post(`/users/friends/removeFriend/${id}`,fd,{
+            headers: { 
+                'x-auth': getToken
+            }
+        })
+            .then((response) => {
+                console.log('[PROMISE-remove-friend]',response.data)
+                const resData = response.data
+                if(resData.hasOwnProperty('errors')){
+                    alert(resData.message)
+                }
+                else{
+                    dispatch(friendRemove(resData))
+                }
+            })
+        }
+}

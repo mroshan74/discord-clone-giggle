@@ -1,37 +1,38 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 
 import { Card, CardList } from '../reusables/Card'
-import { startSendRequest, startCancelRequest, startAcceptRequest, startRejectRequest, startRemoveFriend } from '../../redux/actions/searchAction'
-import { startFriendSendRequest, startFriendCancelRequest } from '../../redux/actions/friendsAction'
+import { startCancelFriendRequest, startAcceptFriendRequest, startRejectFriendRequest, startFriendRemove, startGetFriendList } from '../../redux/actions/friendsAction'
 
 
 function Friends(props) {
     const handleRequest = (id,isFriend,sendByMe,status) => {
-        if(!isFriend){
-            props.dispatch(startFriendSendRequest(id))
-        }
-        else{
+        if(isFriend){
             if(sendByMe && status === 'Pending'){
-                props.dispatch(startFriendCancelRequest(id))
+                props.dispatch(startCancelFriendRequest(id))
             }
         }
     }
 
     const handleAcceptRequest = (id) => {
-        props.dispatch(startAcceptRequest(id))
+        props.dispatch(startAcceptFriendRequest(id))
     }
 
     const handleRejectRequest = (id) => {
-        props.dispatch(startRejectRequest(id))
+        props.dispatch(startRejectFriendRequest(id))
     }
 
     const handleRemoveFriend = (id) => {
-        props.dispatch(startRemoveFriend(id))
+        props.dispatch(startFriendRemove(id))
     }
 
     const { friends } = props
-    let isFriend = true
+
+    useEffect(() => {
+        props.dispatch(startGetFriendList())
+        //console.log('Loaded friend List')
+    // eslint-disable-next-line
+    },[])
 
     return (
         <div>
@@ -41,7 +42,7 @@ function Friends(props) {
                                 key={friend._id} 
                                 username={friend.info.username}
                                 img={friend.info.profilePicUrl}
-                                isFriend={isFriend}
+                                isFriend={friend.isFriend}
                                 status={friend.status && friend.status}
                                 handleRequest={handleRequest}
                                 _id={friend.info._id}

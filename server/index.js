@@ -31,9 +31,9 @@ io.on('connection', socket => { // establishing/listening a connection from clie
         }
         if(pass.userId){
         // 🔥 mapping the connection of socket to user id to the database   
-        Socket.findByIdAndUpdate({_id: pass.userId},store_session,{new:true,upsert:true})
+        Socket.findByIdAndUpdate({_id: pass.userId},store_session,{new:true, upsert:true})
             .then(map => {
-                //console.log(map,'stored user session')
+                console.log(map,'stored user session')
             }).catch(err => console.log(err))
         }
     })
@@ -43,7 +43,7 @@ io.on('connection', socket => { // establishing/listening a connection from clie
         //console.log(reason,socket.id)
         Socket.findOneAndDelete({socketId: socket.id})
             .then(after => {
-                //console.log(after,'removed user session')
+                console.log(after,'removed user session')
             })
             .catch(err => console.log(err))
     })

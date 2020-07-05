@@ -48,6 +48,9 @@ const searchReducer = ( state = initialSearchResult, action ) => {
                 }
             })
         }
+        case 'CLEAR_SEARCH_RESULT': {
+            return state = []
+        }
         default: {
             return [...state]
         }

@@ -5,7 +5,7 @@ import './NewChat.css'
 function NewChat() {
     return (
         <div id='new-message-container'>
-            <button>+</button>
+            {/* <button>+</button> */}
         </div>
     )
 }

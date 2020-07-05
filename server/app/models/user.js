@@ -37,6 +37,10 @@ const userSchema = new Schema({
   },
   country: String,
   friends : [{
+    isFriend: {
+      type: Boolean,
+      default: true
+    },
     info : {
       type: Schema.Types.ObjectId,
       ref: 'User',

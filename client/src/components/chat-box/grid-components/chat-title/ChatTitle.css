@@ -7,13 +7,28 @@
     background: #eee;
     color: #0048AA;
     font-weight: bold;
-    font-size: 2.0rem;
+    font-size: 1.5rem;
     border-radius: 0 10px 0 0;
     box-shadow: 0 1px 3px -1px rgba(0,0,0,0.75);
     padding: 0 20px;
     z-index: 1;
+    position: relative;
 }
 
 #chat-title > img {
     cursor: pointer;
+}
+
+#chat-title-btn {
+    width: 50px;
+    position: absolute;
+    right: 2%;
+    font-size: 1.5rem;
+    border-radius: 50%;
+    color:  #eee;
+    background-color: #0048AA;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

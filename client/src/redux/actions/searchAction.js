@@ -5,9 +5,13 @@ export const setSearchResult = (data) => {
     return { type: 'SET_SEARCH_RESULT', payload: data}
 }
 
-export const startGetSearch = (fdata) => {
+export const clearSearchResult = () => {
+    return { type: 'CLEAR_SEARCH_RESULT' }
+}
+
+export const startGetSearch = (fd) => {
     return(dispatch) => {
-        axios.post('/users/search',fdata,{
+        axios.post('/users/search',fd,{
             headers: {
                 'x-auth':getToken
             }
@@ -16,6 +20,7 @@ export const startGetSearch = (fdata) => {
                 console.log('[PROMISE-search]',response.data)
                 const getSearch = response.data
                 if(getSearch.hasOwnProperty('errors')){
+                    dispatch(clearSearchResult())
                     alert(`${getSearch.message}`)
                 }else{
                     dispatch(setSearchResult(getSearch))
@@ -32,13 +37,13 @@ export const sendReq = (data) => {
 
 export const startSendRequest = (id,fd) => {
     return (dispatch) => {
-        axios.post(`/users/sendRequest/${id}`,fd,{
+        axios.post(`/users/search/sendRequest/${id}`,fd,{
             headers: { 
                 'x-auth': getToken
             }
         })
             .then((response) => {
-                console.log('[PROMISE-send-request]',response.data)
+                console.log('[PROMISE-search-send-request]', response.data)
                 const resData = response.data
                 if(resData.hasOwnProperty('errors')){
                     alert(resData.message)
@@ -57,13 +62,13 @@ export const cancelReq = (data) => {
 
 export const startCancelRequest = (id,fd) => {
     return (dispatch) => {
-        axios.post(`/users/cancelRequest/${id}`,fd,{
+        axios.post(`/users/search/cancelRequest/${id}`,fd,{
             headers: { 
                 'x-auth': getToken
             }
         })
             .then((response) => {
-                console.log('[PROMISE-cancel-request]',response.data)
+                console.log('[PROMISE-search-cancel-request]',response.data)
                 const resData = response.data
                 if(resData.hasOwnProperty('errors')){
                     alert(resData.message)
@@ -82,13 +87,13 @@ export const acceptReq = (data) => {
 
 export const startAcceptRequest = (id,fd) => {
     return (dispatch) => {
-        axios.post(`/users/acceptRequest/${id}`,fd,{
+        axios.post(`/users/search/acceptRequest/${id}`,fd,{
             headers: { 
                 'x-auth': getToken
             }
         })
             .then((response) => {
-                console.log('[PROMISE-accept-request]',response.data)
+                console.log('[PROMISE-search-accept-request]',response.data)
                 const resData = response.data
                 if(resData.hasOwnProperty('errors')){
                     alert(resData.message)
@@ -108,13 +113,13 @@ export const rejectReq = (data) => {
 
 export const startRejectRequest = (id,fd) => {
     return (dispatch) => {
-        axios.post(`/users/rejectRequest/${id}`,fd,{
+        axios.post(`/users/search/rejectRequest/${id}`,fd,{
             headers: { 
                 'x-auth': getToken
             }
         })
             .then((response) => {
-                console.log('[PROMISE-reject-request]',response.data)
+                console.log('[PROMISE-search-reject-request]',response.data)
                 const resData = response.data
                 if(resData.hasOwnProperty('errors')){
                     alert(resData.message)
@@ -134,13 +139,13 @@ export const removeFriend = (data) => {
 
 export const startRemoveFriend = (id,fd) => {
     return (dispatch) => {
-        axios.post(`/users/removeFriend/${id}`,fd,{
+        axios.post(`/users/search/removeFriend/${id}`,fd,{
             headers: { 
                 'x-auth': getToken
             }
         })
             .then((response) => {
-                console.log('[PROMISE-remove-friend]',response.data)
+                console.log('[PROMISE-search-remove-friend]',response.data)
                 const resData = response.data
                 if(resData.hasOwnProperty('errors')){
                     alert(resData.message)

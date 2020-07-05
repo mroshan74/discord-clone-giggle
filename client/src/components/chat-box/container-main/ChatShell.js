@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useMemo } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import { connect } from 'react-redux'
 import socket from '../../../services/socket'
 
@@ -13,11 +13,11 @@ import ChatForm from '../grid-components/chat-form/ChatForm'
 
 import './ChatShell.css'
 import { startStoreSelectedId } from '../../../redux/actions/selectedChatAction'
-import { startSendMsg, setSendMsg } from '../../../redux/actions/chatsAction'
+import { startSendMsg, setSendMsg, startUploadFile } from '../../../redux/actions/chatsAction'
 //import { startGetChatMsgs } from '../../../redux/actions/chatsAction'
 
 function ChatShell(props) {
-    const { chats, selectedChat, user } = props
+    const { chats, selectedChat } = props
     console.log(chats,'chatshell')
 
     //! SOCKETS
@@ -38,9 +38,6 @@ function ChatShell(props) {
     }
     // eslint-disable-next-line
     useEffect(()=>connectSocket,[selectedChat])
-    useMemo(() => {
-        socket.emit('userId', { userId: user._id })
-    },[user._id])
     //! ----SOCKETS
 
     let chatContent = (
@@ -69,6 +66,12 @@ function ChatShell(props) {
         props.dispatch(startSendMsg(id,fd))
     }
 
+    const onFileUpload = (fd) => {
+        const id = selectedChat.info._id
+        console.log(id,fd,'file-upload')
+        props.dispatch(startUploadFile(id,fd))
+    }
+
     return (
         <div id="chat-container">
             <ChatSearch chats={chats} />
@@ -84,6 +87,7 @@ function ChatShell(props) {
             <ChatForm 
                 selectedChat={selectedChat}
                 onMessageSubmitted={onMessageSubmitted} 
+                onFileUpload={onFileUpload}
             />
         </div>
     )

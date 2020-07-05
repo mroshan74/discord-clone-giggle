@@ -12,26 +12,39 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage })
 
 const userControllers = require('../app/controllers/userControllers')
+const searchControllers = require('../app/controllers/searchControllers')
+const friendsControllers = require('../app/controllers/friendsControllers')
 const chatControllers = require('../app/controllers/chatControllers')
 const { authenticateUser } = require('../app/middlewares/authentication')
 
+//! accounts
 router.post('/users/register',userControllers.register)
 router.post('/users/login',userControllers.login)
 router.get('/users/account',authenticateUser, userControllers.account)
 
-router.get('/users/chats', authenticateUser,chatControllers.list)
-router.post('/users/upload', authenticateUser, upload.single('file'), chatControllers.fileUpload)
+//! search
+router.post('/users/search',authenticateUser ,searchControllers.search)
+router.post('/users/search/sendRequest/:id',authenticateUser ,searchControllers.sendRequest)
+router.post('/users/search/cancelRequest/:id',authenticateUser ,searchControllers.cancelRequest)
+router.post('/users/search/acceptRequest/:id',authenticateUser ,searchControllers.acceptRequest)
+router.post('/users/search/rejectRequest/:id',authenticateUser ,searchControllers.rejectRequest)
+router.post('/users/search/removeFriend/:id',authenticateUser ,searchControllers.removeFriend)
 
-router.post('/users/search',authenticateUser ,userControllers.search)
-//router.get('/users/friendList',authenticateUser ,userControllers.friendList)
-router.post('/users/sendRequest/:id',authenticateUser ,userControllers.sendRequest)
-router.post('/users/cancelRequest/:id',authenticateUser ,userControllers.cancelRequest)
-router.post('/users/acceptRequest/:id',authenticateUser ,userControllers.acceptRequest)
-router.post('/users/rejectRequest/:id',authenticateUser ,userControllers.rejectRequest)
-router.post('/users/removeFriend/:id',authenticateUser ,userControllers.removeFriend)
+//! friends
+//router.post('/users/friends/sendRequest/:id',authenticateUser ,friendsControllers.sendRequest)
+router.get('/users/friendList',authenticateUser ,friendsControllers.friendList)
+router.post('/users/friends/cancelRequest/:id',authenticateUser ,friendsControllers.cancelRequest)
+router.post('/users/friends/acceptRequest/:id',authenticateUser ,friendsControllers.acceptRequest)
+router.post('/users/friends/rejectRequest/:id',authenticateUser ,friendsControllers.rejectRequest)
+router.post('/users/friends/removeFriend/:id',authenticateUser ,friendsControllers.removeFriend)
+
+
+//! chat
+router.get('/users/chats', authenticateUser,chatControllers.list)
 
 router.get('/users/getChats/:id',authenticateUser,chatControllers.list)
 router.post('/users/sendMsg/:id',authenticateUser,chatControllers.sendMsg)
+router.post('/users/chats/upload/:id', authenticateUser, upload.single('file'), chatControllers.fileUpload)
 
 
 module.exports = router

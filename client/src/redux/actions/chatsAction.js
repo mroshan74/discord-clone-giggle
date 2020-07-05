@@ -46,10 +46,35 @@ export const startSendMsg = (id,fd) => {
                 if(getData.hasOwnProperty('errors')){
                     alert(getData.message)
                 }else{
-                    console.log('[check return status]************',getData)
                     dispatch(setSendMsg(getData))
                 }
             })
             .catch(err=> console.log('[ERROR-send-msg]',err))
+    }
+}
+
+//upload file
+export const uploadFile = (data) => {
+    return {type: 'UPLOAD_FILE', payload:data}
+}
+
+export const startUploadFile = (id,fd) => {
+    return(dispatch) => {
+        axios.post(`/users/chats/upload/${id}`,fd,{
+            headers: {
+                'content-type': 'multipart/form-data',
+                'x-auth': getToken
+            }
+        })
+            .then(response => {
+                console.log('[PROMISE-upload-file]',response.data)
+                const getData = response.data
+                if(getData.hasOwnProperty('errors')){
+                    alert(getData.message)
+                }else{
+                    dispatch(uploadFile(getData))
+                }
+            })
+            .catch(err=> console.log('[ERROR-upload-msg]',err))
     }
 }

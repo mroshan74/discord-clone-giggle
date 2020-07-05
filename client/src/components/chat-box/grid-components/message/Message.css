@@ -25,7 +25,7 @@
     grid-column-gap: 15px;
 }
 
-.message-row img {
+.message-row .avatar {
     border-radius: 100%;
     grid-row: span 2;
     width: 48px;
@@ -54,5 +54,20 @@
     background: #eee;
     color: #111;
     border: 1px solid #ddd;
+    border-radius: 14px 14px 14px 0;
+}
+
+.message-file {
+    width: 100%;
+    height: auto;
+}
+
+.you-message .message-file {
+    border: 2px solid #0048AA;
+    border-radius: 14px 14px 0 14px;
+}
+
+.other-message .message-file {
+    border: 2px solid #ddd;
     border-radius: 14px 14px 14px 0;
 }

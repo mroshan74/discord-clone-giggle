@@ -79,8 +79,8 @@ class Login extends Component {
 
           <input className='btn-login' type='submit' value='Sign In' />
           <small>
-            Don't have an account?{' '}
-            <Link className='link' to='#'>
+            Don't have an account?
+            <Link className='link' to='/users/register'>
               Sign Up
             </Link>
           </small>

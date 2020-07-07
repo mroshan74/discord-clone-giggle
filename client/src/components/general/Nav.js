@@ -77,7 +77,7 @@ function Nav(props) {
                             }
                     />
                     <NavItem to='/users/friends' name='Friends' />
-                    <NavItem to='/chat' name='Chat'/>
+                    <NavItem to='/users/chat' name='Chat'/>
                     <NavItem to='#' name='Sign Out' styleClass='sign-out' onClick = {handleLogout} />
                 </NavBar>
             ):(

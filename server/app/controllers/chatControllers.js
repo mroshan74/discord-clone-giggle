@@ -35,7 +35,7 @@ chatControllers.sendMsg = (req,res) => {
   )
     .then((user) => {
       if (user) {
-        console.log(user)
+        //console.log(user)
 
         const getUpdatedFriend = user.friends.find(friend => JSON.stringify(friend.info) === JSON.stringify(req.user._id))
         //console.log('getUpdatedFriend', getUpdatedFriend, req.user._id)

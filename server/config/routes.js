@@ -41,7 +41,6 @@ router.post('/users/friends/removeFriend/:id',authenticateUser ,friendsControlle
 
 //! chat
 router.get('/users/chats', authenticateUser,chatControllers.list)
-
 router.get('/users/getChats/:id',authenticateUser,chatControllers.list)
 router.post('/users/sendMsg/:id',authenticateUser,chatControllers.sendMsg)
 router.post('/users/chats/upload/:id', authenticateUser, upload.single('file'), chatControllers.fileUpload)

@@ -15,6 +15,7 @@ import Register from '../register-login/Register'
 import Search from '../search/Search';
 import ChatShell from '../chat-box/container-main/ChatShell';
 import Friends from './Friends';
+import VideoCall from '../video-call/VideoCall'
 
 function App(props) {
 
@@ -37,7 +38,8 @@ function App(props) {
             <Route path='/users/register' component={Register} />
             <Route path='/users/search' component={Search} />
             <Route path='/users/friends' component={Friends} />
-            <Route path='/chat' component={ChatShell} />
+            <Route path='/users/chat' component={ChatShell} />
+            <Route path='/users/videocall' component={VideoCall} />
           </Switch>
         </Container>
       </div>

@@ -4,29 +4,29 @@ const getToken = localStorage.getItem('token')
 
 
 //get chats inbox
-export const setChatsInbox = (data) => {
-    return { type: 'SET_CHAT_INBOX', payload: data}
-}
+// export const setChatsInbox = (data) => {
+//     return { type: 'SET_CHAT_INBOX', payload: data}
+// }
 
-export const startGetChatMsgs = (id) => {
-    return(dispatch) => {
-        axios.get(`/users/getChats/${id}`,{
-            headers: {
-                'x-auth': getToken
-            }
-        })
-            .then(response => {
-                console.log('[PROMISE-get-chats]',response.data)
-                const getData = response.data
-                if(getData.hasOwnProperty('errors')){
-                    alert(getData.message)
-                }else{
-                    dispatch(setChatsInbox(getData))
-                }
-            })
-            .catch(err=> console.log('[ERROR-get-chats]',err))
-    }
-}
+// export const startGetChatMsgs = (id) => {
+//     return(dispatch) => {
+//         axios.get(`/users/getChats/${id}`,{
+//             headers: {
+//                 'x-auth': getToken
+//             }
+//         })
+//             .then(response => {
+//                 console.log('[PROMISE-get-chats]',response.data)
+//                 const getData = response.data
+//                 if(getData.hasOwnProperty('errors')){
+//                     alert(getData.message)
+//                 }else{
+//                     dispatch(setChatsInbox(getData))
+//                 }
+//             })
+//             .catch(err=> console.log('[ERROR-get-chats]',err))
+//     }
+// }
 
 //sent message
 export const setSendMsg = (data) => {

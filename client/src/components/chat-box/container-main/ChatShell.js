@@ -25,7 +25,7 @@ function ChatShell(props) {
     //imported socket as an instance to avoid multiple component call to the server
     //🔥  https://dev.to/bravemaster619/how-to-prevent-multiple-socket-connections-and-events-in-react-531d
 
-    function connectSocket(){
+    const connectSocket = () => {
         console.log('socketFn() connected on load')
         //to remove useEffect dependency warning -> by creating a socket instance in services folder
 
@@ -36,8 +36,19 @@ function ChatShell(props) {
         })
         
     }
-    // eslint-disable-next-line
-    useEffect(()=>connectSocket,[selectedChat])
+
+    useEffect(() => {
+        // https://daveceddia.com/useeffect-hook-examples/
+        // https://stackoverflow.com/questions/23092624/socket-io-removing-specific-listener
+        
+        //Mount
+        connectSocket()
+        return () => {
+            console.log('socket listening closed')
+            socket.off('server message listening')
+        }
+        // eslint-disable-next-line
+    },[selectedChat])
     //! ----SOCKETS
 
     let chatContent = (

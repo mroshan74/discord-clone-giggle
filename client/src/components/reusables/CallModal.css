@@ -1,0 +1,44 @@
+#call-modal{
+    width: 320px;
+    height: 450px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#caller{
+    width: 200px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#caller-avatar{
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin: 10px;
+}
+
+#call-img{
+    margin: 30px;
+    width: 150px;
+    height: 150px;
+}
+
+#call-btns{
+    margin-top: 10%;
+    display: flex;
+}
+
+#acc-call{
+    background-color: green;
+    margin-right: 10%;
+}
+
+#rej-call{
+    background-color: red;
+}

@@ -18,7 +18,7 @@ ul {
 
 .navbar {
     height: var(--nav-size);
-    width:  100vw;
+    width: 100vw;
     background-color: var(--bg);
     padding: 0 1rem;
     border-bottom: var(--border);
@@ -43,13 +43,13 @@ ul {
     color: white;
     text-decoration: none;
 
-    --button-size: calc(var(--nav-size) * 0.5 );
+    --button-size: calc(var(--nav-size) * 0.6 );
     width: calc(var(--button-size) * 5);
     height: var(--button-size);
     background-color: #484a4d;
     border-radius: var(--border-radius);
     padding: 2px;
-    margin: 5px;
+    margin: 4px;
     display: flex;
     align-items: center;
     justify-content: center;

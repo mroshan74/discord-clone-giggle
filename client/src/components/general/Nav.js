@@ -8,6 +8,9 @@ import TextField from '@material-ui/core/TextField'
 import Badge from '@material-ui/core/Badge'
 import { BsSearch } from 'react-icons/bs'
 import { FiMail } from 'react-icons/fi'
+import { FaSignOutAlt } from 'react-icons/fa'
+import { BsChatDots } from 'react-icons/bs'
+import { FaUserFriends } from 'react-icons/fa'
 
 import { connect } from 'react-redux'
 import { useState } from 'react'
@@ -76,9 +79,9 @@ function Nav(props) {
                                 </Badge>
                             }
                     />
-                    <NavItem to='/users/friends' name='Friends' />
-                    <NavItem to='/users/chat' name='Chat'/>
-                    <NavItem to='#' name='Sign Out' styleClass='sign-out' onClick = {handleLogout} />
+                    <NavItem to='/users/friends' name={<FaUserFriends/>} />
+                    <NavItem to='/users/chat' name={<BsChatDots/>}/>
+                    <NavItem to='#' name={<FaSignOutAlt/>} styleClass='sign-out' onClick = {handleLogout} />
                 </NavBar>
             ):(
                 <NavBar >

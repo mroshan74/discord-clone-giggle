@@ -34,7 +34,7 @@ function Register(props) {
     setShowPass(!showPass)
   }
   const redirect = () => {
-    props.history.push('/user/login')
+    props.history.push('/users/login')
   }
   return (
     <div className='form-container'>

@@ -11,7 +11,8 @@ html {
 }
 
 body {
-  background-color:#747475cc;
+  background-color:#dddddd81;
+  /* background-color:#747475cc; */
   font-family: sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

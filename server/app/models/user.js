@@ -84,9 +84,6 @@ const userSchema = new Schema({
     }
   }],
   groups: [],
-  token: {
-    type: String
-  }
 })
 
 userSchema.pre('save', function(next){

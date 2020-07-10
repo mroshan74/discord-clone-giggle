@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import socket from '../../services/socket'
 //import './App.css'
@@ -16,13 +16,14 @@ import Search from '../search/Search';
 import ChatShell from '../chat-box/container-main/ChatShell';
 import Friends from './Friends';
 import VideoCall from '../video-call/VideoCall'
+import IncomingCall from '../video-call/IncomingCall'
 
 function App(props) {
 
   //! storing session via socket generated id
   const { user } = props
 
-  useMemo(() => {
+  useEffect(() => {
     socket.emit('userId', { userId: user._id })
   }, [user._id])  // only changes when there is change in account info, or will remain consistent
   //!-------------sockets
@@ -40,6 +41,7 @@ function App(props) {
             <Route path='/users/friends' component={Friends} />
             <Route path='/users/chat' component={ChatShell} />
             <Route path='/users/videocall' component={VideoCall} />
+            <Route path='/check' component={IncomingCall} />
           </Switch>
         </Container>
       </div>

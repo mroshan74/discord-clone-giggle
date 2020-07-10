@@ -3,7 +3,7 @@ import CallModal from '../../components/reusables/CallModal'
 
 function IncomingCall(props) {
 
-    const { acceptCall, callerPic, callerName, callStatus } = props
+    const { acceptCall, callerPic, callerName } = props
 
     const [viewCall, setViewCall] = useState(true)
 

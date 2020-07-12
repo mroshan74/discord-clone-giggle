@@ -10,6 +10,21 @@ const socketSchema = new Schema({
         type: String,
         required: true
     },
+    inCall: {
+        isTrue: {
+            type: Boolean,
+            default: false,
+        },
+        connectedTo: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+            default: null
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now
+        },
+    },
     createdAt: {
         type: Date,
         default: Date.now

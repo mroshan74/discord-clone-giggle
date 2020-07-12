@@ -21,7 +21,7 @@ paper: {
 export default function CallModal(props) {
     const classes = useStyles()
     const [open, setOpen] = React.useState(false)
-    const { view, modalStatus, name, pic, handleAcceptCall } = props
+    const { view, modalStatus, name, pic, handleAttendCall, handleRejectCall } = props
 
     const handleOpen = () => {
         setOpen(view)
@@ -57,10 +57,13 @@ export default function CallModal(props) {
                 </div>
                 <div id='call-btns'>
                     <button id='acc-call' onClick={()=> {
-                        handleAcceptCall()
                         modalStatus()
+                        handleAttendCall()
                         }}>Accept</button>
-                    <button id='rej-call'>Reject</button>
+                    <button id='rej-call' onClick={() => {
+                        handleRejectCall()
+                        modalStatus()
+                    }}>Reject</button>
                 </div>
             </div>
         </Fade>

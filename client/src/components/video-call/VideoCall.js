@@ -4,62 +4,72 @@ import { useHistory } from 'react-router-dom'
 import socket from '../../services/socket'
 import './VideoCall.css'
 import { connect } from 'react-redux'
-import IncomingCall from './IncomingCall'
+import queryString from 'query-string'
 
 function VideoCall(props) {
   const userVideo = useRef()
   const partnerVideo = useRef()
   const history = useHistory()
+  let getStreamRef
 
   const [stream, setStream] = useState()
   const [callAccepted, setCallAccepted] = useState(false)
   const [callerSignal, setCallerSignal] = useState()
   const [caller, setCaller] = useState('')
-  const [callStatus, setCallStatus] = useState(false)
-  const [callerInfo, setCallerInfo] = useState({})
 
-  const { user, selectedChat } = props
+  const { user, selectedChat, signal } = props
   let receiverId = selectedChat?.info._id
-  let callerId = user?._id
+  let userId = user?._id
+  const query = queryString.parse(props.location.search,{parseBooleans: true})
+  console.log(query,'props-match')
+
+  function closeStream(){
+    console.log('streamVideo closed', getStreamRef, callAccepted)
+    if (getStreamRef) {
+      getStreamRef.getTracks().forEach((track) => {
+        if (track.readyState === 'live') {
+          track.stop()
+        }
+      })
+    }
+  }
 
   useEffect(() => {
-    let closeStream = null
+    //let closeStream = null
     console.log(receiverId, '--->RID')
 
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
-      .then((video) => {
-        setStream(video)
+      .then((stream) => {
+        setStream(stream)
+        getStreamRef = stream
         if (userVideo.current) {
-          userVideo.current.srcObject = video
+          userVideo.current.srcObject = stream
         }
+
         // 🔥 https://stackoverflow.com/questions/11642926/stop-close-webcam-which-is-opened-by-navigator-getusermedia
         // 🔥 https://developers.google.com/web/updates/2015/07/mediastream-deprecations?hl=en#stop-ended-and-active
-        closeStream = () => {
-          console.log('streamVideo closed')
-          video.getTracks().forEach((track) => {
-            if (track.readyState === 'live') {
-              track.stop()
-            }
-          })
+
+        // closeStream = () => {
+        //   console.log('streamVideo closed')
+        //   stream.getTracks().forEach((track) => {
+        //     if (track.readyState === 'live') {
+        //       track.stop()
+        //     }
+        //   })
+        // }
+
+        if (query.receiving) {
+          setCallerSignal(signal.signal)
+          setCaller(signal.from)
+          console.log('[EFFECT-SET-RECEIVING-CALL]', caller, callerSignal)
         }
-        socket.on('call listener', (data) => {
-          console.log('[VIDEO-SIGNAL]', data)
-          setCallStatus(true)
-          setCaller(data.from)
-          setCallerSignal(data.signal)
-          const info = {
-            callerName: data.username,
-            callerPic: data.profilePicUrl,
-          }
-          setCallerInfo(info)
-        })
       })
       .catch((err) => {
         console.log(err)
         history.push('/users/chat')
       })
-    
+      
     return () => {
       closeStream()
     }
@@ -80,7 +90,7 @@ function VideoCall(props) {
           socket.emit('callUser', {
             userToCall: receiverId,
             signalData: data,
-            from: callerId,
+            from: userId,
           })
         })
 
@@ -90,35 +100,82 @@ function VideoCall(props) {
           }
         })
 
+        peer.on('close', () => {
+          setCallAccepted(false)
+          alert('user disconnected')
+        })
+
         socket.on('callAccepted', (signal) => {
           setCallAccepted(true)
           console.log('accepted signal', signal)
           peer.signal(signal)
         })
+
+        socket.on('not-reachable',(data) => {
+          alert(data.message)
+          history.push('/users/chat')
+        })
+
+        // socket.on('callRejected',(data) => {
+        //   alert(data.message)
+        //   peer.destroy()
+        //   history.push('/users/chat')
+        // })
+
+        socket.on('caller engaged',(data) =>{
+          alert(data.message)
+          //peer.destroy()
+          //history.push('/users/chat')
+        })
+
+        // socket.on('call-disconnected',(data)=>{
+        //   alert(data.message)
+        //   peer.destroy()
+        //   history.push('/users/chat')
+        // })
       }
       callPeer(receiverId)
+
+      return () => {
+        socket.off('callAccepted')
+        //socket.off('callRejected')
+        socket.off('not-reachable')
+        socket.off('caller engaged')
+        //socket.off('call-disconnected')
+      }
     }
-  },[callerId,receiverId,stream])
+  }, [stream,userId,receiverId,query.uid])
 
-  function acceptCall() {
-    setCallStatus(false)
-    setCallAccepted(true)
-    const peer = new Peer({
-      initiator: false,
-      trickle: false,
-      stream: stream,
-    })
+  useEffect(() => {
+    if (query.attend && caller && query.uid) {
+      function acceptCall() {
+        setCallAccepted(true)
+        const peer = new Peer({
+          initiator: false,
+          trickle: false,
+          stream: stream,
+        })
 
-    peer.on('signal', (data) => {
-      socket.emit('acceptCall', { signal: data, to: caller })
-    })
+        peer.on('signal', (data) => {
+          socket.emit('acceptCall', { signal: data, to: caller, from: userId })
+        })
 
-    peer.on('stream', (stream) => {
-      partnerVideo.current.srcObject = stream
-    })
+        peer.on('stream', (stream) => {
+          partnerVideo.current.srcObject = stream
+        })
 
-    peer.signal(callerSignal)
-  }
+        peer.on('close', () => {
+          setCallAccepted(false)
+          alert('user disconnected')
+          peer.destroy()
+          //history.push('/users/chat')
+        })
+
+        peer.signal(callerSignal)
+      }
+      acceptCall()
+    }
+  }, [callerSignal,stream,caller, userId])
 
   let ClientVideo
   if (stream) {
@@ -129,29 +186,13 @@ function VideoCall(props) {
 
   let PartnerVideo
   if (callAccepted) {
-    PartnerVideo = <video ref={partnerVideo} autoPlay />
-  }
-
-  console.log('callStatus -->', callStatus)
-  console.log('callAccepted -->', callAccepted)
-
-  let ModalPopUp
-  if (callStatus && !callAccepted) {
-    //console.log('insider---------->')
-    ModalPopUp = (
-      <IncomingCall
-        acceptCall={acceptCall}
-        {...callerInfo}
-        //callStatus={callStatus}
-      />
-    )
+    PartnerVideo = <video id='partnerVideo' ref={partnerVideo} autoPlay />
   }
 
   return (
     <div>
       {ClientVideo}
       {PartnerVideo}
-      {ModalPopUp}
     </div>
   )
 }
@@ -160,6 +201,7 @@ const mapStateToProps = (state) => {
   return {
     user: state.login,
     selectedChat: state.selectedChat,
+    signal: state.call
   }
 }
 

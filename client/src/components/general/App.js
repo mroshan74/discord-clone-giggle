@@ -19,7 +19,7 @@ import VideoCall from '../video-call/VideoCall'
 import IncomingCall from '../video-call/IncomingCall'
 import InterCom from './InterCom'
 import VideoListener from '../socket-listeners/VideoListener'
-import messageListener from '../socket-listeners/MessageListener'
+import MessageListener from '../socket-listeners/MessageListener'
 
 function App(props) {
 
@@ -30,14 +30,15 @@ function App(props) {
     socket.emit('userId', { userId: user._id })
   }, [user._id])  // only changes when there is change in account info, or will remain consistent
   //!-------------sockets
-  
-  messageListener()
+
+ 
 
   return (
     <BrowserRouter>
       <div>
         <Nav />
         <VideoListener />
+        <MessageListener />
         <Container>
           <Switch>
             <Route exact path='/' component={Home} />

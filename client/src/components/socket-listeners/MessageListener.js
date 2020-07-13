@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import socket from '../../services/socket'
 import { connect } from 'react-redux'
 import { setSendMsg } from '../../redux/actions/chatsAction'

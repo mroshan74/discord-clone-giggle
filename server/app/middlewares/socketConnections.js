@@ -1,5 +1,5 @@
 const Socket = require('../models/socket')
-const { findOne } = require('../models/socket')
+const crypto = require('crypto')
 
 const socketConnections = (io) => {
     //listening to socket connections
@@ -21,17 +21,20 @@ const socketConnections = (io) => {
         })
 
         socket.on('callUser',(data) => {
+            console.log('[REQUEST-OFFER-SOCKET]',data)
+            const connect_id = crypto.randomBytes(16).toString('hex')
             let packet = {
                 signal: data.signalData, 
-                from: data.from
+                from: data.from,
+                connect_id
             }
             Socket.findOne({_id: data.userToCall})
             .populate('_id','username profilePicUrl')
                 .then(getUserSocket => {
                     if(getUserSocket){
-                        //console.log('[REQUEST-OFFER-PEER]',packet)
+                        console.log('[REQUEST-OFFER-PEER]',packet)
                         //console.log(getUserSocket, '[USER SOCKET LISTENER]',data.from)
-                        // const { socketId, inCall } = getUserSocket
+                        const { socketId, inCall } = getUserSocket
                         // if(inCall.isTrue && (inCall.connectedTo != data.from)){
                         //     Socket.findOne({_id: data.from})
                         //         .then(getUserSocket => {
@@ -68,7 +71,7 @@ const socketConnections = (io) => {
             },{new: true})
                 .then(getUserSocket => {
                     if(getUserSocket){
-                        //console.log('[ACCEPT-ANSWER-PEER]', data)
+                        console.log('[ACCEPT-ANSWER-PEER]', data)
                         const { socketId } = getUserSocket
                         io.to(socketId).emit('callAccepted', data.signal)
                     }
@@ -112,9 +115,9 @@ const socketConnections = (io) => {
                             })
                                 .then(getUserSocket => {
                                     const { socketId } = getUserSocket
-                                    // io.to(socketId).emit('call-disconnected',{
-                                    //     message: 'user disconnected / error in call channel'
-                                    // })
+                                    io.to(socketId).emit('call-disconnected',{
+                                        message: 'user disconnected / error in call channel'
+                                    })
                                 }).catch(err => console.log(err))
                         }
                     }

@@ -30,9 +30,6 @@ function App(props) {
     socket.emit('userId', { userId: user._id })
   }, [user._id])  // only changes when there is change in account info, or will remain consistent
   //!-------------sockets
-
- 
-
   return (
     <BrowserRouter>
       <div>

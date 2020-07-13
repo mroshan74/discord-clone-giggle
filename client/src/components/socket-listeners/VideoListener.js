@@ -3,8 +3,7 @@ import socket from '../../services/socket'
 import CallModal from '../reusables/CallModal'
 import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { saveSignal } from '../../redux/actions/callAction'
-import { v4 as uuidv4} from 'uuid'
+import { saveSignal, appStateInCallReceiving } from '../../redux/actions/callAction'
 
 
 function VideoListener(props) {
@@ -15,6 +14,9 @@ function VideoListener(props) {
     const [dataPack, setDataPack] = useState({})
     const [attend, setAttend] = useState(false)
     const [query, setQuery] = useState('')
+
+    const { callState } = props
+    const inCallReceiving = callState?.callReceiving
 
     const modalStatus = () => {
         setViewCall(false)
@@ -30,23 +32,44 @@ function VideoListener(props) {
         })
     }
 
-    useEffect(()=>{
-        socket.on('call listener', (data) => {
-            console.log('[VIDEO-SIGNAL]', data)
-            const pack = {
-                from: data.from,
-                signal: data.signal,
+    const videoSignalData = (data) => {
+        console.log('[VIDEO-SIGNAL]', data)
+        const pack = {
+            from: data.from,
+            signal: data.signal,
+        }
+        props.dispatch(saveSignal(pack))
+        if(!callState.callInitiator){
+            props.dispatch(appStateInCallReceiving(true))
+            if(!inCallReceiving){
+                setViewCall(true)
             }
-            const callId = uuidv4()
-            props.dispatch(saveSignal(pack))
-            const path = `/users/videocall?from=${data.from}&uid=${callId}&receiving=true&attend=true`
+        }
+        setDataPack(pack)
+        setCallerName(data.username)
+        setCallerPic(data.profilePicUrl)
+
+        //if(attend){
+            const path = `/users/videoCall?from=${data.from}&connectId=${data.connect_id}&receiving=true&attend=true`
             setQuery(path)
-            setViewCall(true)
-            setDataPack(pack)
-            setCallerName(data.username)
-            setCallerPic(data.profilePicUrl)
-        })
-        //console.log('[APP-STATE]',dataPack)
+        //}
+    }
+
+    const videoCallListener = () => {
+        console.log('VideoCall listener fn() loaded')
+        socket.on('call listener', videoSignalData)
+    }
+
+    useEffect(()=>{
+        videoCallListener()
+        return() => {
+            console.log('VideoCall listening closed')
+            socket.off('call listener',videoSignalData)
+            if(attend){
+                setAttend(false)
+                setViewCall(false)
+            }
+        }
     })
 
     return (
@@ -69,4 +92,10 @@ function VideoListener(props) {
     )
 }
 
-export default connect()(VideoListener)
+const mapStateToProps = state => {
+    return {
+        callState : state.call
+    }
+}
+
+export default connect(mapStateToProps)(VideoListener)

@@ -1,3 +1,35 @@
+#v-call-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
 #clientVideo {
+    background-color: black;
     border: 1px solid grey;
+    position: absolute;
+    left: 0px;
+    width: 400px;
+    height: 250px;
+    border: 10px solid green;
+}
+
+#partnerVideo {
+    max-width: 700px;
+    min-height: 450px;
+    background-color: black;
+    position: relative;
+    border: 10px solid blue;
+    z-index: -1;
+}
+
+#call-end {
+    width: 70px;
+    height: 70px;
+    background-color: red;
+    font-size: 40px;
+    color: white;
+    border-radius: 50%;
+    padding: 5px;
 }

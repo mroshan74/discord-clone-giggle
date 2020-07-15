@@ -100,6 +100,7 @@ function VideoCall(props) {
 
     return () => {
       closeStream()
+      socket.off('connectionClosed')
     }
     // eslint-disable-next-line
   }, [])

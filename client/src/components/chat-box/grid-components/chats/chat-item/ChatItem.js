@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import classNames from 'classnames'
 import moment from 'moment'
 
@@ -7,22 +7,35 @@ import './ChatItem.css'
 function ChatItem(props) {
 
     const { chat, isActive, onChatItemSelected } = props
+    // const [latestMsgDate, setLatestMsgDate] = useState('')
+    // const [latestMsg, setLatestMsg] = useState('')
+    
     const className = classNames('chat',{
         'active': isActive
     })
 
-    let latestMsgDate = chat.inbox.slice(-1).pop() || chat.createdAt
-    //console.log(latestMsgDate, 'DATE--------------------')
+    let MsgObjSorted = chat?.inbox.slice(0).sort((a, b) => a.createdAt.localeCompare(b.createdAt))
+    let latestMsgObj = MsgObjSorted.slice(0).pop()
 
+    console.log('[LATEST-CHAT-MSG]', latestMsgObj,'[CHAT]', chat)
+    let latestMsg, latestMsgDate
+    if(!latestMsgObj){
+        latestMsgDate = chat?.createdAt
+        latestMsg = ''
+    } else {
+        latestMsg = latestMsgObj.message
+        latestMsgDate = latestMsgObj.createdAt
+    }
+    
     return (
         <div className={className} 
             onClick={() => {onChatItemSelected(chat)}}
         >
             <img src={chat.info.profilePicUrl} alt={chat.info.username} />
             <div className="title-text">{chat.info.username}</div>
-            <div className="created-date">{moment(latestMsgDate.createdAt).fromNow()}</div>
+            <div className="created-date">{moment(latestMsgDate).fromNow()}</div>
             <div className="chat-message">
-                {chat.latestMessageText}
+                {latestMsg}
             </div>
         </div>
     )

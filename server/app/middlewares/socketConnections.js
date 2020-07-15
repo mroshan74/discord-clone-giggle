@@ -127,6 +127,35 @@ const socketConnections = (io) => {
                 .catch(err => console.log(err))
         })
 
+        socket.on('endCallByUser',(data) =>{
+            Socket.findOneAndUpdate({_id: data.user},{
+                $set: { 
+                    'inCall.isTrue': false,
+                    'inCall.connectedTo': null
+                }
+            })
+                .then(getUserSocket => {
+                    if(getUserSocket){
+                        const { inCall } = getUserSocket
+                        Socket.findOneAndUpdate({_id: inCall.connectedTo},{
+                            $set: { 
+                                'inCall.isTrue': false,
+                                'inCall.connectedTo': null
+                            }
+                        })
+                            .then(getUserSocket => {
+                                if(getUserSocket){
+                                    const { socketId } = getUserSocket
+                                    io.to(socketId).emit('callClosedByUser',{
+                                        message: 'call closed'
+                                    })
+                                }
+                            }).catch(err => console.log(err))
+                        
+                    }
+                }).catch(err => console.log(err))
+        })
+
         socket.on('disconnect',(reason)=>{
             //console.log(reason,socket.id)
             Socket.findOneAndRemove({socketId: socket.id})

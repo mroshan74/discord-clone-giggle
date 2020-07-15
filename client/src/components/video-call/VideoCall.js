@@ -17,6 +17,7 @@ function VideoCall(props) {
   const partnerVideo = useRef()
   const history = useHistory()
   let getStreamRef = null
+  let callEnd = useRef(false)
   
   const [viewCall, setViewCall] = useState(true)
   const [stream, setStream] = useState()
@@ -26,11 +27,11 @@ function VideoCall(props) {
 
   const [offline, setOffline] = useState(false)
   const [offlineMsg, setOfflineMsg] = useState('')
+  //const [callEnd, setCallEnd] = useState(false)
 
   const modalStatus = () => {
     setViewCall(false)
   }
-
 
   const { user, callState } = props
   const signal = callState.signal
@@ -40,6 +41,17 @@ function VideoCall(props) {
   let userId = user?._id
   const query = queryString.parse(props.location.search,{parseBooleans: true})
   console.log(query,'incoming-call query')
+
+  const handleCallEndBtn = () => {
+    socket.emit('endCallByUser', {
+      user: user._id
+    })
+    callEnd.current = true
+    //setCallEnd(true)
+    setTimeout(() => {
+      history.push('/users/chat')
+    }, 1500);
+  }
 
   const videoCssEle = classNames('clientVideo', {
     'clientVideo-accepted': callAccepted,
@@ -56,21 +68,24 @@ function VideoCall(props) {
         }
       })
     }
-    console.log('[***INIT**]',receiverId, userId, isReceiving)
-    if(receiverId){
-      console.log('INSIDE CLOSING CALL CONNECTION CHANNEL --> [receiver]')
-      socket.emit('connectionClosed', {
-        to: receiverId,
-        from: userId
-      })
+    console.log('[***INIT**]',receiverId, userId, isReceiving, '[CALL-END] -->',callEnd.current)
+
+    if(!callEnd.current){
+      if (receiverId) {
+        //console.log('INSIDE CLOSING CALL CONNECTION CHANNEL --> [receiver]')
+        socket.emit('connectionClosed', {
+          to: receiverId,
+          from: userId,
+        })
+      } else if (isReceiving) {
+        //console.log('INSIDE CLOSING CALL CONNECTION CHANNEL --> [caller]',signal.from)
+        socket.emit('connectionClosed', {
+          to: signal.from,
+          from: userId,
+        })
+      }
     }
-    else if(isReceiving){
-      console.log('INSIDE CLOSING CALL CONNECTION CHANNEL --> [caller]',signal.from)
-      socket.emit('connectionClosed', {
-        to: signal.from,
-        from: userId,
-      })
-    }
+
     props.dispatch(callStateClear())
   }
 
@@ -153,6 +168,8 @@ function VideoCall(props) {
 
         socket.on('callChannelClosed', serverEndCall)
 
+        socket.on('callClosedByUser', serverEndCall)
+
         // socket.on('caller engaged',(data) =>{
         //   alert(data.message)
         //   peer.destroy()
@@ -168,6 +185,7 @@ function VideoCall(props) {
         socket.off('not-reachable')
         socket.off('call-disconnected')
         socket.off('callChannelClosed')
+        socket.off('callClosedByUser')
         //socket.off('caller engaged')
       }
     }
@@ -239,7 +257,7 @@ function VideoCall(props) {
           {PartnerVideo}
         </div>
       </div>
-      <button id='call-end'>
+      <button id='call-end' onClick={() => {handleCallEndBtn()}}>
         <IoIosCall />
       </button>
     </div>

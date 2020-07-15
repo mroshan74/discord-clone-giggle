@@ -7,7 +7,7 @@ function MessageList(props) {
     
     const { selectedChat } = props
     let messageItems = null
-    console.log('MESSAGE LIST',selectedChat)
+    //console.log('MESSAGE LIST',selectedChat)
     
     //! scrollToBottom -> 🔥  https://stackoverflow.com/questions/37620694/how-to-scroll-to-bottom-in-react
     const messagesEndRef = useRef(null)

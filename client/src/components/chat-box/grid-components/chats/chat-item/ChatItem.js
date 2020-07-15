@@ -17,14 +17,18 @@ function ChatItem(props) {
     let MsgObjSorted = chat?.inbox.slice(0).sort((a, b) => a.createdAt.localeCompare(b.createdAt))
     let latestMsgObj = MsgObjSorted.slice(0).pop()
 
-    console.log('[LATEST-CHAT-MSG]', latestMsgObj,'[CHAT]', chat)
+    //console.log('[LATEST-CHAT-MSG]', latestMsgObj,'[CHAT]', chat)
     let latestMsg, latestMsgDate
     if(!latestMsgObj){
         latestMsgDate = chat?.createdAt
         latestMsg = ''
     } else {
-        latestMsg = latestMsgObj.message
         latestMsgDate = latestMsgObj.createdAt
+        if(latestMsgObj.type === 'text'){
+            latestMsg = latestMsgObj.message
+        }else{
+            latestMsg = ''
+        }
     }
     
     return (

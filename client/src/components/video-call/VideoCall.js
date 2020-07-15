@@ -23,27 +23,32 @@ function VideoCall(props) {
   const [callAccepted, setCallAccepted] = useState(false)
   const [callerSignal, setCallerSignal] = useState()
   const [caller, setCaller] = useState('')
+
   const [offline, setOffline] = useState(false)
+  const [offlineMsg, setOfflineMsg] = useState('')
 
   const modalStatus = () => {
     setViewCall(false)
   }
 
 
-  const { user, selectedChat, callState } = props
+  const { user, callState } = props
   const signal = callState.signal
-  let receiverId = selectedChat?.info._id
+  //let receiverId = selectedChat?.info._id
+  let receiverId = props.match.params.id
+  console.log('params id -->',receiverId)
   let userId = user?._id
   const query = queryString.parse(props.location.search,{parseBooleans: true})
   console.log(query,'incoming-call query')
 
   const videoCssEle = classNames('clientVideo', {
     'clientVideo-accepted': callAccepted,
-    //'clientVideo': !callAccepted
   })
 
+  const isReceiving = callState?.callReceiving
+  //const isInitiator = callState?.callInitiator
   function closeStream(){
-    console.log('streamVideo closed', getStreamRef, callAccepted)
+    console.log('streamVideo closed', getStreamRef)
     if(getStreamRef){
       getStreamRef.getTracks().forEach((track) => {
         if (track.readyState === 'live') {
@@ -51,9 +56,22 @@ function VideoCall(props) {
         }
       })
     }
-    if(callState.inCall){
-      props.dispatch(callStateClear())
+    console.log('[***INIT**]',receiverId, userId, isReceiving)
+    if(receiverId){
+      console.log('INSIDE CLOSING CALL CONNECTION CHANNEL --> [receiver]')
+      socket.emit('connectionClosed', {
+        to: receiverId,
+        from: userId
+      })
     }
+    else if(isReceiving){
+      console.log('INSIDE CLOSING CALL CONNECTION CHANNEL --> [caller]',signal.from)
+      socket.emit('connectionClosed', {
+        to: signal.from,
+        from: userId,
+      })
+    }
+    props.dispatch(callStateClear())
   }
 
   useEffect(() => {
@@ -79,10 +97,9 @@ function VideoCall(props) {
         console.log(err)
         history.push('/users/chat')
       })
-      
+
     return () => {
       closeStream()
-      //socket.off('not-reachable')
     }
     // eslint-disable-next-line
   }, [])
@@ -99,11 +116,10 @@ function VideoCall(props) {
         })
 
         const serverEndCall = (data) => {
-          setOffline(true)
           peer.destroy()
           console.log('data fail',data)
           setTimeout(() => {
-            //history.push('/users/chat')
+            setOfflineMsg(data.message)
             setOffline(true)
           }, 5000)
         }
@@ -128,9 +144,13 @@ function VideoCall(props) {
           peer.signal(signal)
         })
 
-        //socket.on('not-reachable',serverEndCall)
+        socket.on('not-reachable',serverEndCall)
 
         socket.on('callRejected',serverEndCall)
+        
+        socket.on('call-disconnected',serverEndCall)
+
+        socket.on('callChannelClosed', serverEndCall)
 
         // socket.on('caller engaged',(data) =>{
         //   alert(data.message)
@@ -138,20 +158,16 @@ function VideoCall(props) {
         //   history.push('/users/chat')
         // })
 
-        // socket.on('call-disconnected',(data)=>{
-        //   alert(data.message)
-        //   peer.destroy()
-        //   history.push('/users/chat')
-        // })
       }
       callPeer(receiverId)
 
       return () => {
         socket.off('callAccepted')
         socket.off('callRejected')
-        //socket.off('not-reachable')
+        socket.off('not-reachable')
+        socket.off('call-disconnected')
+        socket.off('callChannelClosed')
         //socket.off('caller engaged')
-        //socket.off('call-disconnected')
       }
     }
   }, [stream,userId,receiverId,query.connectId])
@@ -166,6 +182,15 @@ function VideoCall(props) {
           stream: stream,
         })
 
+        const serverEndCall = (data) => {
+          peer.destroy()
+          console.log('data fail', data)
+          setTimeout(() => {
+            setOfflineMsg(data.message)
+            setOffline(true)
+          }, 5000)
+        }
+
         peer.on('signal', (data) => {
           socket.emit('acceptCall', { signal: data, to: caller, from: userId })
         })
@@ -174,16 +199,15 @@ function VideoCall(props) {
           partnerVideo.current.srcObject = stream
         })
 
-        // peer.on('close', () => {
-        //   setCallAccepted(false)
-        //   //alert('user disconnected')
-        //   peer.destroy()
-        //   //history.push('/users/chat')
-        // })
-
         peer.signal(callerSignal)
+
+        socket.on('callChannelClosed', serverEndCall)
       }
       acceptCall()
+    }
+
+    return () => {
+      socket.off('callChannelClosed')
     }
   }, [callerSignal,stream,caller, userId, query.connectId])
 
@@ -201,7 +225,11 @@ function VideoCall(props) {
 
   return (
     <div id='v-call-container'>
-      {offline && <CallAlertModal view={viewCall} modalStatus={modalStatus} />}
+      {offline && <CallAlertModal 
+        view={viewCall} 
+        modalStatus={modalStatus} 
+        message= {offlineMsg}
+        />}
       <div id='call-video-box'>
         <div>
           {ClientVideo}

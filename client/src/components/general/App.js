@@ -45,7 +45,8 @@ function App(props) {
             <Route path='/users/friends' component={Friends} />
             <Route path='/users/intercom' component={InterCom} />
             <Route path='/users/chat' component={ChatShell} />
-            <Route path='/users/videocall' component={VideoCall} />
+            <Route path='/users/videocall/:id' component={VideoCall} />
+            <Route path='/users/videocall/' component={VideoCall} />
             <Route path='/check' component={IncomingCall} />
           </Switch>
         </Container>

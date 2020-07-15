@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom'
 
 function ChatTitle(props) {
     const { selectedChat } = props
+    const connectToId = selectedChat?.info._id
     let chatTitleContents = null
 
     const history = useHistory()
@@ -14,7 +15,7 @@ function ChatTitle(props) {
         chatTitleContents = (
             <Fragment>
                 <span>{selectedChat.info.username}</span>
-                <button id='chat-title-btn' onClick={()=>{history.push('/users/videocall')}}>
+                <button id='chat-title-btn' onClick={()=>{history.push(`/users/videocall/${connectToId}`)}}>
                     <FiVideo />
                     </button>
             </Fragment>

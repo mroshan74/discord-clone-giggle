@@ -21,7 +21,7 @@ const socketConnections = (io) => {
         })
 
         socket.on('callUser',(data) => {
-            console.log('[REQUEST-OFFER-SOCKET]',data)
+            //console.log('[REQUEST-OFFER-SOCKET]',data)
             const connect_id = crypto.randomBytes(16).toString('hex')
             let packet = {
                 signal: data.signalData, 
@@ -32,7 +32,7 @@ const socketConnections = (io) => {
             .populate('_id','username profilePicUrl')
                 .then(getUserSocket => {
                     if(getUserSocket){
-                        console.log('[REQUEST-OFFER-PEER]',packet)
+                        //console.log('[REQUEST-OFFER-PEER]',packet)
                         //console.log(getUserSocket, '[USER SOCKET LISTENER]',data.from)
                         const { socketId, inCall } = getUserSocket
                         // if(inCall.isTrue && (inCall.connectedTo != data.from)){
@@ -71,7 +71,7 @@ const socketConnections = (io) => {
             },{new: true})
                 .then(getUserSocket => {
                     if(getUserSocket){
-                        console.log('[ACCEPT-ANSWER-PEER]', data)
+                        //console.log('[ACCEPT-ANSWER-PEER]', data)
                         const { socketId } = getUserSocket
                         io.to(socketId).emit('callAccepted', data.signal)
                     }
@@ -97,6 +97,34 @@ const socketConnections = (io) => {
                         })
                     }
                 }).catch(err => console.log(err))
+        })
+
+        socket.on('connectionClosed',(data) =>{
+            Socket.findOneAndUpdate({_id: data.to},{
+                $set: { 
+                    'inCall.isTrue': false,
+                    'inCall.connectedTo': null
+                }
+            })
+                .then(getUserSocket => {
+                    if(getUserSocket){
+                        console.log(getUserSocket, '----->Close connection')
+                        const { socketId } = getUserSocket
+                        io.to(socketId).emit('callChannelClosed',{
+                            message: 'connection dropped'
+                        })
+                        
+                    }
+                }).catch(err => console.log(err))
+            
+            Socket.findOneAndUpdate({_id: data.from},{
+                $set: { 
+                    'inCall.isTrue': false,
+                    'inCall.connectedTo': null
+                }
+            })
+                .then()
+                .catch(err => console.log(err))
         })
 
         socket.on('disconnect',(reason)=>{

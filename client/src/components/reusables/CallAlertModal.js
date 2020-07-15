@@ -5,6 +5,9 @@ import Backdrop from '@material-ui/core/Backdrop'
 import Fade from '@material-ui/core/Fade'
 import { useHistory } from 'react-router-dom'
 
+import { RiCloudOffLine } from 'react-icons/ri'
+import './CallAlertModal.css'
+
 const useStyles = makeStyles((theme) => ({
 modal: {
     display: 'flex',
@@ -20,7 +23,7 @@ paper: {
 export default function CallModal(props) {
     const classes = useStyles()
     const [open, setOpen] = React.useState(false)
-    const { view, modalStatus } = props
+    const { view, modalStatus, message } = props
     const history = useHistory()
 
     const handleOpen = () => {
@@ -53,12 +56,14 @@ export default function CallModal(props) {
         >
         <Fade in={open}>
             <div id='call-alert-modal' className={classes.paper}>
-                <button onClick={
+                <RiCloudOffLine id='offline-icon'/>
+                <h2>{message}</h2>
+                <button id='close-alert' onClick={
                     () => {
                         modalStatus()
                         handleRedirect()
                     }
-                }>Alert</button>
+                }>Close</button>
             </div>
         </Fade>
         </Modal>

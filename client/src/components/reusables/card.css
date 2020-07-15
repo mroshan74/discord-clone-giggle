@@ -54,3 +54,19 @@ button {
     border-radius: 8px;
     border: 1px solid white;
 }
+
+.btn-accept-friend {
+    background-color: rgb(35, 148, 35);
+}
+.btn-reject-friend {
+    background-color: rgb(252, 49, 49);
+}
+.btn-remove-friend {
+    background-color: rgb(255, 50, 50);
+}
+.btn-pending-friend {
+    background-color: rgb(252, 184, 58);
+}
+.btn-cancel-friend {
+    background-color: rgb(255, 180, 40);
+}

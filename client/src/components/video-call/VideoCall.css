@@ -5,22 +5,33 @@
     justify-content: center;
 }
 
-#clientVideo {
+#call-video-box {
     background-color: black;
-    border: 1px solid grey;
+    position: relative;
+    width: 700px;
+    height: 450px;
+}
+
+.clientVideo {
+    background-color: black;
+    width: 700px;
+    height: 450px;
+    border: 2px solid white;
+}
+
+.clientVideo-accepted {
     position: absolute;
-    left: 0px;
-    width: 400px;
-    height: 250px;
-    border: 10px solid green;
+    right: 0px;
+    bottom: 0px;
+    width: 200px;
+    height: 150px;
+    margin: 5px;
 }
 
 #partnerVideo {
-    max-width: 700px;
-    min-height: 450px;
+    width: 700px;
+    height: 450px;
     background-color: black;
-    position: relative;
-    border: 10px solid blue;
     z-index: -1;
 }
 
@@ -32,4 +43,8 @@
     color: white;
     border-radius: 50%;
     padding: 5px;
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

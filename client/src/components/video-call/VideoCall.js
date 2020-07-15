@@ -8,6 +8,7 @@ import queryString from 'query-string'
 import { IoIosCall } from 'react-icons/io'
 import CallAlertModal from '../reusables/CallAlertModal'
 import { callStateClear, appStateInCallInitiate } from '../../redux/actions/callAction'
+import classNames from 'classnames'
 
 
 
@@ -28,12 +29,18 @@ function VideoCall(props) {
     setViewCall(false)
   }
 
+
   const { user, selectedChat, callState } = props
   const signal = callState.signal
   let receiverId = selectedChat?.info._id
   let userId = user?._id
   const query = queryString.parse(props.location.search,{parseBooleans: true})
   console.log(query,'incoming-call query')
+
+  const videoCssEle = classNames('clientVideo', {
+    'clientVideo-accepted': callAccepted,
+    //'clientVideo': !callAccepted
+  })
 
   function closeStream(){
     console.log('streamVideo closed', getStreamRef, callAccepted)
@@ -183,7 +190,7 @@ function VideoCall(props) {
   let ClientVideo
   if (stream) {
     ClientVideo = (
-      <video id='clientVideo' playsInline muted ref={userVideo} autoPlay />
+      <video className={videoCssEle} playsInline muted ref={userVideo} autoPlay />
     )
   }
 
@@ -195,9 +202,13 @@ function VideoCall(props) {
   return (
     <div id='v-call-container'>
       {offline && <CallAlertModal view={viewCall} modalStatus={modalStatus} />}
-      <div>
-        {ClientVideo}
-        {PartnerVideo}
+      <div id='call-video-box'>
+        <div>
+          {ClientVideo}
+        </div>
+        <div>
+          {PartnerVideo}
+        </div>
       </div>
       <button id='call-end'>
         <IoIosCall />

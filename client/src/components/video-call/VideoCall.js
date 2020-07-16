@@ -86,6 +86,7 @@ function VideoCall(props) {
       }
     }
 
+    callEnd.current = false
     props.dispatch(callStateClear())
   }
 
@@ -221,12 +222,15 @@ function VideoCall(props) {
         peer.signal(callerSignal)
 
         socket.on('callChannelClosed', serverEndCall)
+
+        socket.on('callClosedByUser', serverEndCall)
       }
       acceptCall()
     }
 
     return () => {
       socket.off('callChannelClosed')
+      socket.off('callClosedByUser')
     }
   }, [callerSignal,stream,caller, userId, query.connectId])
 

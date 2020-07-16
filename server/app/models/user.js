@@ -2,7 +2,9 @@ const mongoose = require('mongoose')
 const bcryptjs = require('bcryptjs')
 const isEmail = require('validator/lib/isEmail')
 const md5 = require('crypto-js/md5')
-const {chatSchema} = require('./chat')
+const { friendSchema } = require('./friend')
+const { notificationSchema } = require('./notification')
+
 
 const Schema = mongoose.Schema
 const userSchema = new Schema({
@@ -35,55 +37,10 @@ const userSchema = new Schema({
   profilePicUrl: {
       type: String
   },
-  country: String,
-  friends : [{
-    isFriend: {
-      type: Boolean,
-      default: true
-    },
-    info : {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-    },
-    status: {
-      type: String,
-      default: 'Pending'
-    },
-    sendByMe: {
-      type: Boolean,
-      default: false
-    },
-    inbox: [chatSchema],
-    createdAt: {
-      type: Date,
-      default: Date.now
-    }
-  }],
-  notifications: [{
-    info: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-    },
-    message: {
-      type: String
-    },
-    type: {
-      type:String
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now
-    },
-    seen: {
-      type: Boolean,
-      default: false
-    },
-    opened: {
-      type: Boolean,
-      default: false
-    }
-  }],
+  notifications: [notificationSchema],
+  friends : [friendSchema],
   groups: [],
+  posts: [],
 })
 
 userSchema.pre('save', function(next){

@@ -29,7 +29,7 @@ export function CardList(props) {
                                 <button className='btn btn-remove-friend' onClick={() => {handleRemove(_id)}}>Remove Friend</button> : status=== 'Pending' &&
                                 <Fragment>
                                     <button className='btn btn-accept-friend' onClick={() => {handleAccept(_id)}}>Accept</button>
-                                    <button className={'btn-reject-friend'} onClick={() => {handleReject(_id)}}>Reject</button>
+                                    <button className={'btn btn-reject-friend'} onClick={() => {handleReject(_id)}}>Reject</button>
                                 </Fragment>
                         }
                         </Fragment>

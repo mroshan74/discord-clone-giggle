@@ -16,10 +16,10 @@ import Search from '../search/Search';
 import ChatShell from '../chat-box/container-main/ChatShell';
 import Friends from './Friends';
 import VideoCall from '../video-call/VideoCall'
-import IncomingCall from '../video-call/IncomingCall'
 import InterCom from './InterCom'
 import VideoListener from '../socket-listeners/VideoListener'
 import MessageListener from '../socket-listeners/MessageListener'
+import PostManager from '../posts/PostManager'
 
 function App(props) {
 
@@ -47,7 +47,8 @@ function App(props) {
             <Route path='/users/chat' component={ChatShell} />
             <Route path='/users/videocall/:id' component={VideoCall} />
             <Route path='/users/videocall/' component={VideoCall} />
-            <Route path='/check' component={IncomingCall} />
+            <Route path='/users/posts/' component={PostManager} />
+
           </Switch>
         </Container>
       </div>

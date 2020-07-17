@@ -15,7 +15,7 @@ function ChatTitle(props) {
         chatTitleContents = (
             <Fragment>
                 <span>{selectedChat.info.username}</span>
-                <button id='chat-title-btn' onClick={()=>{history.push(`/users/videocall/${connectToId}`)}}>
+                <button id='chatTitle-videoCall-btn' onClick={()=>{history.push(`/users/videocall/${connectToId}`)}}>
                     <FiVideo />
                     </button>
             </Fragment>

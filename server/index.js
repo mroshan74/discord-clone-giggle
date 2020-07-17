@@ -14,6 +14,7 @@ configureDB()
 
 //  setting the upload path public for file access
 app.use(express.static('uploads'))
+app.use(express.static('resources'))
 
 const routes = require('./config/routes')
 app.use('/',routes)

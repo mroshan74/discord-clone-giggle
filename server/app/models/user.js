@@ -4,6 +4,8 @@ const isEmail = require('validator/lib/isEmail')
 const md5 = require('crypto-js/md5')
 const { friendSchema } = require('./friend')
 const { notificationSchema } = require('./notification')
+const { groupSchema } = require('./group')
+const { postSchema } = require('./post')
 
 
 const Schema = mongoose.Schema
@@ -37,10 +39,13 @@ const userSchema = new Schema({
   profilePicUrl: {
       type: String
   },
+  country: String,
+  phone: Number,
+  gender: String,
   notifications: [notificationSchema],
   friends : [friendSchema],
-  groups: [],
-  posts: [],
+  groups: [groupSchema],
+  posts: [postSchema],
 })
 
 userSchema.pre('save', function(next){

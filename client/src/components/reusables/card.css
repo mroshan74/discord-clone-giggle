@@ -37,7 +37,7 @@
     margin: auto 3px;
 }
 
-button {
+.btn {
     height: 50px;
     width: 120px;
     background-color: var(--btn-primary);
@@ -45,8 +45,6 @@ button {
     color: white;
     border-radius: 8px;
     margin-right: 2%;
-}
-.btn {
     margin-left: auto;
 }
 
@@ -60,6 +58,7 @@ button {
 }
 .btn-reject-friend {
     background-color: rgb(252, 49, 49);
+    margin-left: initial;
 }
 .btn-remove-friend {
     background-color: rgb(255, 50, 50);

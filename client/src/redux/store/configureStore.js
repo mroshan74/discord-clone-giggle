@@ -6,6 +6,7 @@ import selectedChatReducer from '../reducers/selectedChatReducer'
 import searchReducer from '../reducers/searchReducer'
 import chatReducer from '../reducers/chatReducer'
 import callReducer from '../reducers/callReducer'
+import postReducer from '../reducers/postReducer'
 
 
 const configureStore = () => {
@@ -14,7 +15,8 @@ const configureStore = () => {
         selectedChat: selectedChatReducer,
         searchResult: searchReducer,
         chat: chatReducer,
-        call: callReducer
+        call: callReducer,
+        posts: postReducer
     }),applyMiddleware(thunk))
     return store
 }

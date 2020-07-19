@@ -1,0 +1,113 @@
+#postCardItem-container {
+    margin: 6px auto;
+    width: 500px;
+    height: auto;
+    border: 1px solid gray;
+    border-radius: 10px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+}
+
+#postCardItem-container hr{
+    border: none;
+    border-top: 1px solid #c4c3c4;
+    width: 440px;
+}
+
+#postCardItem-title{
+    width: 450px;
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    position: relative;
+}
+
+#postCardItem-avatar {
+    margin: 5px;
+    border: 1px solid #c4c3c4;
+}
+
+#postCardItem-userDate {
+    margin: 3px;
+    padding: 2px;
+}
+
+#postCardItem-miniAct{
+    position: absolute;
+    right: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#postCardItem-edit{
+    padding: 2px;
+    margin: 3px;
+    border: none;
+    font-size: 1.5rem;
+    width: 25px;
+    height: 25px;
+    border-radius: 10px;
+    background-color: transparent;
+}
+
+#postCardItem-edit:hover{
+    color: blue;
+}
+
+#postCardItem-select{
+    padding: 2px;
+    margin: 3px;
+}
+
+#postCardItem-action{
+    width: 420px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 10px;
+}
+
+#postCardItem-post {
+    width: 400px;
+    min-height: 50px;   
+    display: flex;
+    flex-direction: column;
+}
+
+#postCardItem-post p{
+    font-size: 1.5rem;
+    padding: 3px;
+    margin: 2px;
+}
+
+#postCardItem-post img{
+    width: 300px;
+    max-height: 400px;
+    padding: 5px;
+    margin: 5px;
+    align-self: center;
+}
+
+#postCardItem-action button {
+    border: none;
+    font-size: 16px;
+    width: 120px;
+    height: 40px;
+    border-radius: 10px;
+    transition: background-color 0.5s ease-in-out;
+}
+
+#postCardItem-action button:hover {
+    background-color: rgba(81, 148, 224, 0.452);
+}
+
+#postCardItem-action button span {
+    margin: 5px;
+}
+
+

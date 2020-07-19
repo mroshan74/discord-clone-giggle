@@ -14,38 +14,16 @@ const postSchema = new Schema({
     type: String,
     required: true,
   },
-  imagePaths: [],
-  likes: {
-    type: Number,
-    default: 0,
-  },
-  dislikes: {
-    type: Number,
-    default: 0,
-  },
-  comments: [
-    {
-      commentBy: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-      },
-      comment: {
-        type: String,
-      },
-      likes: {
-        type: Number,
-        default: 0,
-      },
-      dislikes: {
-        type: Number,
-        default: 0,
-      },
-      disabled: {
-        type: Boolean,
-        default: false,
-      },
-    },
-  ],
+  uploadPath: String,
+  isLiked: [{
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+  isDisliked: [{
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+  comments: [],
   createdBy: {
     type: Schema.Types.ObjectId,
     ref: 'User',

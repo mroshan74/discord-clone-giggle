@@ -15,6 +15,7 @@ const userControllers = require('../app/controllers/userControllers')
 const searchControllers = require('../app/controllers/searchControllers')
 const friendsControllers = require('../app/controllers/friendsControllers')
 const chatControllers = require('../app/controllers/chatControllers')
+const postControllers = require('../app/controllers/postControllers')
 const { authenticateUser } = require('../app/middlewares/authentication')
 
 //! accounts
@@ -44,6 +45,9 @@ router.get('/users/chats', authenticateUser,chatControllers.list)
 router.get('/users/getChats/:id',authenticateUser,chatControllers.list)
 router.post('/users/sendMsg/:id',authenticateUser,chatControllers.sendMsg)
 router.post('/users/chats/upload/:id', authenticateUser, upload.single('file'), chatControllers.fileUpload)
+
+//! posts
+router.post('/users/posts/new', authenticateUser, upload.single('file'),postControllers.create)
 
 
 module.exports = router

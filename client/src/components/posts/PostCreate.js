@@ -12,8 +12,9 @@ import { FaUserFriends } from 'react-icons/fa'
 import { MdPublic } from 'react-icons/md'
 import { GrEmoji } from 'react-icons/gr'
 import EmojiPopUp from '../reusables/EmojiPopUp'
+import { startCreateNewPost } from '../../redux/actions/postsAction'
 
-function AddPost(props){
+export function AddPost(props){
 
     const { user, handleDrop, fileUp, post, pType, handleClearFileUpload, handlePassPostData, handleSubmit } = props
     
@@ -27,6 +28,7 @@ function AddPost(props){
             setPostType(pType)
             setPostText(post)
         }
+        // eslint-disable-next-line
     },[])
 
     console.log(!postText.length,!Boolean(fileUp),'check disabled')
@@ -49,6 +51,7 @@ function AddPost(props){
     useEffect(
         () => {
             handlePassPostData(postText,postType)
+            // eslint-disable-next-line
         },[postText,postType])
 
     return(
@@ -128,6 +131,15 @@ function PostCreate(props) {
 
     const handlePostSubmit = () => {
         console.log('[SUBMIT]',post,postType,file)
+        const fd = new FormData()
+        fd.append('file', file)
+        fd.append('post',post)
+        fd.append('postType',postType)
+        props.dispatch(startCreateNewPost(fd))
+        handlePostModal()
+        setFile(null)
+        setPost('')
+        setPostType('Private')
     }
 
     const handleClearFileUpload = () => {

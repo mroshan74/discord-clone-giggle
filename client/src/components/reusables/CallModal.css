@@ -37,8 +37,18 @@
 #acc-call{
     background-color: green;
     margin-right: 10%;
+    border: none;
+    color: white;
+    width: 120px;
+    height: 50px;
+    border-radius: 8px;
 }
 
 #rej-call{
     background-color: red;
+    border: none;
+    color: white;
+    width: 120px;
+    height: 50px;
+    border-radius: 8px;
 }

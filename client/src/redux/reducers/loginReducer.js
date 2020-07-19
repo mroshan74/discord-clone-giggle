@@ -4,7 +4,8 @@ const initialStateLogin = {
   email: '',
   profileImg:'',
   notifications: [],
-  friends: []
+  friends: [],
+  posts: []
 }
 
 const loginReducer = (state = initialStateLogin, action) => {
@@ -17,7 +18,8 @@ const loginReducer = (state = initialStateLogin, action) => {
         email: action.payload.email,
         profileImg: action.payload.profilePicUrl,
         notifications: action.payload.notifications,
-        friends: action.payload.friends
+        friends: action.payload.friends,
+        posts: action.payload.posts
       })
     }
 
@@ -87,7 +89,8 @@ const loginReducer = (state = initialStateLogin, action) => {
         email: '',
         profileImg:'',
         notification: [],
-        friends:[]
+        friends:[],
+        posts: []
       })
     }
     default: {

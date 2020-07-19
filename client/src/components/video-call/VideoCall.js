@@ -243,7 +243,7 @@ function VideoCall(props) {
 
   let PartnerVideo
   if (callAccepted) {
-    PartnerVideo = <video id='partnerVideo' ref={partnerVideo} autoPlay />
+    PartnerVideo = <video controls id='partnerVideo' ref={partnerVideo} autoPlay />
   }
 
   return (

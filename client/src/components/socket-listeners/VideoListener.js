@@ -3,7 +3,7 @@ import socket from '../../services/socket'
 import CallModal from '../reusables/CallModal'
 import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { saveSignal, appStateInCallReceiving } from '../../redux/actions/callAction'
+import { saveSignal, appStateInCallReceiving, callStateClear } from '../../redux/actions/callAction'
 
 
 function VideoListener(props) {
@@ -27,6 +27,7 @@ function VideoListener(props) {
     }
 
     const handleRejectCall = () => {
+        props.dispatch(callStateClear())
         socket.emit('rejectCall', {
             from: dataPack.from
         })

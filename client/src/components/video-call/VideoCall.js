@@ -18,6 +18,7 @@ function VideoCall(props) {
   const history = useHistory()
   let getStreamRef = null
   let callEnd = useRef(false)
+  let callEngaged = useRef(false)
   
   const [viewCall, setViewCall] = useState(true)
   const [stream, setStream] = useState()
@@ -70,23 +71,26 @@ function VideoCall(props) {
     }
     console.log('[***INIT**]',receiverId, userId, isReceiving, '[CALL-END] -->',callEnd.current)
 
-    if(!callEnd.current){
-      if (receiverId) {
-        //console.log('INSIDE CLOSING CALL CONNECTION CHANNEL --> [receiver]')
-        socket.emit('connectionClosed', {
-          to: receiverId,
-          from: userId,
-        })
-      } else if (isReceiving) {
-        //console.log('INSIDE CLOSING CALL CONNECTION CHANNEL --> [caller]',signal.from)
-        socket.emit('connectionClosed', {
-          to: signal.from,
-          from: userId,
-        })
+    if(!callEngaged.current){
+      if(!callEnd.current){
+        if (receiverId) {
+          //console.log('INSIDE CLOSING CALL CONNECTION CHANNEL --> [receiver]')
+          socket.emit('connectionClosed', {
+            to: receiverId,
+            from: userId,
+          })
+        } else if (isReceiving) {
+          //console.log('INSIDE CLOSING CALL CONNECTION CHANNEL --> [caller]',signal.from)
+          socket.emit('connectionClosed', {
+            to: signal.from,
+            from: userId,
+          })
+        }
       }
     }
 
     callEnd.current = false
+    callEngaged.current = false
     props.dispatch(callStateClear())
   }
 
@@ -138,7 +142,7 @@ function VideoCall(props) {
           setTimeout(() => {
             setOfflineMsg(data.message)
             setOffline(true)
-          }, 1500) // prev --> 5000
+          }, 2000) // prev --> 5000
         }
 
         peer.on('signal', (data) => {
@@ -162,24 +166,24 @@ function VideoCall(props) {
         })
 
         socket.on('not-reachable',serverEndCall)
-
-        socket.on('callRejected',serverEndCall)
-        
+        socket.on('callRejected',serverEndCall)  
         socket.on('call-disconnected',serverEndCall)
-
         socket.on('callChannelClosed', serverEndCall)
-
         socket.on('callClosedByUser', serverEndCall)
 
-        // socket.on('caller engaged',(data) =>{
-        //   alert(data.message)
-        //   peer.destroy()
-        //   history.push('/users/chat')
-        // })
-
+        socket.on('caller engaged', (data) =>{
+          peer.destroy()
+          console.log('data fail',data)
+          setTimeout(() => {
+            setOfflineMsg(data.message)
+            setOffline(true)
+            callEngaged.current = true
+          }, 2000) // prev --> 5000
+        })
+        
       }
       callPeer(receiverId)
-
+      
       return () => {
         socket.off('callAccepted')
         socket.off('callRejected')
@@ -187,7 +191,7 @@ function VideoCall(props) {
         socket.off('call-disconnected')
         socket.off('callChannelClosed')
         socket.off('callClosedByUser')
-        //socket.off('caller engaged')
+        socket.off('caller engaged')
       }
     }
   }, [stream,userId,receiverId,query.connectId])
@@ -208,7 +212,7 @@ function VideoCall(props) {
           setTimeout(() => {
             setOfflineMsg(data.message)
             setOffline(true)
-          }, 1500)  // prev 5000
+          }, 2000)  // prev 5000
         }
 
         peer.on('signal', (data) => {
@@ -222,7 +226,6 @@ function VideoCall(props) {
         peer.signal(callerSignal)
 
         socket.on('callChannelClosed', serverEndCall)
-
         socket.on('callClosedByUser', serverEndCall)
       }
       acceptCall()

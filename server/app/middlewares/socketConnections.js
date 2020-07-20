@@ -36,16 +36,16 @@ const socketConnections = (io) => {
                         //console.log(getUserSocket, '[USER SOCKET LISTENER]',data.from)
                         const { socketId, inCall } = getUserSocket
                         if(inCall.isTrue && (JSON.stringify(inCall.connectedTo) !== JSON.stringify(data.from))){
-                            // Socket.findOne({_id: data.from})
-                            //     .then(getUserSocket => {
-                            //         console.log(getUserSocket, '[USER SOCKET LISTENER]',data.from)
-                            //         if(!getUserSocket){
-                            //             const { socketId } = getUserSocket
-                            //             io.to(socketId).emit('caller engaged'),{
-                            //                 message:'User is in-call or in a session'
-                            //             }
-                            //         }
-                            //     }).catch(err => console.log(err))
+                            Socket.findOne({_id: data.from})
+                                .then(getUserSocket => {
+                                    console.log(getUserSocket, '[call engaged]',data.from)
+                                    if(getUserSocket){
+                                        const { socketId } = getUserSocket
+                                        io.to(socketId).emit('caller engaged',{
+                                            message:'User is in-call or in a session'
+                                        })
+                                    }
+                                }).catch(err => console.log(err))
                         }
                         else{
                             const { username, profilePicUrl } = getUserSocket._id

@@ -138,7 +138,7 @@ function VideoCall(props) {
           setTimeout(() => {
             setOfflineMsg(data.message)
             setOffline(true)
-          }, 5000)
+          }, 1500) // prev --> 5000
         }
 
         peer.on('signal', (data) => {
@@ -208,7 +208,7 @@ function VideoCall(props) {
           setTimeout(() => {
             setOfflineMsg(data.message)
             setOffline(true)
-          }, 5000)
+          }, 1500)  // prev 5000
         }
 
         peer.on('signal', (data) => {

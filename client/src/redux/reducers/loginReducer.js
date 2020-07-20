@@ -82,6 +82,16 @@ const loginReducer = (state = initialStateLogin, action) => {
       return Object.assign({},state,{ friends: removeFriend })
     }
 
+    case 'ADD_NEW_POST': {
+      const newPostArray = [action.payload].concat(state.posts)
+      return Object.assign({}, state, { posts: newPostArray })
+    }
+
+    case 'DELETE_POST': {
+      const newPostArray = action.payload
+      return Object.assign({}, state, { posts: newPostArray })
+    }
+
     case 'CLEAR_USER_DATA': {
       return Object.assign({}, state, {
         _id: '',
@@ -90,7 +100,7 @@ const loginReducer = (state = initialStateLogin, action) => {
         profileImg:'',
         notification: [],
         friends:[],
-        posts: []
+        posts: [],
       })
     }
     default: {

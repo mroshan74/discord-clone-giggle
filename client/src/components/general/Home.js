@@ -1,16 +1,24 @@
 import React from 'react'
-//import Grid from '@material-ui/core/Grid'
-//import Layout from './Layout'
+import PostCardItem from '../reusables/PostCardItem'
+import { connect } from 'react-redux'
 
 function Home(props) {
-    //const change = localStorage.getItem('token')
+    const { publicPosts, userId } = props
     return (
         <div>
-            
-                    <h1>Welcome to ChatBot</h1>
-                
+            <h1 style={{color: 'white'}}>Welcome to Giggle-DisBot</h1>
+            {publicPosts?.map(post => {
+                return <PostCardItem key={post._id} post={post} userId={userId}/>
+            })}
         </div>
     )
 }
 
-export default Home
+const mapStateToProps = state => {
+    return {
+        publicPosts: state.publicPosts,
+        userId: state.login._id
+    }
+}
+
+export default connect(mapStateToProps)(Home)

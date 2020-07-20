@@ -59,9 +59,33 @@
     color: blue;
 }
 
-#postCardItem-select{
+#postCardItem-delete{
     padding: 2px;
     margin: 3px;
+    border: none;
+    font-size: 1.5rem;
+    width: 25px;
+    height: 25px;
+    border-radius: 10px;
+    background-color: transparent;
+}
+
+#postCardItem-delete:hover{
+    color: blue;
+}
+
+#postCardItem-control{
+    padding: 4px;
+    margin: 6px;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#postCardItem-select{
+    font-weight: bold;
+    font-size: 2rem;
 }
 
 #postCardItem-action{

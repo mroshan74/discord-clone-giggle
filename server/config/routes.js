@@ -47,7 +47,9 @@ router.post('/users/sendMsg/:id',authenticateUser,chatControllers.sendMsg)
 router.post('/users/chats/upload/:id', authenticateUser, upload.single('file'), chatControllers.fileUpload)
 
 //! posts
+router.get('/users/getLatestPublicPosts', postControllers.listPublicPosts)
 router.post('/users/posts/new', authenticateUser, upload.single('file'),postControllers.create)
+router.put('/users/posts/:postType/:id', authenticateUser,postControllers.destroy)
 
 
 module.exports = router

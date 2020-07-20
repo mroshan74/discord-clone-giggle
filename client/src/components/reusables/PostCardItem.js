@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, Fragment } from 'react'
 import moment from 'moment'
 import Avatar from '@material-ui/core/Avatar'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -11,16 +11,41 @@ import { GrLike } from 'react-icons/gr'
 import { GrDislike } from 'react-icons/gr'
 import { GoCommentDiscussion } from 'react-icons/go'
 import { FiEdit } from 'react-icons/fi'
+import { AiOutlineDelete } from 'react-icons/ai'
 import './PostCardItem.css'
+import DeletePostPopUp from './DeletePostPopUp'
 
 function PostCardItem(props) {
-    const { post } = props
+    const { post, userId, handleDeletePost } = props
     const [openEdit, setOpenEdit] = useState(false)
-    const [like, setLike] = useState(0)
-    const [dislike, setDislike] = useState(0)
+    const [anchorEl, setAnchorEl] = useState(null)
+
+    const deletePostPop = (e) => {
+        setAnchorEl(e.currentTarget)
+    }
+    const handleDelPostPopClose = () => {
+        setAnchorEl(null)
+    }
     const handleEditPostModal= () => {
         setOpenEdit(!openEdit)
     }
+    let editPost = null 
+    if(post?.createdBy._id === userId){
+        editPost = (
+            <Fragment>
+                <button id='postCardItem-edit' onClick={handleEditPostModal}><FiEdit/></button>
+                <button id='postCardItem-delete' onClick={
+                    (e) => {deletePostPop(e)}}><AiOutlineDelete/></button>
+                    {anchorEl && <DeletePostPopUp 
+                            anchorEl={anchorEl} 
+                            post= {post} 
+                            handleDeletePost={handleDeletePost}
+                            handleClose= {handleDelPostPopClose}
+                        />}
+            </Fragment>
+        )
+    }
+    
     return(
         <div id='postCardItem-container'>
             <div id='postCardItem-title'>
@@ -30,19 +55,19 @@ function PostCardItem(props) {
                     <p>{moment(post.createdAt).format('LLL')}</p>
                 </div>
                 <div id='postCardItem-miniAct'>
-                    <FormControl id="postCardItem-select">
+                    <FormControl id="postCardItem-control">
                         <Select
                         disableUnderline={true}
                         value={post.postType}
                         readOnly
                         displayEmpty
                         >
-                            <MenuItem value={'Private'}><BsLockFill/></MenuItem>
-                            <MenuItem value={'Friends'}><FaUserFriends/></MenuItem>
-                            <MenuItem value={'Public'}><MdPublic/></MenuItem>
+                            <MenuItem id='"postCardItem-select' value={'Private'}><BsLockFill/></MenuItem>
+                            <MenuItem id='"postCardItem-select' value={'Friends'}><FaUserFriends/></MenuItem>
+                            <MenuItem id='"postCardItem-select' value={'Public'}><MdPublic/></MenuItem>
                         </Select>
                     </FormControl>
-                    <button id='postCardItem-edit' onClick={handleEditPostModal}><FiEdit/></button>
+                    {editPost}
                 </div>
             </div>
             <hr/>

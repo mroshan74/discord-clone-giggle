@@ -48,7 +48,6 @@ function App(props) {
             <Route path='/users/videocall/:id' component={VideoCall} />
             <Route path='/users/videocall/' component={VideoCall} />
             <Route path='/users/posts/' component={PostManager} />
-
           </Switch>
         </Container>
       </div>

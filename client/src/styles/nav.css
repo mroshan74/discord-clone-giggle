@@ -35,7 +35,7 @@ ul {
 }
 
 .nav-item {
-    width: calc(var(--nav-size) * 1.5);
+    width: calc(var(--nav-size) * 1);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -72,14 +72,22 @@ ul {
 }
 
 .sign-in {
+    width: calc(var(--nav-size) * 1.5);
+    /* background-color: var(--sign-in); */
+}
+.sign-in-link {
     background-color: var(--sign-in);
 }
+
 .sign-out {
     background-color: var(--sign-out);
 }
 .register {
-    background-color: var(--bg);
+    width: calc(var(--nav-size) * 1.5);
+}
+.register-link {
     border: 1px solid white;
+    background-color: var(--bg);
 }
 
 .search-bar {
@@ -102,4 +110,10 @@ ul {
 
 .badge-li{
     width: calc(var(--nav-size)*0.8);
+}
+
+.post-icon-nav img{
+    color: white;
+    width: 20px;
+    height: 20px;
 }

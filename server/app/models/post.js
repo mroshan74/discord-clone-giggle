@@ -11,8 +11,15 @@ const postSchema = new Schema({
     default: false,
   },
   post: {
-    type: String,
-    required: true,
+    type: String
+  },
+  publicPostId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Post'
+  },
+  friendPostId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Post'
   },
   uploadPath: String,
   isLiked: [{

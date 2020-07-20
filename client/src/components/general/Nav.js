@@ -19,6 +19,7 @@ import '../../styles/nav.css'
 
 import logo from '../../styles/icons/logo.png'
 import { startGetSearch } from '../../redux/actions/searchAction'
+import PostIcon from '../../resources/icons/post.png'
 
 
 function Nav(props) {
@@ -79,6 +80,7 @@ function Nav(props) {
                                 </Badge>
                             }
                     />
+                    <NavItem to='/users/posts' name={<img src={PostIcon} alt='postIcon'/>} styleClass='post-icon-nav'/>
                     <NavItem to='/users/friends' name={<FaUserFriends/>} />
                     <NavItem to='/users/chat' name={<BsChatDots/>}/>
                     <NavItem to='#' name={<FaSignOutAlt/>} styleClass='sign-out' onClick = {handleLogout} />
@@ -86,8 +88,8 @@ function Nav(props) {
             ):(
                 <NavBar >
                     <img src={logo} alt='chatbot' className='logo' onClick={() => {history.push('/')}}/>
-                    <NavItem to='/users/register' name='Register' styleClass='register'/>
-                    <NavItem to='/users/login' name='Sign In' styleClass='sign-in' />
+                    <NavItem to='/users/register' name='Register' styleClassLi='register' styleClass='register-link'/>
+                    <NavItem to='/users/login' name='Sign In' styleClassLi='sign-in' styleClass='sign-in-link'/>
                 </NavBar>
             )
             }

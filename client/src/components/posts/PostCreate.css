@@ -113,17 +113,25 @@
 }
 
 #add-post-text {
+    font-family: inherit;
     border: none;
     padding: 20px;
     width: 400px;
     font-size: 1.5rem;
+    height: auto;
+    max-height: 450px;
+    resize: none;
 }
 
 #add-input-emoji {
     position: absolute;
-    right: 0;
+    padding: 2px;
+    margin: 2px;
+    right: 2px;
+    bottom: 2px;
     font-size: 2rem;
     color: #b4b2b4;
+    background-color: white;
 }
 
 #add-input-emoji:hover {

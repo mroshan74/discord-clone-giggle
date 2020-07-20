@@ -20,6 +20,7 @@ import InterCom from './InterCom'
 import VideoListener from '../socket-listeners/VideoListener'
 import MessageListener from '../socket-listeners/MessageListener'
 import PostManager from '../posts/PostManager'
+import PostListener from '../socket-listeners/PostListener'
 
 function App(props) {
 
@@ -36,6 +37,7 @@ function App(props) {
         <Nav />
         <VideoListener />
         <MessageListener />
+        <PostListener />
         <Container>
           <Switch>
             <Route exact path='/' component={Home} />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
 import Dropzone from 'react-dropzone'
 import Avatar from '@material-ui/core/Avatar'
@@ -21,6 +21,7 @@ export function AddPost(props){
     const [postType, setPostType] = useState('Private')
     const [postText, setPostText] = useState('')
     const [anchorEl, setAnchorEl] = useState(null)
+    const [lineHeight,setLineHeight] = useState('')
 
 
     useEffect(() => {
@@ -46,6 +47,8 @@ export function AddPost(props){
 
     const handlePostTextChange = (e) => {
         setPostText(e.target.value)
+        console.log(e.target)
+        setLineHeight(e.target.scrollHeight)
     }
 
     useEffect(
@@ -83,8 +86,9 @@ export function AddPost(props){
                 </div>
             ) }
             <div id='add-post-wrapper'>
-                <input 
-                    id='add-post-text' 
+                <textarea
+                    id='add-post-text'
+                    style={{height:`${lineHeight}px`}} 
                     type="text" 
                     value={postText}
                     placeholder={`Whats on your mind,${user.username} ?`}

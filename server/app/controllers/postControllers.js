@@ -1,5 +1,6 @@
 const User = require('../models/user')
 const { Post } = require('../models/post')
+const Socket = require('../models/socket')
 const postControllers = {}
 
 postControllers.listPublicPosts = (req,res) => {
@@ -17,7 +18,7 @@ postControllers.create = (req,res) => {
     if(img){
         path = url + img.path.replace('uploads', '')
     }
-    // const io = req.app.io
+    const io = req.app.io
     const {body} = req
     console.log(path, req.body.post, req.body.postType)
     let dataPack = {
@@ -55,6 +56,7 @@ postControllers.create = (req,res) => {
                 },{new: true, select: 'posts'})
                 .populate('posts.createdBy', 'username profilePicUrl')
                 .then(user => {
+                    io.emit('publicPost',user.posts[0])
                     res.json(user.posts[0])
                 }).catch(err => res.json(err))
             }).catch(err => res.json(err))
@@ -91,8 +93,18 @@ postControllers.create = (req,res) => {
                                 $position: 0
                             }
                         }
-                    },{new: true, select: 'posts username profilePicUrl'})
-                    .then(user => console.log('updated friend post', user))
+                    },{new: true, select: 'posts'})
+                    .populate('posts.createdBy','username profilePicUrl')
+                    .then(user => {
+                            //console.log('updated friend post', user)
+                            Socket.findOne({_id: user._id})
+                                .then(getUserSocketId => {
+                                    if(getUserSocketId){
+                                        const { socketId } = getUserSocketId
+                                        io.to(socketId).emit('addNewFriendPost',user.posts[0])
+                                    }
+                                })
+                        })
                     .catch(err => res.json(err))
                 })
                 res.json(user.posts[0])

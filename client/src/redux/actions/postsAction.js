@@ -2,6 +2,12 @@ import axios from 'axios'
 const getToken = localStorage.getItem('token')
 
 // --------------> get latest public posts
+        //---> addPublic post listener
+
+export const addNewPublicPost = (data) => {
+    return { type: 'ADD_NEW_PUBLIC_POST', payload: data }
+}
+
 export const setPublicPosts = (data) => {
     return { type: 'SET_PUBLIC_POSTS', payload: data }
 }

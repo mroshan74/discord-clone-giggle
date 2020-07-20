@@ -15,7 +15,7 @@ function MessageListener(props) {
     }
     
     const connectSocket = () => {
-        console.log('socketFn() connected on load')
+        console.log('socketFnMessages() connected on load')
         //to remove useEffect dependency warning -> by creating a socket instance in services folder
         
         // 🧾 https://stackoverflow.com/questions/9418697/how-to-unsubscribe-from-a-socket-io-subscription

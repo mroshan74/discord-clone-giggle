@@ -10,6 +10,8 @@ import CallAlertModal from '../reusables/CallAlertModal'
 import { callStateClear, appStateInCallInitiate } from '../../redux/actions/callAction'
 import classNames from 'classnames'
 
+
+
 function VideoCall(props) {
   const userVideo = useRef()
   const partnerVideo = useRef()
@@ -17,7 +19,7 @@ function VideoCall(props) {
   let getStreamRef = null
   let callEnd = useRef(false)
   let callEngaged = useRef(false)
-
+  
   const [viewCall, setViewCall] = useState(true)
   const [stream, setStream] = useState()
   const [callAccepted, setCallAccepted] = useState(false)
@@ -36,22 +38,20 @@ function VideoCall(props) {
   const signal = callState.signal
   //let receiverId = selectedChat?.info._id
   let receiverId = props.match.params.id
-  console.log('params id -->', receiverId)
+  console.log('params id -->',receiverId)
   let userId = user?._id
-  const query = queryString.parse(props.location.search, {
-    parseBooleans: true,
-  })
-  console.log(query, 'incoming-call query')
+  const query = queryString.parse(props.location.search,{parseBooleans: true})
+  console.log(query,'incoming-call query')
 
   const handleCallEndBtn = () => {
     socket.emit('endCallByUser', {
-      user: user._id,
+      user: user._id
     })
     callEnd.current = true
     //setCallEnd(true)
     setTimeout(() => {
       history.push('/users/chat')
-    }, 1500)
+    }, 1500);
   }
 
   const videoCssEle = classNames('clientVideo', {
@@ -60,26 +60,19 @@ function VideoCall(props) {
 
   const isReceiving = callState?.callReceiving
   //const isInitiator = callState?.callInitiator
-  function closeStream() {
+  function closeStream(){
     console.log('streamVideo closed', getStreamRef)
-    if (getStreamRef) {
+    if(getStreamRef){
       getStreamRef.getTracks().forEach((track) => {
         if (track.readyState === 'live') {
           track.stop()
         }
       })
     }
-    console.log(
-      '[***INIT**]',
-      receiverId,
-      userId,
-      isReceiving,
-      '[CALL-END] -->',
-      callEnd.current
-    )
+    console.log('[***INIT**]',receiverId, userId, isReceiving, '[CALL-END] -->',callEnd.current)
 
-    if (!callEngaged.current) {
-      if (!callEnd.current) {
+    if(!callEngaged.current){
+      if(!callEnd.current){
         if (receiverId) {
           //console.log('INSIDE CLOSING CALL CONNECTION CHANNEL --> [receiver]')
           socket.emit('connectionClosed', {
@@ -108,7 +101,6 @@ function VideoCall(props) {
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
         setStream(stream)
-        // eslint-disable-next-line
         getStreamRef = stream
         if (userVideo.current) {
           userVideo.current.srcObject = stream
@@ -134,7 +126,7 @@ function VideoCall(props) {
   }, [])
 
   useEffect(() => {
-    console.log('++++++++++++++++++++++++++++++++++++CallPEER', receiverId)
+    console.log('++++++++++++++++++++++++++++++++++++CallPEER',receiverId)
     if (receiverId) {
       props.dispatch(appStateInCallInitiate(true))
       function callPeer(id) {
@@ -146,7 +138,7 @@ function VideoCall(props) {
 
         const serverEndCall = (data) => {
           peer.destroy()
-          console.log('data fail', data)
+          console.log('data fail',data)
           setTimeout(() => {
             setOfflineMsg(data.message)
             setOffline(true)
@@ -173,24 +165,25 @@ function VideoCall(props) {
           peer.signal(signal)
         })
 
-        socket.on('not-reachable', serverEndCall)
-        socket.on('callRejected', serverEndCall)
-        socket.on('call-disconnected', serverEndCall)
+        socket.on('not-reachable',serverEndCall)
+        socket.on('callRejected',serverEndCall)  
+        socket.on('call-disconnected',serverEndCall)
         socket.on('callChannelClosed', serverEndCall)
         socket.on('callClosedByUser', serverEndCall)
 
-        socket.on('caller engaged', (data) => {
+        socket.on('caller engaged', (data) =>{
           peer.destroy()
-          console.log('data fail', data)
+          console.log('data fail',data)
           setTimeout(() => {
             setOfflineMsg(data.message)
             setOffline(true)
             callEngaged.current = true
           }, 2000) // prev --> 5000
         })
+        
       }
       callPeer(receiverId)
-
+      
       return () => {
         socket.off('callAccepted')
         socket.off('callRejected')
@@ -200,8 +193,8 @@ function VideoCall(props) {
         socket.off('callClosedByUser')
         socket.off('caller engaged')
       }
-    } // eslint-disable-next-line
-  }, [stream, userId, receiverId, query.connectId])
+    }
+  }, [stream,userId,receiverId,query.connectId])
 
   useEffect(() => {
     if (query.attend && caller && query.connectId) {
@@ -219,7 +212,7 @@ function VideoCall(props) {
           setTimeout(() => {
             setOfflineMsg(data.message)
             setOffline(true)
-          }, 2000) // prev 5000
+          }, 2000)  // prev 5000
         }
 
         peer.on('signal', (data) => {
@@ -241,48 +234,37 @@ function VideoCall(props) {
     return () => {
       socket.off('callChannelClosed')
       socket.off('callClosedByUser')
-    } // eslint-disable-next-line
-  }, [callerSignal, stream, caller, userId, query.connectId])
+    }
+  }, [callerSignal,stream,caller, userId, query.connectId])
 
   let ClientVideo
   if (stream) {
     ClientVideo = (
-      <video
-        className={videoCssEle}
-        playsInline
-        muted
-        ref={userVideo}
-        autoPlay
-      />
+      <video className={videoCssEle} playsInline muted ref={userVideo} autoPlay />
     )
   }
 
   let PartnerVideo
   if (callAccepted) {
-    PartnerVideo = (
-      <video controls id='partnerVideo' ref={partnerVideo} autoPlay />
-    )
+    PartnerVideo = <video controls id='partnerVideo' ref={partnerVideo} autoPlay />
   }
 
   return (
     <div id='v-call-container'>
-      {offline && (
-        <CallAlertModal
-          view={viewCall}
-          modalStatus={modalStatus}
-          message={offlineMsg}
-        />
-      )}
+      {offline && <CallAlertModal 
+        view={viewCall} 
+        modalStatus={modalStatus} 
+        message= {offlineMsg}
+        />}
       <div id='call-video-box'>
-        <div>{ClientVideo}</div>
-        <div>{PartnerVideo}</div>
+        <div>
+          {ClientVideo}
+        </div>
+        <div>
+          {PartnerVideo}
+        </div>
       </div>
-      <button
-        id='call-end'
-        onClick={() => {
-          handleCallEndBtn()
-        }}
-      >
+      <button id='call-end' onClick={() => {handleCallEndBtn()}}>
         <IoIosCall />
       </button>
     </div>
@@ -293,7 +275,7 @@ const mapStateToProps = (state) => {
   return {
     user: state.login,
     selectedChat: state.selectedChat,
-    callState: state.call,
+    callState: state.call
   }
 }
 

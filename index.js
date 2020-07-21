@@ -3,9 +3,6 @@ const port = process.env.PORT || 3000
 const app =express()
 const morgan = require('morgan')
 
-//deploy
-const path = require('path') 
-
 app.use(express.json())
 app.use(morgan('dev'))
 
@@ -34,10 +31,9 @@ const socketConnections = require('./app/middlewares/socketConnections')
 socketConnections(io)
 
 //deploy
-app.use(express.static(path.join(__dirname, 'client/build')))
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname + '/client/build/index.html'))
-})
+if(process.env.NODE_ENV === 'production'){
+    app.use(express.static('client/build'))
+}
 
 server.listen(port, ()=>{
     console.log('SERVER PORT OPEN -> ',port)

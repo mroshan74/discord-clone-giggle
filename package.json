@@ -10,8 +10,8 @@
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "engines": {
-    "node": "^10.3.0", 
-    "npm": "^6.8.0" 
+    "node": "^10.3.0",
+    "npm": "^6.8.0"
   },
   "author": "muhammed roshan m",
   "license": "ISC",

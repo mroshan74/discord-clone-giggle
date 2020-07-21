@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import Dropzone from 'react-dropzone'
 import Avatar from '@material-ui/core/Avatar'

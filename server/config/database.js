@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
 
 const configureDB = () => {
-    mongoose.connect('mongodb://localhost:27017/giggle-discord-db',{
+    const url = 'mongodb+srv://giggleApp:giggleDbServer@development.kxlvf.mongodb.net/giggle-db?retryWrites=true&w=majority'
+    mongoose.connect(url,{
         useCreateIndex: true,
         useNewUrlParser: true,
         useUnifiedTopology: true,

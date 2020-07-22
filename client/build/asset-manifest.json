@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "/static/css/main.bbcbabdb.chunk.css",
-    "main.js": "/static/js/main.507b55ad.chunk.js",
-    "main.js.map": "/static/js/main.507b55ad.chunk.js.map",
+    "main.css": "/static/css/main.7559a6f9.chunk.css",
+    "main.js": "/static/js/main.e0b7aa04.chunk.js",
+    "main.js.map": "/static/js/main.e0b7aa04.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.09b85ec0.js",
     "runtime-main.js.map": "/static/js/runtime-main.09b85ec0.js.map",
     "static/css/2.c2bc211b.chunk.css": "/static/css/2.c2bc211b.chunk.css",
-    "static/js/2.163bb303.chunk.js": "/static/js/2.163bb303.chunk.js",
-    "static/js/2.163bb303.chunk.js.map": "/static/js/2.163bb303.chunk.js.map",
+    "static/js/2.969296d1.chunk.js": "/static/js/2.969296d1.chunk.js",
+    "static/js/2.969296d1.chunk.js.map": "/static/js/2.969296d1.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.8e7e167ca879fe304ee9961c29b3ffc5.js": "/precache-manifest.8e7e167ca879fe304ee9961c29b3ffc5.js",
+    "precache-manifest.b281e4a57d58eed3604adf3164f46bef.js": "/precache-manifest.b281e4a57d58eed3604adf3164f46bef.js",
     "service-worker.js": "/service-worker.js",
     "static/css/2.c2bc211b.chunk.css.map": "/static/css/2.c2bc211b.chunk.css.map",
-    "static/css/main.bbcbabdb.chunk.css.map": "/static/css/main.bbcbabdb.chunk.css.map",
-    "static/js/2.163bb303.chunk.js.LICENSE.txt": "/static/js/2.163bb303.chunk.js.LICENSE.txt",
+    "static/css/main.7559a6f9.chunk.css.map": "/static/css/main.7559a6f9.chunk.css.map",
+    "static/js/2.969296d1.chunk.js.LICENSE.txt": "/static/js/2.969296d1.chunk.js.LICENSE.txt",
     "static/media/calling.gif": "/static/media/calling.d2cab8e3.gif",
     "static/media/imageUpload.png": "/static/media/imageUpload.73a9f061.png",
     "static/media/login-logo-blk.png": "/static/media/login-logo-blk.6421f490.png",
@@ -22,8 +22,8 @@
   "entrypoints": [
     "static/js/runtime-main.09b85ec0.js",
     "static/css/2.c2bc211b.chunk.css",
-    "static/js/2.163bb303.chunk.js",
-    "static/css/main.bbcbabdb.chunk.css",
-    "static/js/main.507b55ad.chunk.js"
+    "static/js/2.969296d1.chunk.js",
+    "static/css/main.7559a6f9.chunk.css",
+    "static/js/main.e0b7aa04.chunk.js"
   ]
 }

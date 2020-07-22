@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link , useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 // ! https://stackoverflow.com/questions/54579730/react-hooks-with-react-router-v4-how-do-i-redirect-to-another-route
 
 // material-ui 
@@ -14,12 +14,14 @@ import { FaUserFriends } from 'react-icons/fa'
 
 import { connect } from 'react-redux'
 import { useState } from 'react'
-import { startLogout } from '../../redux/actions/loginsAction'
-import '../../styles/nav.css'
+import { startLogout } from '../../../redux/actions/loginsAction'
+import { NavBar, NavItem } from './_reuse/NavComponents'
+import './Navbar.css'
 
-import logo from '../../styles/icons/logo.png'
-import { startGetSearch } from '../../redux/actions/searchAction'
-import PostIcon from '../../resources/icons/post.png'
+import logo from './_reuse/logo.png'
+import { startGetSearch } from '../../../redux/actions/searchAction'
+import PostIcon from './_reuse/post.png'
+import AppBar from './AppBar'
 
 
 function Nav(props) {
@@ -49,9 +51,11 @@ function Nav(props) {
     console.log('USER--------',props.user)
 
     return (
-        <div>
+        <div className='nav-container'>
             {change ? 
             (
+                <>
+                <div className='navHide'>
                 <NavBar >
                     <img src={logo} alt='chatbot' className='logo' onClick={() => {history.push('/')}}/>
                     <form className='search-bar' onSubmit={handleSearch}>
@@ -85,9 +89,12 @@ function Nav(props) {
                     <NavItem to='/users/chat' name={<BsChatDots/>}/>
                     <NavItem to='#' name={<FaSignOutAlt/>} styleClass='sign-out' onClick = {handleLogout} />
                 </NavBar>
+                </div>
+                <AppBar onClick={handleLogout}/>
+                </>
             ):(
                 <NavBar >
-                    <img src={logo} alt='chatbot' className='logo' onClick={() => {history.push('/')}}/>
+                    <img src={logo} alt='chatbot' className='logo-out' onClick={() => {history.push('/')}}/>
                     <NavItem to='/users/register' name='Register' styleClassLi='register' styleClass='register-link'/>
                     <NavItem to='/users/login' name='Sign In' styleClassLi='sign-in' styleClass='sign-in-link'/>
                 </NavBar>
@@ -96,21 +103,6 @@ function Nav(props) {
             <br/><br/>
             <p>{props.user._id && <span>{props.user.username} - {props.user.email}</span>}</p>
         </div>
-    )
-}
-
-function NavBar(props){
-    return (
-        <nav className='navbar'>
-            <ul className='navbar-nav'> {props.children} </ul>
-        </nav>
-    )
-}
-function NavItem(props){
-    return (
-        <li className={`nav-item ${props.styleClassLi}`}>
-            <Link className={`link-item ${props.styleClass}`} to={props.to} onClick={props.onClick}>{props.name}</Link>
-        </li>
     )
 }
 

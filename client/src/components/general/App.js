@@ -10,7 +10,7 @@ import { Container } from '@material-ui/core'
 
 import Home from './Home';
 import Login from '../register-login/Login';
-import Nav from './Nav';
+import Navbar from './nav-bar/Navbar';
 import Register from '../register-login/Register'
 import Search from '../search/Search';
 import ChatShell from '../chat-box/container-main/ChatShell';
@@ -34,11 +34,11 @@ function App(props) {
   return (
     <BrowserRouter>
       <div>
-        <Nav />
+        <Navbar />
         <VideoListener />
         <MessageListener />
         <PostListener />
-        <Container>
+        {/* <Container> */}
           <Switch>
             <Route exact path='/' component={Home} />
             <Route path='/users/login' component={Login} />
@@ -51,7 +51,7 @@ function App(props) {
             <Route path='/users/videocall/' component={VideoCall} />
             <Route path='/users/posts/' component={PostManager} />
           </Switch>
-        </Container>
+        {/* </Container> */}
       </div>
     </BrowserRouter>
   )

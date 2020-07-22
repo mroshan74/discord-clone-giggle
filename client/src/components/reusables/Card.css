@@ -1,6 +1,6 @@
 :root{
-    --item-width: 60%; 
-    --item-height: 20%;
+    --item-width: 500px; 
+    --item-height: 90px;
     --btn-primary: #096cd7;
 }
 
@@ -22,6 +22,7 @@
     padding: 5px;
     margin: 10px auto;
     border: 1px solid #4a4e52a6;
+    transition: width 0.5s ease-in-out;
 }
 .avatar {
     height: calc(var(--item-height) * 0.6);
@@ -46,6 +47,7 @@
     border-radius: 8px;
     margin-right: 2%;
     margin-left: auto;
+    transition: width 0.5s ease-in-out;
 }
 
 .btn:visited{
@@ -68,4 +70,15 @@
 }
 .btn-cancel-friend {
     background-color: rgb(255, 180, 40);
+}
+
+@media (max-width: 720px) {
+
+    .card-item-wrap {
+        width: 300px;
+    }
+
+    .btn {
+        width: 80px;
+    }
 }

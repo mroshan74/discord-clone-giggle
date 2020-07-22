@@ -10,6 +10,7 @@
     align-items: center;
     justify-content: center;
     padding: 15px;
+    transition: width 0.3s ease-in-out ;
 }
 
 #postCardItem-container hr{
@@ -24,6 +25,7 @@
     align-items: center;
     padding: 5px;
     position: relative;
+    transition: width 0.3s ease-in-out ;
 }
 
 #postCardItem-avatar {
@@ -94,6 +96,7 @@
     align-items: center;
     justify-content: space-evenly;
     padding: 10px;
+    transition: width 0.3s ease-in-out ;
 }
 
 #postCardItem-post {
@@ -101,6 +104,7 @@
     min-height: 50px;   
     display: flex;
     flex-direction: column;
+    transition: width 0.3s ease-in-out ;
 }
 
 #postCardItem-post p{
@@ -134,4 +138,34 @@
     margin: 5px;
 }
 
+@media (max-width: 720px){
+    #postCardItem-container {
+        width: 350px;
+    }
 
+    #postCardItem-container hr{
+        width: 300px;
+    }
+
+    #postCardItem-title{
+        width: 320px;
+    }
+
+    #postCardItem-action{
+        width: 300px;
+    }
+
+    #postCardItem-post {
+        width: 290px;
+    }
+
+    #postCardItem-post p{
+        font-size: 1rem;
+    }
+
+    #postCardItem-action button {
+        font-size: 12px;
+        width: 80px;
+        height: 30px;
+    }
+}

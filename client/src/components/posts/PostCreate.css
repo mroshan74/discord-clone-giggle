@@ -10,12 +10,14 @@
     background-color: white;
     align-items: center;
     justify-content: center;
+    transition: width 0.3s ease-in-out ;
 }
 
 #create-post-container hr{
     width: 420px;
     border: 0px;
     border-top: 1px solid #c4c3c4;
+    transition: width 0.3s ease-in-out ;
 }
 
 #ava-input {
@@ -23,6 +25,7 @@
     margin: 10px;
     align-items: center;
     justify-content: center;
+    transition: width 0.3s ease-in-out ;
 }
 
 #post-avatar {
@@ -76,10 +79,12 @@
     background-color: white;
     align-items: center;
     justify-content: center;
+    transition: width 0.3s ease-in-out ;
 }
 #add-post-container h1{
     margin: 5px;
     padding: 5px;
+    transition: width 0.3s ease-in-out ;
 }
 
 #add-post-container hr{
@@ -92,6 +97,7 @@
     display: flex;
     margin-left: 30px;
     margin-right: auto;
+    transition: width 0.3s ease-in-out ;
 }
 
 #add-post-type {
@@ -121,6 +127,8 @@
     height: auto;
     max-height: 450px;
     resize: none;
+    transition: width 0.3s ease-in-out ;
+    transition: font-size 0.3s ease-in-out ;
 }
 
 #add-input-emoji {
@@ -153,7 +161,8 @@
     height: 50px;
     color: white;
     border-radius: 8px;
-    filter: brightness(0.6)
+    filter: brightness(0.6);
+    transition: width 0.3s ease-in-out ;
 }
 
 #add-post-btn:hover{
@@ -183,4 +192,42 @@
 
 #add-file-up-close:hover{
     filter: brightness(1);
+}
+
+@media (max-width: 720px){
+    #create-post-container {
+        width: 350px;
+        height: 150px;
+        
+    }
+    
+    #create-post-container hr{
+        width: 300px;
+    }
+
+    #ava-input {
+        width: 320px;
+    }
+
+    #add-post-container {
+        width: 350px;
+    }
+
+    #add-post-container hr{
+        width: 300px;
+    }
+
+    #add-ava-user {
+        width: 320px;
+    }
+
+    #add-post-text {
+        width: 280px;
+        font-size: 1.2rem;
+    }
+
+    #add-post-btn{
+        width: 200px;
+    }
+
 }

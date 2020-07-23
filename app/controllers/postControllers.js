@@ -176,4 +176,113 @@ postControllers.destroy = (req,res) => {
     }
 }
 
+postControllers.postAction = (req,res) => {
+    const actionType = req.params.action
+    const id = req.params.id
+    const postType = req.params.postType
+
+    console.log(actionType,id,postType,'------------------->postAction')
+
+    if(postType === 'Public'){
+        Post.findOne({_id: id}, 'isLiked isDisliked')
+            .then(result => {
+                if(actionType === 'like'){
+                    if(result.isLiked.length){
+                        if(result.isDisliked.find(id => JSON.stringify(id) === JSON.stringify(req.user._id))){
+                            Post.findOneAndUpdate({_id: id}, {
+                                $push: {
+                                    isLiked: req.user._id
+                                },
+                                $pull: { 
+                                    isDisliked: req.user._id
+                                }
+                            },{new: true, select: 'isLiked'})
+                            .then(result => {
+                                res.json(result)
+                            }).catch(err => res.json(err))
+                        }
+                        else if(result.isLiked.find(id => JSON.stringify(id) === JSON.stringify(req.user._id))){
+                            Post.findOneAndUpdate({_id: id}, {
+                                $pull: {
+                                    isLiked: req.user._id
+                                }
+                            },{new: true, select: 'isLiked'})
+                            .then(result => {
+                                res.json(result)
+                            }).catch(err => res.json(err))
+                        }
+                        else{
+                            Post.findOneAndUpdate({_id: id}, {
+                                $push: {
+                                    isLiked: req.user._id
+                                }
+                            },{new: true, select: 'isLiked'})
+                            .then(result => {
+                                res.json(result)
+                            }).catch(err => res.json(err))
+                        }
+                    }
+                    else {
+                        Post.findOneAndUpdate({_id: id}, {
+                            $push: {
+                                isLiked: req.user._id
+                            }
+                        },{new: true, select: 'isLiked'})
+                        .then(result => {
+                            res.json(result)
+                        }).catch(err => res.json(err))
+                    }
+                }
+
+                else if(actionType==='dislike'){
+                    if(result.isDisliked.length){
+                        if(result.isLiked.find(id => JSON.stringify(id) === JSON.stringify(req.user._id))){
+                            Post.findOneAndUpdate({_id: id}, {
+                                $push: {
+                                    isDisliked: req.user._id
+                                },
+                                $pull: { 
+                                    isLiked: req.user._id
+                                }
+                            },{new: true, select: 'isDisliked'})
+                            .then(result => {
+                                res.json(result)
+                            }).catch(err => res.json(err))
+                        }
+                        else if(result.isDisliked.find(id => JSON.stringify(id) === JSON.stringify(req.user._id))){
+                            Post.findOneAndUpdate({_id: id}, {
+                                $pull: {
+                                    isDisliked: req.user._id
+                                }
+                            },{new: true, select: 'isDisliked'})
+                            .then(result => {
+                                res.json(result)
+                            }).catch(err => res.json(err))
+                        }
+                        else{
+                            Post.findOneAndUpdate({_id: id}, {
+                                $push: {
+                                    isDisliked: req.user._id
+                                }
+                            },{new: true, select: 'isDisliked'})
+                            .then(result => {
+                                res.json(result)
+                            }).catch(err => res.json(err))
+                        }
+                    }
+                    else {
+                        Post.findOneAndUpdate({_id: id}, {
+                            $push: {
+                                isDisliked: req.user._id
+                            }
+                        },{new: true, select: 'isDisliked'})
+                        .then(result => {
+                            res.json(result)
+                        }).catch(err => res.json(err))
+                    }
+                }
+            })
+    }
+}
+
 module.exports = postControllers

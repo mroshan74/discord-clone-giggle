@@ -14,8 +14,8 @@ function Friends(props) {
         }
     }
 
-    const handleAcceptRequest = (id) => {
-        props.dispatch(startAcceptFriendRequest(id))
+    const handleAcceptRequest = (id,username) => {
+        props.dispatch(startAcceptFriendRequest(id,username))
     }
 
     const handleRejectRequest = (id) => {

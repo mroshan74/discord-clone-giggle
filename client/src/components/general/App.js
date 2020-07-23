@@ -5,7 +5,7 @@ import socket from '../../services/socket'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 
 //material-ui
-import { Container } from '@material-ui/core'
+//import { Container } from '@material-ui/core'
 
 
 import Home from './Home';
@@ -21,6 +21,7 @@ import VideoListener from '../socket-listeners/VideoListener'
 import MessageListener from '../socket-listeners/MessageListener'
 import PostManager from '../posts/PostManager'
 import PostListener from '../socket-listeners/PostListener'
+import Notifications from './Notifications';
 
 function App(props) {
 
@@ -50,6 +51,7 @@ function App(props) {
             <Route path='/users/videocall/:id' component={VideoCall} />
             <Route path='/users/videocall/' component={VideoCall} />
             <Route path='/users/posts/' component={PostManager} />
+            <Route path='/users/notifications/' component={Notifications} />
           </Switch>
         {/* </Container> */}
       </div>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Drawer from '@material-ui/core/Drawer'
 import Badge from '@material-ui/core/Badge'
-import { BsSearch } from 'react-icons/bs'
+//import { BsSearch } from 'react-icons/bs'
 import { FiMail } from 'react-icons/fi'
 import { FaSignOutAlt } from 'react-icons/fa'
 import { BsChatDots } from 'react-icons/bs'
@@ -12,13 +12,17 @@ import burger from './_reuse/burger.png'
 import './AppBar.css'
 import { NavItem } from './_reuse/NavComponents'
 import { useHistory } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { startLogout } from '../../../redux/actions/loginsAction'
 
 function AppBar(props) {
     const [state, setState] = useState(false)
     const toggleDrawer = () => () => {
         setState(!state)
     }
-    const {handleLogout} = props
+    const handleLogout = () => {
+        props.dispatch(startLogout())
+    }
     const history  = useHistory()
     return (
         <div className='app-bar-contain'>
@@ -53,4 +57,4 @@ function AppBar(props) {
     )
 }
 
-export default AppBar
+export default connect()(AppBar)

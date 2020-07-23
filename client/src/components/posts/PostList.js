@@ -1,16 +1,11 @@
 import React from 'react'
 import { connect } from  'react-redux'
 import PostCardItem from '../reusables/PostCardItem'
-import { startDeletePost } from '../../redux/actions/postsAction'
 
 
 function PostList(props) {
     const { posts, userId } = props
     console.log(posts,'-----> posts')
-    const handleDeletePost = (id, type) => {
-        console.log('deletePost',id,type)
-        props.dispatch(startDeletePost(id,type))
-    }
     return(
         <div>
             {posts?.map(post => {
@@ -18,7 +13,6 @@ function PostList(props) {
                     key={post._id} 
                     post={post} 
                     userId={userId} 
-                    handleDeletePost={handleDeletePost}
                 />
             })}
         </div>

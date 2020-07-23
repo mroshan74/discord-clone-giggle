@@ -64,3 +64,24 @@ export const startDeletePost = (id,type,fd) => {
             }).catch(err => console.log(err))
     }
 }
+
+//-------------------> post action // like dislike
+
+// export const deletePost = (data) => {
+//     return { type: 'DELETE_POST', payload: data }
+// }
+
+export const startActionOnPost = (id,type,action,fd) => {
+    return(dispatch) => {
+        axios.put(`/users/posts/action/${type}/${action}/${id}`,fd,{
+            headers: {
+                'x-auth': getToken
+            }
+        })
+            .then(response => {
+                console.log('[PROMISE-postAction]',response.data)
+                //const retPost = response.data
+                //dispatch(deletePost(retPost))
+            }).catch(err => console.log(err))
+    }
+}

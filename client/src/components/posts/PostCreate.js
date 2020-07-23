@@ -32,7 +32,7 @@ export function AddPost(props){
         // eslint-disable-next-line
     },[])
 
-    console.log(!postText.length,!Boolean(fileUp),'check disabled')
+    //console.log(!postText.length,!Boolean(fileUp),'check disabled')
 
     const handleEmojiPopOpen = (e) => {
         setAnchorEl(e.currentTarget)
@@ -47,7 +47,7 @@ export function AddPost(props){
 
     const handlePostTextChange = (e) => {
         setPostText(e.target.value)
-        console.log(e.target)
+        //console.log(e.target)
         setLineHeight(e.target.scrollHeight)
     }
 

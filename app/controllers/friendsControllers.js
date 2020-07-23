@@ -42,6 +42,7 @@ friendsControllers.cancelRequest = (req,res) => {
 // accept friend request
 friendsControllers.acceptRequest = (req,res) => {
     const friendId = req.params.id
+    const friendName = req.params.friendName
 
     User.findOne({
             _id: friendId, 
@@ -75,7 +76,7 @@ friendsControllers.acceptRequest = (req,res) => {
                     $set: { 'friends.$.status': 'Accepted' },
                     $push: { notifications : {
                         info: friendId,
-                        message: `You are now friend with ${friendId}`
+                        message: `You are now friend with ${friendName}`
                     }}
                 }, {new:true})
                     .then(user => {

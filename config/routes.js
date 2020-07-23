@@ -35,7 +35,7 @@ router.post('/users/search/removeFriend/:id',authenticateUser ,searchControllers
 //router.post('/users/friends/sendRequest/:id',authenticateUser ,friendsControllers.sendRequest)
 router.get('/users/friendList',authenticateUser ,friendsControllers.friendList)
 router.post('/users/friends/cancelRequest/:id',authenticateUser ,friendsControllers.cancelRequest)
-router.post('/users/friends/acceptRequest/:id',authenticateUser ,friendsControllers.acceptRequest)
+router.post('/users/friends/acceptRequest/:friendName/:id',authenticateUser ,friendsControllers.acceptRequest)
 router.post('/users/friends/rejectRequest/:id',authenticateUser ,friendsControllers.rejectRequest)
 router.post('/users/friends/removeFriend/:id',authenticateUser ,friendsControllers.removeFriend)
 
@@ -50,6 +50,7 @@ router.post('/users/chats/upload/:id', authenticateUser, upload.single('file'), 
 router.get('/users/getLatestPublicPosts', postControllers.listPublicPosts)
 router.post('/users/posts/new', authenticateUser, upload.single('file'),postControllers.create)
 router.put('/users/posts/:postType/:id', authenticateUser,postControllers.destroy)
+router.put('/users/posts/action/:postType/:action/:id', authenticateUser,postControllers.postAction)
 
 
 module.exports = router

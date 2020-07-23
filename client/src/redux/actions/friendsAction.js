@@ -56,9 +56,9 @@ export const acceptFriendReq = (data) => {
     return { type: 'FRIEND_ACCEPT_REQUEST', payload: data }
 }
 
-export const startAcceptFriendRequest = (id,fd) => {
+export const startAcceptFriendRequest = (id,username,fd) => {
     return (dispatch) => {
-        axios.post(`/users/friends/acceptRequest/${id}`,fd,{
+        axios.post(`/users/friends/acceptRequest/${username}/${id}`,fd,{
             headers: { 
                 'x-auth': getToken
             }

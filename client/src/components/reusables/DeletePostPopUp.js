@@ -32,7 +32,7 @@ export default function DeletePostPopUp(props) {
             () => {
                     let postId = null
                     if(post.postType === 'Public'){
-                        postId = post.publicPostId
+                        postId = post.publicPostId || post._id
                     }else{
                         postId = post._id
                     }

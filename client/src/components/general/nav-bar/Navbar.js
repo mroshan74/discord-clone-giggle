@@ -90,7 +90,7 @@ function Nav(props) {
                     <NavItem to='#' name={<FaSignOutAlt/>} styleClass='sign-out' onClick = {handleLogout} />
                 </NavBar>
                 </div>
-                <AppBar onClick={handleLogout}/>
+                <AppBar/>
                 </>
             ):(
                 <NavBar >

@@ -130,8 +130,13 @@
     transition: background-color 0.5s ease-in-out;
 }
 
-#postCardItem-action button:hover {
+#postCardItem-action button:hover:not([disabled]) {
     background-color: rgba(81, 148, 224, 0.452);
+}
+
+#postCardItem-action button:disabled{
+    color: black;
+    border: 1px solid #c4c3c4;
 }
 
 #postCardItem-action button span {

@@ -181,107 +181,156 @@ postControllers.postAction = (req,res) => {
     const id = req.params.id
     const postType = req.params.postType
 
-    console.log(actionType,id,postType,'------------------->postAction')
+    //console.log(actionType,id,postType,'------------------->postAction')
 
     if(postType === 'Public'){
         Post.findOne({_id: id}, 'isLiked isDisliked')
-            .then(result => {
-                if(actionType === 'like'){
-                    if(result.isLiked.length){
-                        if(result.isDisliked.find(id => JSON.stringify(id) === JSON.stringify(req.user._id))){
-                            Post.findOneAndUpdate({_id: id}, {
-                                $push: {
-                                    isLiked: req.user._id
-                                },
-                                $pull: { 
-                                    isDisliked: req.user._id
-                                }
-                            },{new: true, select: 'isLiked'})
-                            .then(result => {
-                                res.json(result)
-                            }).catch(err => res.json(err))
-                        }
-                        else if(result.isLiked.find(id => JSON.stringify(id) === JSON.stringify(req.user._id))){
-                            Post.findOneAndUpdate({_id: id}, {
-                                $pull: {
-                                    isLiked: req.user._id
-                                }
-                            },{new: true, select: 'isLiked'})
-                            .then(result => {
-                                res.json(result)
-                            }).catch(err => res.json(err))
+            .then(results => {
+                console.log(results,actionType)
+                switch(actionType){
+                    case 'like': {
+                        if(results.isLiked.length){
+                            if(results.isDisliked.find(id => JSON.stringify(id) === JSON.stringify(req.user._id))){
+                                Post.findOneAndUpdate({_id:id},{
+                                    $pull: {
+                                        isDisliked: req.user._id
+                                    },
+                                    $push: {
+                                        isLiked: req.user._id
+                                    }
+                                },{new: true, select: 'isLiked'})
+                                .then(result => res.json(result))
+                                .catch(err => res.json(err))
+                            }
+                            else if(results.isLiked.find(id => JSON.stringify(id) === JSON.stringify(req.user._id))){
+                                // console.log('isLiked ------------> liked')
+                                Post.findOneAndUpdate({_id:id},{
+                                    $pull: {
+                                        isLiked: req.user._id
+                                    }
+                                },{new: true, select: 'isLiked'})
+                                .then(result => res.json(result))
+                                .catch(err => res.json(err))
+                            }
+                            else {
+                                Post.findOneAndUpdate({_id:id},{
+                                    $push: {
+                                        isLiked: req.user._id
+                                    }
+                                },{new: true, select: 'isLiked'})
+                                .then(result => res.json(result))
+                                .catch(err => res.json(err))
+                            }
                         }
                         else{
-                            Post.findOneAndUpdate({_id: id}, {
-                                $push: {
-                                    isLiked: req.user._id
+                            if(results.isDisliked.length){
+                                if(results.isDisliked.find(id => JSON.stringify(id) === JSON.stringify(req.user._id))){
+                                    Post.findOneAndUpdate({_id:id},{
+                                        $pull: {
+                                            isDisliked: req.user._id
+                                        },
+                                        $push: {
+                                            isLiked: req.user._id
+                                        }
+                                    },{new: true, select: 'isLiked'})
+                                    .then(result => res.json(result))
+                                    .catch(err => res.json(err))
                                 }
-                            },{new: true, select: 'isLiked'})
-                            .then(result => {
-                                res.json(result)
-                            }).catch(err => res.json(err))
-                        }
-                    }
-                    else {
-                        Post.findOneAndUpdate({_id: id}, {
-                            $push: {
-                                isLiked: req.user._id
+                                else {
+                                    Post.findByIdAndUpdate({_id:id},{
+                                        $push: {
+                                            isLiked: req.user._id
+                                        }
+                                    },{new: true, select: 'isLiked'})
+                                    .then(result => res.json(result))
+                                    .catch(err => res.json(err))
+                                }
                             }
-                        },{new: true, select: 'isLiked'})
-                        .then(result => {
-                            res.json(result)
-                        }).catch(err => res.json(err))
-                    }
-                }
-
-                else if(actionType==='dislike'){
-                    if(result.isDisliked.length){
-                        if(result.isLiked.find(id => JSON.stringify(id) === JSON.stringify(req.user._id))){
-                            Post.findOneAndUpdate({_id: id}, {
-                                $push: {
-                                    isDisliked: req.user._id
-                                },
-                                $pull: { 
-                                    isLiked: req.user._id
-                                }
-                            },{new: true, select: 'isDisliked'})
-                            .then(result => {
-                                res.json(result)
-                            }).catch(err => res.json(err))
+                            else{
+                                Post.findByIdAndUpdate({_id:id},{
+                                    $push: {
+                                        isLiked: req.user._id
+                                    }
+                                },{new: true, select: 'isLiked'})
+                                .then(result => res.json(result))
+                                .catch(err => res.json(err))
+                            }
                         }
-                        else if(result.isDisliked.find(id => JSON.stringify(id) === JSON.stringify(req.user._id))){
-                            Post.findOneAndUpdate({_id: id}, {
-                                $pull: {
-                                    isDisliked: req.user._id
-                                }
-                            },{new: true, select: 'isDisliked'})
-                            .then(result => {
-                                res.json(result)
-                            }).catch(err => res.json(err))
+                        break;
+                    }
+                    case 'dislike': {
+                        if(results.isDisliked.length){
+                            if(results.isLiked.find(id => JSON.stringify(id) === JSON.stringify(req.user._id))){
+                                Post.findOneAndUpdate({_id:id},{
+                                    $pull: {
+                                        isLiked: req.user._id
+                                    },
+                                    $push: {
+                                        isDisliked: req.user._id
+                                    }
+                                },{new: true, select: 'isDisliked'})
+                                .then(result => res.json(result))
+                                .catch(err => res.json(err))
+                            }
+                            else if(results.isDisliked.find(id => JSON.stringify(id) === JSON.stringify(req.user._id))){
+                                // console.log('isLiked ------------> liked')
+                                Post.findOneAndUpdate({_id:id},{
+                                    $pull: {
+                                        isDisliked: req.user._id
+                                    }
+                                },{new: true, select: 'isDisliked'})
+                                .then(result => res.json(result))
+                                .catch(err => res.json(err))
+                            }
+                            else {
+                                Post.findOneAndUpdate({_id:id},{
+                                    $push: {
+                                        isDisliked: req.user._id
+                                    }
+                                },{new: true, select: 'isDisliked'})
+                                .then(result => res.json(result))
+                                .catch(err => res.json(err))
+                            }
                         }
                         else{
-                            Post.findOneAndUpdate({_id: id}, {
-                                $push: {
-                                    isDisliked: req.user._id
+                            if(results.isLiked.length){
+                                if(results.isLiked.find(id => JSON.stringify(id) === JSON.stringify(req.user._id))){
+                                    Post.findOneAndUpdate({_id:id},{
+                                        $pull: {
+                                            isLiked: req.user._id
+                                        },
+                                        $push: {
+                                            isDisliked: req.user._id
+                                        }
+                                    },{new: true, select: 'isDisliked'})
+                                    .then(result => res.json(result))
+                                    .catch(err => res.json(err))
                                 }
-                            },{new: true, select: 'isDisliked'})
-                            .then(result => {
-                                res.json(result)
-                            }).catch(err => res.json(err))
+                                else {
+                                    Post.findByIdAndUpdate({_id:id},{
+                                        $push: {
+                                            isDisliked: req.user._id
+                                        }
+                                    },{new: true, select: 'isDisliked'})
+                                    .then(result => res.json(result))
+                                    .catch(err => res.json(err))
+                                }
+                            }
+                            else{
+                                Post.findByIdAndUpdate({_id:id},{
+                                    $push: {
+                                        isDisliked: req.user._id
+                                    }
+                                },{new: true, select: 'isDisliked'})
+                                .then(result => res.json(result))
+                                .catch(err => res.json(err))
+                            }
                         }
                     }
-                    else {
-                        Post.findOneAndUpdate({_id: id}, {
-                            $push: {
-                                isDisliked: req.user._id
-                            }
-                        },{new: true, select: 'isDisliked'})
-                        .then(result => {
-                            res.json(result)
-                        }).catch(err => res.json(err))
-                    }
+                    break;
                 }
             })
+            .catch(err => res.json(err))
     }
 }
 

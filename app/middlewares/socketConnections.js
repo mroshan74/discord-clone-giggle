@@ -4,7 +4,7 @@ const crypto = require('crypto')
 const socketConnections = (io) => {
     //listening to socket connections
     io.on('connection', socket => { // establishing/listening a connection from client side
-        console.log('connected client to the socket', socket.id)
+        //console.log('connected client to the socket', socket.id)
 
         socket.on('userId',pass=> {
             //console.log('pass customId', pass)
@@ -160,7 +160,7 @@ const socketConnections = (io) => {
             //console.log(reason,socket.id)
             Socket.findOneAndRemove({socketId: socket.id})
                 .then(afterClean => {
-                    console.log(afterClean,'removed user session')
+                    //console.log(afterClean,'removed user session')
                     if(afterClean){
                         const { inCall } = afterClean
                         if(inCall.isTrue){

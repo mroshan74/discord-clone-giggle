@@ -1,17 +1,26 @@
 const User = require('../models/user')
 const { Post } = require('../models/post')
+//const { FriendPost } = require('../models/friendPost')
 const Socket = require('../models/socket')
 const postControllers = {}
 
 postControllers.listPublicPosts = (req,res) => {
-    Post.find({}).sort({createdAt: 'desc'})
+    Post.find({postType: 'Public'}).sort({createdAt: 'desc'})
         .populate('createdBy','username profilePicUrl')
         .then(posts => {
             res.json(posts)
         }).catch(err => res.json(err))
 }
 
-postControllers.create = (req,res) => {
+postControllers.listFriendPosts = (req,res) => {
+    Post.find({friendsTo: req.user._id, postType: 'Friends'}).sort({createdAt: 'desc'})
+        .populate('createdBy','username profilePicUrl')
+        .then(posts => {
+            res.json(posts)
+        }).catch(err => res.json(err))
+}
+
+postControllers.create = async(req,res) => {
     const url = req.protocol + '://' + req.get('host')
     const img = req.file
     let path = ''
@@ -62,52 +71,37 @@ postControllers.create = (req,res) => {
             }).catch(err => res.json(err))
     }
     else if(body.postType === 'Friends'){
-        dataPack.postByMe = true
-        User.findOneAndUpdate({_id: req.user._id},{
-            $push: {
-                posts: {
-                    $each: [dataPack],
-                    $position: 0
-                }
-            }
-        },{new: true, select: 'friends posts'})
-            .populate('posts.createdBy', 'username profilePicUrl')
-            .then(user => {
-                //console.log('[POST[0] ---> friends]',user.posts[0])
-                // User.updateMany({'friends.info': req.user._id},{
-                //     $push: {
-                //         posts: {
-                //             $each: [user.posts[0]],
-                //             $position: 0
-                //         }
-                //     }
-                // })
-                user.posts[0].postByMe = false
-                user.posts[0].friendPostId = user.posts[0]._id
-                user.friends.map(friend => {
-                    //console.log(friend.info)
-                    User.findOneAndUpdate({_id: friend.info},{
-                        $push: {
-                            posts: {
-                                $each: [user.posts[0]],
-                                $position: 0
-                            }
-                        }
-                    },{new: true, select: 'posts'})
-                    .populate('posts.createdBy','username profilePicUrl')
-                    .then(user => {
-                            //console.log('updated friend post', user)
-                            Socket.findOne({_id: user._id})
-                                .then(getUserSocketId => {
-                                    if(getUserSocketId){
-                                        const { socketId } = getUserSocketId
-                                        io.to(socketId).emit('addNewFriendPost',user.posts[0])
-                                    }
-                                })
-                        })
-                    .catch(err => res.json(err))
-                })
-                res.json(user.posts[0])
+        await User.findOne({_id: req.user._id},'friends')
+            .then(result => {
+                let friendIds = result.friends.map(friend => friend.info)
+                //console.log(friendIds)
+                dataPack.friendsTo = friendIds
+            }).catch(err => res.json(err))
+        
+        const post = new Post(dataPack)
+        post.save()
+            .then(post => {
+                dataPack.friendPostId = post._id
+                dataPack.postByMe = true
+                User.findOneAndUpdate({_id: req.user._id},{
+                    $push: { posts: {
+                        $each: [dataPack],
+                        $position: 0
+                    }}
+                },{new: true, select: 'posts'})
+                .populate('posts.createdBy', 'username profilePicUrl')
+                .then(user => {
+                    dataPack.friendsTo.map(id => {
+                        Socket.findOne({_id: id})
+                            .then(getUserSocketId => {
+                                if(getUserSocketId){
+                                    const { socketId } = getUserSocketId
+                                    io.to(socketId).emit('addNewFriendPost',user.posts[0])
+                                }
+                            }).catch(err => console.log(err))
+                    })
+                    res.json(user.posts[0])
+                }).catch(err => res.json(err))
             }).catch(err => res.json(err))
     }
 }
@@ -150,29 +144,47 @@ postControllers.destroy = (req,res) => {
         }).catch(err => console.log(err))
     }
     else if(postType === 'Friends') {
-        User.findOneAndUpdate({_id: req.user._id},{
+        // User.findOneAndUpdate({_id: req.user._id},{
+        //     $pull: {
+        //         posts: {
+        //             _id: id
+        //         }
+        //     }
+        // },{new: true, select: 'friends posts'})
+        //     .populate('posts.createdBy', 'username profilePicUrl')
+        //     .then(user => {
+        //         user.friends.map(friend => {
+        //             User.findOneAndUpdate({_id: friend.info},{
+        //                 $pull: {
+        //                     posts: {
+        //                         friendPostId: id
+        //                     }
+        //                 }
+        //             },{new: true, select: 'posts username profilePicUrl'})
+        //             .then(user => {
+        //                 //console.log('deleted friend post', user)
+        //             }).catch(err => res.json(err))
+        //         })
+        //         res.json(user.posts)
+        //     }).catch(err => res.json(err))
+
+        Post.findOneAndRemove({_id: id, postType:'Friends'})
+        .then(post => {
+            //console.log(post,'[friend post deleted]')
+        }).catch(err => console.log(err))
+
+        User.findOneAndUpdate({_id:req.user._id},{
             $pull: {
                 posts: {
-                    _id: id
+                    friendPostId: id
                 }
             }
-        },{new: true, select: 'friends posts'})
-            .populate('posts.createdBy', 'username profilePicUrl')
-            .then(user => {
-                user.friends.map(friend => {
-                    User.findOneAndUpdate({_id: friend.info},{
-                        $pull: {
-                            posts: {
-                                friendPostId: id
-                            }
-                        }
-                    },{new: true, select: 'posts username profilePicUrl'})
-                    .then(user => {
-                        //console.log('deleted friend post', user)
-                    }).catch(err => res.json(err))
-                })
-                res.json(user.posts)
-            }).catch(err => res.json(err))
+        },{new:true, select: 'posts'})
+        .populate('posts.createdBy', 'username profilePicUrl')
+        .then(user => {
+            //console.log(user.posts,'[public post deleted from user posts]')
+            res.json(user.posts)
+        }).catch(err => console.log(err))
     }
 }
 
@@ -182,11 +194,35 @@ postControllers.postAction = (req,res) => {
     const postType = req.params.postType
 
     //console.log(actionType,id,postType,'------------------->postAction')
+    function updateOriginalPost(packet,to){
+        console.log(packet,to,'-------------------->packet')
+        if(postType === 'Public'){
+            User.findOneAndUpdate({_id: to, 'posts.publicPostId':id},{
+                $set: {
+                    'posts.$.isLiked': packet.isLiked,
+                    'posts.$.isDisliked': packet.isDisliked
+                }
+            }).then(result => {
+                //console.log(result,'------------>public original')
+            }).catch(err => console.log(err))
+        }
+        else if(postType === 'Friends'){
+            User.findOneAndUpdate({_id: to, 'posts.friendPostId':id},{
+                $set: {
+                    'posts.$.isLiked': packet.isLiked,
+                    'posts.$.isDisliked': packet.isDisliked
+                }
+            }).then(result => {
+                //console.log(result,'------------>friend original')
+            }).catch(err => console.log(err))
+        }
+    }
 
-    if(postType === 'Public'){
-        Post.findOne({_id: id}, 'isLiked isDisliked')
+    if(postType === 'Public' || postType === 'Friends'){
+        Post.findOne({_id: id}, 'isLiked isDisliked createdBy')
             .then(results => {
-                console.log(results,actionType)
+                //console.log(results,actionType)
+                let { createdBy } = results
                 switch(actionType){
                     case 'like': {
                         if(results.isLiked.length){
@@ -198,8 +234,11 @@ postControllers.postAction = (req,res) => {
                                     $push: {
                                         isLiked: req.user._id
                                     }
-                                },{new: true, select: 'isLiked'})
-                                .then(result => res.json(result))
+                                },{new: true, select: 'isLiked isDisliked'})
+                                .then(result => {
+                                    updateOriginalPost(result,createdBy)
+                                    res.json(result)
+                                })
                                 .catch(err => res.json(err))
                             }
                             else if(results.isLiked.find(id => JSON.stringify(id) === JSON.stringify(req.user._id))){
@@ -208,8 +247,11 @@ postControllers.postAction = (req,res) => {
                                     $pull: {
                                         isLiked: req.user._id
                                     }
-                                },{new: true, select: 'isLiked'})
-                                .then(result => res.json(result))
+                                },{new: true, select: 'isLiked isDisliked'})
+                                .then(result => {
+                                    updateOriginalPost(result,createdBy)
+                                    res.json(result)
+                                })
                                 .catch(err => res.json(err))
                             }
                             else {
@@ -217,8 +259,11 @@ postControllers.postAction = (req,res) => {
                                     $push: {
                                         isLiked: req.user._id
                                     }
-                                },{new: true, select: 'isLiked'})
-                                .then(result => res.json(result))
+                                },{new: true, select: 'isLiked isDisliked'})
+                                .then(result => {
+                                    updateOriginalPost(result,createdBy)
+                                    res.json(result)
+                                })
                                 .catch(err => res.json(err))
                             }
                         }
@@ -232,8 +277,11 @@ postControllers.postAction = (req,res) => {
                                         $push: {
                                             isLiked: req.user._id
                                         }
-                                    },{new: true, select: 'isLiked'})
-                                    .then(result => res.json(result))
+                                    },{new: true, select: 'isLiked isDisliked'})
+                                    .then(result => {
+                                        updateOriginalPost(result,createdBy)
+                                        res.json(result)
+                                    })
                                     .catch(err => res.json(err))
                                 }
                                 else {
@@ -241,8 +289,11 @@ postControllers.postAction = (req,res) => {
                                         $push: {
                                             isLiked: req.user._id
                                         }
-                                    },{new: true, select: 'isLiked'})
-                                    .then(result => res.json(result))
+                                    },{new: true, select: 'isLiked isDisliked'})
+                                    .then(result => {
+                                        updateOriginalPost(result,createdBy)
+                                        res.json(result)
+                                    })
                                     .catch(err => res.json(err))
                                 }
                             }
@@ -251,8 +302,11 @@ postControllers.postAction = (req,res) => {
                                     $push: {
                                         isLiked: req.user._id
                                     }
-                                },{new: true, select: 'isLiked'})
-                                .then(result => res.json(result))
+                                },{new: true, select: 'isLiked isDisliked'})
+                                .then(result => {
+                                    updateOriginalPost(result,createdBy)
+                                    res.json(result)
+                                })
                                 .catch(err => res.json(err))
                             }
                         }
@@ -268,8 +322,11 @@ postControllers.postAction = (req,res) => {
                                     $push: {
                                         isDisliked: req.user._id
                                     }
-                                },{new: true, select: 'isDisliked'})
-                                .then(result => res.json(result))
+                                },{new: true, select: 'isLiked isDisliked'})
+                                .then(result => {
+                                    updateOriginalPost(result,createdBy)
+                                    res.json(result)
+                                })
                                 .catch(err => res.json(err))
                             }
                             else if(results.isDisliked.find(id => JSON.stringify(id) === JSON.stringify(req.user._id))){
@@ -278,8 +335,11 @@ postControllers.postAction = (req,res) => {
                                     $pull: {
                                         isDisliked: req.user._id
                                     }
-                                },{new: true, select: 'isDisliked'})
-                                .then(result => res.json(result))
+                                },{new: true, select: 'isLiked isDisliked'})
+                                .then(result => {
+                                    updateOriginalPost(result,createdBy)
+                                    res.json(result)
+                                })
                                 .catch(err => res.json(err))
                             }
                             else {
@@ -287,8 +347,11 @@ postControllers.postAction = (req,res) => {
                                     $push: {
                                         isDisliked: req.user._id
                                     }
-                                },{new: true, select: 'isDisliked'})
-                                .then(result => res.json(result))
+                                },{new: true, select: 'isLiked isDisliked'})
+                                .then(result => {
+                                    updateOriginalPost(result,createdBy)
+                                    res.json(result)
+                                })
                                 .catch(err => res.json(err))
                             }
                         }
@@ -302,8 +365,11 @@ postControllers.postAction = (req,res) => {
                                         $push: {
                                             isDisliked: req.user._id
                                         }
-                                    },{new: true, select: 'isDisliked'})
-                                    .then(result => res.json(result))
+                                    },{new: true, select: 'isLiked isDisliked'})
+                                    .then(result => {
+                                        updateOriginalPost(result,createdBy)
+                                        res.json(result)
+                                    })
                                     .catch(err => res.json(err))
                                 }
                                 else {
@@ -311,8 +377,11 @@ postControllers.postAction = (req,res) => {
                                         $push: {
                                             isDisliked: req.user._id
                                         }
-                                    },{new: true, select: 'isDisliked'})
-                                    .then(result => res.json(result))
+                                    },{new: true, select: 'isLiked isDisliked'})
+                                    .then(result => {
+                                        updateOriginalPost(result,createdBy)
+                                        res.json(result)
+                                    })
                                     .catch(err => res.json(err))
                                 }
                             }
@@ -321,8 +390,11 @@ postControllers.postAction = (req,res) => {
                                     $push: {
                                         isDisliked: req.user._id
                                     }
-                                },{new: true, select: 'isDisliked'})
-                                .then(result => res.json(result))
+                                },{new: true, select: 'isLiked isDisliked'})
+                                .then(result => {
+                                    updateOriginalPost(result,createdBy)
+                                    res.json(result)
+                                })
                                 .catch(err => res.json(err))
                             }
                         }
@@ -332,6 +404,13 @@ postControllers.postAction = (req,res) => {
             })
             .catch(err => res.json(err))
     }
+
+    //------------------------friends
+    // else if(postType === 'Friends'){
+    //     User.findOne({'posts.friendPostId': id},'friends')
+    //         .then(res => console.log(res))
+    //         .catch(err => console.log(err))
+    // }
 }
 
 module.exports = postControllers

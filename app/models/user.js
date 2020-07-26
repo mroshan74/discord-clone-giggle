@@ -6,6 +6,7 @@ const { friendSchema } = require('./friend')
 const { notificationSchema } = require('./notification')
 const { groupSchema } = require('./group')
 const { postSchema } = require('./post')
+const { friendPostSchema } = require('./friendPost')
 
 
 const Schema = mongoose.Schema
@@ -46,6 +47,7 @@ const userSchema = new Schema({
   friends : [friendSchema],
   groups: [groupSchema],
   posts: [postSchema],
+  friendPosts: [friendPostSchema]
 })
 
 userSchema.pre('save', function(next){

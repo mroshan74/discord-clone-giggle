@@ -1,10 +1,10 @@
 const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
-const postSchema = new Schema({
+const friendPostSchema = new Schema({
   postType: {
     type: String,
-    default: 'Private',
+    default: 'Friends',
   },
   postByMe: {
     type: Boolean,
@@ -12,10 +12,6 @@ const postSchema = new Schema({
   },
   post: {
     type: String
-  },
-  publicPostId: {
-    type: Schema.Types.ObjectId,
-    ref: 'Post'
   },
   friendPostId: {
     type: Schema.Types.ObjectId,
@@ -41,7 +37,7 @@ const postSchema = new Schema({
     type: Date,
     default: Date.now,
   },
-})
+},{timestamps: true})
 
-const Post = mongoose.model('Post', postSchema)
-module.exports = { Post, postSchema }
+const FriendPost = mongoose.model('FriendPost', friendPostSchema)
+module.exports = { FriendPost, friendPostSchema }

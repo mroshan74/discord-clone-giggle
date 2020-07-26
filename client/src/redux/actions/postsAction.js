@@ -23,6 +23,31 @@ export const startGetPublicPosts = (fd) => {
     }
 }
 
+// --------------> get latest friend posts
+        //---> addPublic post listener
+
+export const addNewFriendPost = (data) => {
+    return { type: 'ADD_NEW_FRIEND_POST', payload: data }
+}
+
+export const setFriendPosts = (data) => {
+    return { type: 'SET_FRIEND_POSTS', payload: data }
+}
+
+export const startGetFriendPosts = () => {
+    return(dispatch) => {
+        axios.get('/users/getLatestFriendPosts',{
+            headers: {
+                'x-auth': getToken
+            }})
+            .then(response => {
+                console.log('[PROMISE-friendPosts]',response.data)
+                const getPosts = response.data
+                dispatch(setFriendPosts(getPosts))
+            }).catch(err => console.log(err))
+    }
+}
+
 
 // ---------------> create post
 export const addNewPost = (data) => {
@@ -67,9 +92,9 @@ export const startDeletePost = (id,type,fd) => {
 
 //-------------------> post action // like dislike
 
-// export const deletePost = (data) => {
-//     return { type: 'DELETE_POST', payload: data }
-// }
+export const updatePostActionReceived = (data) => {
+    return { type: 'UPDATE_POST_ACTION_PUBLIC', payload: data }
+}
 
 export const startActionOnPost = (id,type,action,fd) => {
     return(dispatch) => {
@@ -80,8 +105,8 @@ export const startActionOnPost = (id,type,action,fd) => {
         })
             .then(response => {
                 console.log('[PROMISE-postAction]',response.data)
-                //const retPost = response.data
-                //dispatch(deletePost(retPost))
+                const retPost = response.data
+                dispatch(updatePostActionReceived(retPost))
             }).catch(err => console.log(err))
     }
 }

@@ -16,6 +16,7 @@ import './PostCardItem.css'
 import DeletePostPopUp from './DeletePostPopUp'
 import { startDeletePost, startActionOnPost } from '../../redux/actions/postsAction'
 import { connect } from 'react-redux'
+import { Button } from '@material-ui/core'
 
 function PostCardItem(props) {
     const { post, userId } = props
@@ -59,6 +60,13 @@ function PostCardItem(props) {
             </Fragment>
         )
     }
+
+    let selectedLike = '', selectedDislike = ''
+    if(post.isLiked.find(id => id===userId)){
+        selectedLike = 'postCardItem-btn-like-selected'
+    }else if (post.isDisliked.find(id => id===userId)){
+        selectedDislike = 'postCardItem-btn-dislike-selected'
+    }
     
     return(
         <div id='postCardItem-container'>
@@ -91,7 +99,7 @@ function PostCardItem(props) {
             </div>
             <hr/>
             <div id='postCardItem-action'>
-                <button disabled={disableRef.current} onClick={
+                <Button id={selectedLike} disabled={disableRef.current} onClick={
                     () => { 
                         let postId = post._id
                         if(post.postType=== 'Public'){
@@ -99,13 +107,13 @@ function PostCardItem(props) {
                         }
                         handlePostAction(postId, post.postType, 'like') 
                     }
-                }><GrLike/><span>{post.isLiked.length}</span></button>
+                }><GrLike/><span>{post.isLiked.length}</span></Button>
 
-                <button disabled={disableRef.current} onClick={
+                <Button id={selectedDislike} disabled={disableRef.current} onClick={
                     () => { handlePostAction(post._id, post.postType, 'dislike') }
-                }><GrDislike/><span>{post.isDisliked.length}</span></button>
+                }><GrDislike/><span>{post.isDisliked.length}</span></Button>
 
-                <button><GoCommentDiscussion/><span>{post.comments.length}</span></button>
+                <Button ><GoCommentDiscussion/><span>{post.comments.length}</span></Button>
             </div>
         </div>
     )

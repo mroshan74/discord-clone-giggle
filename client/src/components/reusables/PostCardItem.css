@@ -136,11 +136,20 @@
 
 #postCardItem-action button:disabled{
     color: black;
-    border: 1px solid #c4c3c4;
+    /* border: 1px solid #c4c3c4; */
 }
+
 
 #postCardItem-action button span {
     margin: 5px;
+}
+
+#postCardItem-btn-like-selected {
+    background-color: rgba(98, 179, 233, 0.548);
+}
+
+#postCardItem-btn-dislike-selected {
+    background-color: rgba(98, 179, 233, 0.548);
 }
 
 @media (max-width: 720px){

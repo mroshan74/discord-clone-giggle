@@ -16,7 +16,7 @@ function Notifications(props) {
         <div>
             {
                 notifications.length ? (notifyList) :
-                <h3>No Notifications for you at the moment</h3>
+                <h2>No Notifications for you at the moment</h2>
             }
         </div>
     )

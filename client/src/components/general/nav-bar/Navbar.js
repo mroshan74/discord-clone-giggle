@@ -1,5 +1,5 @@
 import React from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory, Redirect  } from 'react-router-dom'
 // ! https://stackoverflow.com/questions/54579730/react-hooks-with-react-router-v4-how-do-i-redirect-to-another-route
 
 // material-ui 
@@ -93,11 +93,12 @@ function Nav(props) {
                 <AppBar/>
                 </>
             ):(
-                <NavBar >
-                    <img src={logo} alt='chatbot' className='logo-out' onClick={() => {history.push('/')}}/>
-                    <NavItem to='/users/register' name='Register' styleClassLi='register' styleClass='register-link'/>
-                    <NavItem to='/users/login' name='Sign In' styleClassLi='sign-in' styleClass='sign-in-link'/>
-                </NavBar>
+                // <NavBar >
+                //     <img src={logo} alt='chatbot' className='logo-out' onClick={() => {history.push('/')}}/>
+                //     <NavItem to='/users/register' name='Register' styleClassLi='register' styleClass='register-link'/>
+                //     <NavItem to='/users/login' name='Sign In' styleClassLi='sign-in' styleClass='sign-in-link'/>
+                // </NavBar>
+                <Redirect to='/users/login'/>
             )
             }
             <br/><br/>

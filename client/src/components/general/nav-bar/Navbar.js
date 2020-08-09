@@ -51,59 +51,53 @@ function Nav(props) {
     console.log('USER--------',props.user)
 
     return (
-        <div className='nav-container'>
+        <>
             {change ? 
             (
-                <>
-                <div className='navHide'>
-                <NavBar >
-                    <img src={logo} alt='chatbot' className='logo' onClick={() => {history.push('/')}}/>
-                    <form className='search-bar' onSubmit={handleSearch}>
-                        <TextField
-                            className='search-input'
-                            variant='outlined'
-                            placeholder='Search...'
-                            onChange={handleChange}
-                            value={searchUser}
-                            InputProps={{
-                            startAdornment: (
-                                <InputAdornment position='start'>
-                                    <BsSearch />
-                                </InputAdornment>
-                            ),
-                            }}
-                        />
-                    </form>
-                    <NavItem 
-                        to='/users/notifications' 
-                        styleClass='badge'
-                        styleClassLi='badge-li'
-                        name={
-                                <Badge badgeContent={props.user.notifications.length} color="secondary">
-                                    <FiMail />
-                                </Badge>
-                            }
-                    />
-                    <NavItem to='/users/posts' name={<img src={PostIcon} alt='postIcon'/>} styleClass='post-icon-nav'/>
-                    <NavItem to='/users/friends' name={<FaUserFriends/>} />
-                    <NavItem to='/users/chat' name={<BsChatDots/>}/>
-                    <NavItem to='#' name={<FaSignOutAlt/>} styleClass='sign-out' onClick = {handleLogout} />
-                </NavBar>
+                <div className='nav-container'>
+                    <div className='navHide'>
+                        <NavBar >
+                            <img src={logo} alt='chatbot' className='logo' onClick={() => {history.push('/')}}/>
+                            <form className='search-bar' onSubmit={handleSearch}>
+                                <TextField
+                                    className='search-input'
+                                    variant='outlined'
+                                    placeholder='Search...'
+                                    onChange={handleChange}
+                                    value={searchUser}
+                                    InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position='start'>
+                                            <BsSearch />
+                                        </InputAdornment>
+                                    ),
+                                    }}
+                                />
+                            </form>
+                            <NavItem 
+                                to='/users/notifications' 
+                                styleClass='badge'
+                                styleClassLi='badge-li'
+                                name={
+                                        <Badge badgeContent={props.user.notifications.length} color="secondary">
+                                            <FiMail />
+                                        </Badge>
+                                    }
+                            />
+                            <NavItem to='/users/posts' name={<img src={PostIcon} alt='postIcon'/>} styleClass='post-icon-nav'/>
+                            <NavItem to='/users/friends' name={<FaUserFriends/>} />
+                            <NavItem to='/users/chat' name={<BsChatDots/>}/>
+                            <NavItem to='#' name={<FaSignOutAlt/>} styleClass='sign-out' onClick = {handleLogout} />
+                        </NavBar>
+                        <p>{props.user._id && <span>{props.user.username} - {props.user.email}</span>}</p>
+                    </div>
+                    <AppBar/>
                 </div>
-                <AppBar/>
-                </>
             ):(
-                // <NavBar >
-                //     <img src={logo} alt='chatbot' className='logo-out' onClick={() => {history.push('/')}}/>
-                //     <NavItem to='/users/register' name='Register' styleClassLi='register' styleClass='register-link'/>
-                //     <NavItem to='/users/login' name='Sign In' styleClassLi='sign-in' styleClass='sign-in-link'/>
-                // </NavBar>
                 <Redirect to='/users/login'/>
             )
             }
-            <br/><br/>
-            <p>{props.user._id && <span>{props.user.username} - {props.user.email}</span>}</p>
-        </div>
+        </>
     )
 }
 

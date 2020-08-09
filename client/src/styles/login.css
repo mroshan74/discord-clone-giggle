@@ -1,12 +1,23 @@
+.login-bg{
+    width: 100vw;
+    height: 100vh;
+    background-image: url('../resources/bg/login-bg.jpg') , linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5));
+    background-blend-mode: overlay;
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: relative;
+}
 .login-container{
     background-color: white;
     border-radius: 8px;
     border: 2px solid #5e5e5f;
-    width: 600px;
-    max-width: 100%;
+    width: 450px;
     display: flex;
     flex-direction: column;
-    margin: auto;
+    position: absolute;
+    top: 25vh;
+    left:30vw;
 }
 
 .login-logo{
@@ -93,3 +104,10 @@
     color: blue;
 }
 
+@media (max-width: 480px){
+    .login-container{
+        width: 300px;
+        top: 10%;
+        left: 8%;
+    }
+}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Fragment } from 'react'
 import { connect } from 'react-redux'
 import Dropzone from 'react-dropzone'
 import Avatar from '@material-ui/core/Avatar'
@@ -12,17 +12,16 @@ import { FaUserFriends } from 'react-icons/fa'
 import { MdPublic } from 'react-icons/md'
 import { GrEmoji } from 'react-icons/gr'
 import EmojiPopUp from '../reusables/EmojiPopUp'
-import { startCreateNewPost } from '../../redux/actions/postsAction'
+import { startCreateNewPost, startUpdatePost } from '../../redux/actions/postsAction'
 
 export function AddPost(props){
 
-    const { user, handleDrop, fileUp, post, pType, handleClearFileUpload, handlePassPostData, handleSubmit } = props
+    const { user, handleDrop, fileUp, post, pType, handleClearFileUpload, handlePassPostData, handleSubmit, isEdit, editUpdateFile } = props
     
     const [postType, setPostType] = useState('Private')
     const [postText, setPostText] = useState('')
     const [anchorEl, setAnchorEl] = useState(null)
     const [lineHeight,setLineHeight] = useState('')
-
 
     useEffect(() => {
         if(post){
@@ -59,7 +58,7 @@ export function AddPost(props){
 
     return(
         <div id='add-post-container'>
-            <h1>Create post</h1>
+            <h1>{isEdit ? 'Update Post':'Create post'}</h1>
             <hr/>
             <div id='add-ava-user'>
                 <Avatar id='post-avatar' src={user.profileImg} />
@@ -81,7 +80,11 @@ export function AddPost(props){
             </div>
             {fileUp && (
                 <div id='add-file-up'>
+                    {editUpdateFile ?
+                    <img  src={editUpdateFile} alt='fileUp'/>
+                    :
                     <img  src={URL.createObjectURL(fileUp)} alt='fileUp'/>
+                    }
                     <button id='add-file-up-close' onClick={handleClearFileUpload}>X</button>
                 </div>
             ) }
@@ -117,7 +120,9 @@ export function AddPost(props){
                             </section>
                         )}
                 </Dropzone>
-                <button id='add-post-btn' onClick={handleSubmit} disabled={!postText.length && !Boolean(fileUp)}>Post</button>
+                <button id='add-post-btn' onClick={handleSubmit} disabled={!postText.length && !Boolean(fileUp)}>
+                    {isEdit ? 'Update':'Post'}
+                </button>
             </div>
         </div>
     )
@@ -125,21 +130,51 @@ export function AddPost(props){
 
 function PostCreate(props) {
 
-    const { user } = props
+    const { user, editPost, isEdit, handleEditPostModal } = props
 
     const [modalView, setModalView] = useState(false)
     const [file, setFile] = useState(null)
     const [post, setPost] = useState('')
     const [postType, setPostType] = useState('Private')
+    const [editUpdateFile,setEditUpdateFile] = useState(null)
+
+    useEffect(()=> {
+        if(isEdit){
+            if(editPost.uploadPath){
+                setEditUpdateFile(editPost.uploadPath)
+                setFile(true)
+                console.log('[pic asbracted inside <---]')
+            }
+            setModalView(true)
+            setPostType(editPost.postType)
+            setPost(editPost.post)
+        }
+        // eslint-disable-next-line
+    },[])
     
 
     const handlePostSubmit = () => {
         console.log('[SUBMIT]',post,postType,file)
         const fd = new FormData()
-        fd.append('file', file)
-        fd.append('post',post)
-        fd.append('postType',postType)
-        props.dispatch(startCreateNewPost(fd))
+        if(isEdit){
+            //console.log(isEdit,editPost._id)
+            const id = editPost._id
+            if(!file){
+                fd.append('uploadRemoved',true)
+            }
+            else{
+                fd.append('file', file)
+            }
+            fd.append('post',post)
+            fd.append('postType',postType)
+            props.dispatch(startUpdatePost(id,fd))
+        }
+        else{
+            fd.append('file', file)
+            fd.append('post',post)
+            fd.append('postType',postType)
+            props.dispatch(startCreateNewPost(fd))
+        }
         handlePostModal()
         setFile(null)
         setPost('')
@@ -159,6 +194,9 @@ function PostCreate(props) {
         // const fd = new FormData()
         // fd.append('file', file[0])
         // fd.append('type','image/video')
+        if(editUpdateFile){
+            setEditUpdateFile(null)
+        }
         setFile(file[0])
         if(!modalView){
             setModalView(!modalView)
@@ -167,10 +205,13 @@ function PostCreate(props) {
 
     const handlePostModal = () => {
         setModalView(!modalView)
+        if(isEdit){
+            handleEditPostModal()
+        }
     }
 
     return (
-        <div id='create-post-container'>
+        <Fragment>
             {modalView && <PostModal 
                 modalStatus={modalView}
                 handleModalStatus={handlePostModal}
@@ -184,28 +225,34 @@ function PostCreate(props) {
                         handleClearFileUpload={handleClearFileUpload}
                         handlePassPostData={handlePassPostData}
                         handleSubmit={handlePostSubmit}
+                        isEdit={isEdit}
+                        editUpdateFile={editUpdateFile}
                     />}
                 />}
-            <div id='ava-input'>
-                <Avatar id='post-avatar' src={user.profileImg} />
-                <input id='input-post' type="text" placeholder={`Whats on your mind,${user.username} ?`} readOnly onClick={handlePostModal}/>
-            </div>
-            <hr/>
-            <div id='post-action'>
-                <Dropzone onDrop={handleDrop}>
-                        {({ getRootProps, getInputProps }) => (
-                            <section>
-                            <div {...getRootProps()}>
-                                <input {...getInputProps()} />
-                                <div id='img-up-btn'>
-                                <img src={require('../../resources/icons/imageUpload.png')} alt='imgUpIcon' />
-                                Image</div>
-                            </div>
-                            </section>
-                        )}
-            </Dropzone>
-            </div>
-        </div>
+            {!isEdit && 
+                <div id='create-post-container'>
+                    <div id='ava-input'>
+                        <Avatar id='post-avatar' src={user.profileImg} />
+                        <input id='input-post' type="text" placeholder={`Whats on your mind,${user.username} ?`} readOnly onClick={handlePostModal}/>
+                    </div>
+                    <hr/>
+                    <div id='post-action'>
+                        <Dropzone onDrop={handleDrop}>
+                                {({ getRootProps, getInputProps }) => (
+                                    <section>
+                                    <div {...getRootProps()}>
+                                        <input {...getInputProps()} />
+                                        <div id='img-up-btn'>
+                                        <img src={require('../../resources/icons/imageUpload.png')} alt='imgUpIcon' />
+                                        Image</div>
+                                    </div>
+                                    </section>
+                                )}
+                    </Dropzone>
+                    </div>
+                </div>
+            }
+    </Fragment>
     )
 }
 

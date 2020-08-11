@@ -17,11 +17,15 @@ import DeletePostPopUp from './DeletePostPopUp'
 import { startDeletePost, startActionOnPost } from '../../redux/actions/postsAction'
 import { connect } from 'react-redux'
 import { Button } from '@material-ui/core'
+import PostCreate from '../posts/PostCreate'
+import PostImageModal from './PostImageModal'
 
 function PostCardItem(props) {
     const { post, userId } = props
     const [openEdit, setOpenEdit] = useState(false)
     const [anchorEl, setAnchorEl] = useState(null)
+    const [isEdit, setIsEdit] = useState(false)
+    const [openModal, setOpenModal] = useState(false)
     const disableRef = useRef(false)
 
     const handleDeletePost = (id, type) => {
@@ -40,7 +44,12 @@ function PostCardItem(props) {
         setAnchorEl(null)
     }
     const handleEditPostModal= () => {
+        setIsEdit(!isEdit)
         setOpenEdit(!openEdit)
+    }
+
+    const openModalState = () => {
+        setOpenModal(!openModal)
     }
 
     let editPost = null 
@@ -49,6 +58,7 @@ function PostCardItem(props) {
         editPost = (
             <Fragment>
                 <button id='postCardItem-edit' onClick={handleEditPostModal}><FiEdit/></button>
+                {openEdit && <PostCreate editPost={post} isEdit={isEdit} handleEditPostModal={handleEditPostModal}/>}
                 <button id='postCardItem-delete' onClick={
                     (e) => {deletePostPop(e)}}><AiOutlineDelete/></button>
                     {anchorEl && <DeletePostPopUp 
@@ -94,7 +104,8 @@ function PostCardItem(props) {
             </div>
             <hr/>
             <div id='postCardItem-post'>
-                {post.uploadPath && <img src={post.uploadPath} alt={post._id}/>}
+                {post.uploadPath && <img src={post.uploadPath} alt={post._id} onClick={()=>{openModalState()}}/>}
+                {openModal && <PostImageModal openModalState={openModalState} post={post} modalStatus={openModal}/>}
                 <p>{post.post}</p>
             </div>
             <hr/>
@@ -102,9 +113,9 @@ function PostCardItem(props) {
                 <Button id={selectedLike} disabled={disableRef.current} onClick={
                     () => { 
                         let postId = post._id
-                        if(post.postType=== 'Public'){
-                            postId = post.publicPostId || post._id
-                        }
+                        // if(post.postType=== 'Public'){
+                        //     postId = post.publicPostId || post._id
+                        // }
                         handlePostAction(postId, post.postType, 'like') 
                     }
                 }><GrLike/><span>{post.isLiked.length}</span></Button>

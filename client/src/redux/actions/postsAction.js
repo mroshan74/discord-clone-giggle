@@ -1,6 +1,26 @@
 import axios from 'axios'
 const getToken = localStorage.getItem('token')
 
+// -------------> get UserPosts 
+
+export const setUserPosts = (data) => {
+    return { type: 'SET_USER_POSTS', payload: data }
+}
+
+export const startGetUserPosts = () => {
+    return(dispatch) => {
+        axios.get('/users/getUserPosts',{
+            headers: {
+                'x-auth': getToken
+            }})
+            .then(response => {
+                console.log('[PROMISE-UserPosts]',response.data)
+                const getPosts = response.data
+                dispatch(setUserPosts(getPosts))
+            }).catch(err => console.log(err))
+    }
+}
+
 // --------------> get latest public posts
         //---> addPublic post listener
 
@@ -69,15 +89,36 @@ export const startCreateNewPost = (fd) => {
     }
 }
 
+//-------------updatePost
+
+export const updatePost = (data) => {
+    return { type: 'UPDATE_POST', payload: data }
+}
+
+export const startUpdatePost = (id,fd) => {
+    return(dispatch) => {
+        axios.put(`/users/posts/update/${id}`,fd,{
+            headers: {
+                'x-auth': getToken
+            }
+        })
+            .then(response => {
+                console.log('[PROMISE-postUpdate]',response.data)
+                const updatedPost = response.data
+                dispatch(updatePost(updatedPost))
+            }).catch(err => console.log(err))
+    }
+}
+
 //-------------deletePost
 
 export const deletePost = (data) => {
     return { type: 'DELETE_POST', payload: data }
 }
 
-export const startDeletePost = (id,type,fd) => {
+export const startDeletePost = (id) => {
     return(dispatch) => {
-        axios.put(`/users/posts/${type}/${id}`,fd,{
+        axios.delete(`/users/posts/${id}`,{
             headers: {
                 'x-auth': getToken
             }
@@ -98,7 +139,7 @@ export const updatePostActionReceived = (data) => {
 
 export const startActionOnPost = (id,type,action,fd) => {
     return(dispatch) => {
-        axios.put(`/users/posts/action/${type}/${action}/${id}`,fd,{
+        axios.put(`/users/posts/action/${action}/${id}`,fd,{
             headers: {
                 'x-auth': getToken
             }

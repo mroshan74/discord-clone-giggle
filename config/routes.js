@@ -48,10 +48,11 @@ router.post('/users/chats/upload/:id', authenticateUser, upload.single('file'), 
 
 //! posts
 router.get('/users/getLatestPublicPosts', postControllers.listPublicPosts)
+router.get('/users/getUserPosts', authenticateUser, postControllers.listUserPosts)
 router.get('/users/getLatestFriendPosts', authenticateUser, postControllers.listFriendPosts)
 router.post('/users/posts/new', authenticateUser, upload.single('file'),postControllers.create)
-router.put('/users/posts/:postType/:id', authenticateUser,postControllers.destroy)
-router.put('/users/posts/action/:postType/:action/:id', authenticateUser,postControllers.postAction)
-
+router.put('/users/posts/update/:id', authenticateUser, upload.single('file'), postControllers.update)
+router.delete('/users/posts/:id', authenticateUser,postControllers.destroy)
+router.put('/users/posts/action/:action/:id', authenticateUser,postControllers.postAction)
 
 module.exports = router

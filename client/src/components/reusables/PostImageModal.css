@@ -1,0 +1,9 @@
+.modal-img {
+    max-width: 600px;
+    height: auto;
+}
+
+.modal-img-container:focus-within {
+    outline:none;
+    border: none;
+}

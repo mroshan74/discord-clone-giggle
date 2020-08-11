@@ -6,7 +6,7 @@ import configureStore from './redux/store/configureStore'
 import { startAccount } from './redux/actions/loginsAction'
 
 import './styles/index.css'
-import { startGetPublicPosts, startGetFriendPosts } from './redux/actions/postsAction'
+import { startGetPublicPosts, startGetFriendPosts, startGetUserPosts } from './redux/actions/postsAction'
 
 const store = configureStore()
 
@@ -15,6 +15,7 @@ if (localStorage.getItem('token')) {
   store.dispatch(startAccount())
   store.dispatch(startGetPublicPosts())
   store.dispatch(startGetFriendPosts())
+  store.dispatch(startGetUserPosts())
 }
 
 store.subscribe(() => {

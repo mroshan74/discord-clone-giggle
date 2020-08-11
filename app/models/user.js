@@ -47,8 +47,12 @@ const userSchema = new Schema({
   friends : [friendSchema],
   groups: [groupSchema],
   posts: [postSchema],
-  friendPosts: [friendPostSchema]
-})
+  friendPosts: [friendPostSchema],
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+},{timestamps: true})
 
 userSchema.pre('save', function(next){
     console.log(this.password)

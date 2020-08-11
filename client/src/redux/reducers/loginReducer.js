@@ -19,7 +19,6 @@ const loginReducer = (state = initialStateLogin, action) => {
         profileImg: action.payload.profilePicUrl,
         notifications: action.payload.notifications,
         friends: action.payload.friends,
-        posts: action.payload.posts
       })
     }
 
@@ -82,13 +81,29 @@ const loginReducer = (state = initialStateLogin, action) => {
       return Object.assign({},state,{ friends: removeFriend })
     }
 
+    case 'SET_USER_POSTS': {
+      return Object.assign({}, state, { posts: action.payload })
+    }
+
     case 'ADD_NEW_POST': {
       const newPostArray = [action.payload].concat(state.posts)
       return Object.assign({}, state, { posts: newPostArray })
     }
 
     case 'DELETE_POST': {
-      const newPostArray = action.payload
+      const newPostArray = state.posts.filter(post => post._id !== action.payload._id)
+      return Object.assign({}, state, { posts: newPostArray })
+    }
+
+    case 'UPDATE_POST': {
+      const newPostArray = state.posts.map(post => {
+        if(post._id===action.payload._id){
+          return Object.assign({}, post, action.payload)
+        }
+        else {
+          return Object.assign({},post)
+        }
+      })
       return Object.assign({}, state, { posts: newPostArray })
     }
 

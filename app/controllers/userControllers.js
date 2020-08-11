@@ -45,9 +45,8 @@ usersControllers.account = (req,res) => {
     User.findOne({_id: req.user._id})
         .populate('friends.info','username profilePicUrl')
         .populate('notifications.info', 'username profilePicUrl')
-        .populate('posts.createdBy', 'username profilePicUrl')
         .then(user => {
-            const { _id, username, email , profilePicUrl, notifications, groups, posts } = user
+            const { _id, username, email , profilePicUrl, notifications, groups } = user
             const friends = user.friends.filter(friend => friend.status !== 'Rejected')
             friends.sort((a,b) => {
                 return (a.status < b.status) ? 1 : ((b.status < a.status) ? -1 : 0)
@@ -60,7 +59,6 @@ usersControllers.account = (req,res) => {
                 notifications,
                 groups,
                 friends,
-                posts
             }
             res.json(packData)
         })

@@ -1,8 +1,21 @@
+.register-bg{
+    width: 100vw;
+    height: 100vh;
+    background-image: url('../resources/bg/register-bg.jpg') , linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5));
+    background-blend-mode: overlay;
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .form-container {
+    width: 450px;
     background-color: white;
     border-radius: 8px;
     max-width: 600px;
-    margin: auto;
+    margin: 8px;
 }
 
 

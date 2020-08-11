@@ -19,6 +19,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
   /* display: flex;
   justify-content: center; */
+    width: 100vw;
+    height: 100vh;
+    background-image: url('../resources/bg/register-bg.jpg') , linear-gradient(rgba(255, 255, 255, 0),rgba(255, 255, 255, 0));
+    background-blend-mode: overlay;
+    background-position: center center;
+    background-size: cover;
+    /* background-repeat: no-repeat; */
 }
 
 /* #root {

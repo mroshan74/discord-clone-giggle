@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import socket from '../../services/socket'
 import { connect } from 'react-redux'
-import { addNewPublicPost, addNewPost } from '../../redux/actions/postsAction'
+import { addNewPublicPost, addNewFriendPost } from '../../redux/actions/postsAction'
 
 function PostListener(props) {
     //! SOCKETS
@@ -12,7 +12,7 @@ function PostListener(props) {
 
     const friendPostFromServer = (post) => {
         console.log(post,'[POST_SERVER-FRIEND]')
-        props.dispatch(addNewPost(post))
+        props.dispatch(addNewFriendPost(post))
     }
     
     const connectSocket = () => {

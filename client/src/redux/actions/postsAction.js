@@ -44,7 +44,7 @@ export const startGetPublicPosts = (fd) => {
 }
 
 // --------------> get latest friend posts
-        //---> addPublic post listener
+        //---> addFriend post listener
 
 export const addNewFriendPost = (data) => {
     return { type: 'ADD_NEW_FRIEND_POST', payload: data }

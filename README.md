@@ -44,13 +44,5 @@ Clone of discord app with minimilistic features
 ├───config
 ├───resources
 │   └───images
-├───server
-│   ├───app
-│   │   ├───controllers
-│   │   ├───middlewares
-│   │   └───models
-│   ├───config
-│   └───resources
-│       └───images
 └───uploads
 ```

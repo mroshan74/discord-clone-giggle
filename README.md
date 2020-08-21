@@ -1,18 +1,16 @@
-# discord-clone-giggle
-Clone of discord app with minimilistic features
-
 # Giggle - Discord Clone
 [![Build Status](https://i.imgur.com/l5raReV.png)](https://giggle-app.herokuapp.com/)
 # Overview
-This app showcases minimilistic features of discord such as: 
+This app showcases minimalistic features of discord such as: 
   - Message Chatting
   - Video Calling using peer2peer technology of webRTC
   - Social Media 
+
 > CRUD operation performed on application state in front-end
 > and in the database on backend where it is stored in the cloud.
 > 
-> This app implements user authentication and authorization
-> and is build with MVC architecture which scalable in future.
+> This app implements user authentication and authorization.
+> Build with MVC architecture.
 
 ## Packages Used
     @material-ui/core

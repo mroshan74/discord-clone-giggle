@@ -1,5 +1,5 @@
 # Giggle - Discord Clone
-[![Build Status](https://i.imgur.com/l5raReV.png)](https://giggle-app.herokuapp.com/)
+[![Build Status](https://img.shields.io/badge/build-deployed-success)](https://giggle-app.herokuapp.com/)
 # Overview
 This app showcases minimalistic features of discord such as: 
   - Message Chatting
